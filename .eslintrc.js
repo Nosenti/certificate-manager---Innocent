@@ -8,7 +8,8 @@ module.exports = {
     'plugin:react/recommended',
     'airbnb',
     'airbnb/hooks',
-    'plugin:@typescript-eslint/recommended'
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended'
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -29,7 +30,8 @@ module.exports = {
         tsx: 'never'
       }
     ],
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true }]
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'prettier/prettier': 'error',
   },
   settings: {
     'import/resolver': {
