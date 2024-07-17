@@ -1,5 +1,5 @@
 {
-	"compilerOptions": {
+  "compilerOptions": {
     "target": "es2018",
     "lib": ["dom", "ESNext", "DOM.Iterable"],
     "strict": true,
@@ -19,6 +19,5 @@
       "@/*": ["*"]
     }
   },
-	"include": ["src", "types"]
-  }
-  
+  "include": ["src", "types"]
+}
