@@ -2,7 +2,7 @@ import './Layout.css';
 
 /**
  * Layout - Component that gives structure of the page
- * Description - Position other components on the UI: Sidebar, TopBar and Content
+ * Description - Position other components on the UI: Sidebar, Topbar and the page content
  *
  */
 const Layout = (): JSX.Element => {
