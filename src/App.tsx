@@ -1,12 +1,15 @@
-import React from 'react';
 import './App.css';
 import Layout from './components/layout/Layout';
 
-const App: React.FC = () => {
+/**
+ * App - component that serves as the main container of the entire application
+ * Description - Renders the Layout component
+ * 
+ */
+const App = (): JSX.Element => {
+ 
   return (
-    <div className="app">
-      <Layout />
-    </div>
+      <Layout /> 
   );
 };
 

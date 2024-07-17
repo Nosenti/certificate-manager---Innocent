@@ -1,13 +1,20 @@
-import React from 'react';
+import "./Layout.css";
 
-export default function Layout() {
+/**
+ * Layout - Component that gives structure of the page
+ * Description - Position other components on the UI
+ * 
+ */
+const Layout = (): JSX.Element => {
   return (
     <div className="layout">
       <div className="sidebar"></div>
       <main>
-        <div className="top-bar" style={{fontSize: '3rem'}}>Hello React!</div>
+        <div className="top-bar">Hello React!</div>
         <div className="body"></div>
       </main>
     </div>
   );
 }
+
+export default Layout;

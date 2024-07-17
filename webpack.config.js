@@ -1,48 +1,63 @@
 import path from 'path';
+import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import { fileURLToPath } from 'url';
 
-const config = {
-  entry: './src/index.tsx',
-  devtool: 'inline-source-map',
-  module: {
-    rules: [
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.js$/,
-        enforce: 'pre',
-        use: ['source-map-loader'],
-      },
-    ],
-  },
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
-  },
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(path.dirname(new URL(import.meta.url).pathname), 'dist'),
-  },
-  devServer: {
-    static: {
-      directory: path.join(path.dirname(new URL(import.meta.url).pathname), 'dist'),
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default (env, argv) => {
+  const isDevelopment = argv.mode === 'development';
+
+  return {
+    entry: './src/index.tsx',
+    mode: isDevelopment ? 'development' : 'production',
+    output: {
+      filename: 'bundle.js',
+      path: path.resolve(__dirname, 'dist'),
     },
-    port: 3000,
-    hot: true,
-  },
-  plugins: [
-    new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({
-      template: './src/index.html',
-    }),
-  ],
+    resolve: {
+      extensions: ['.ts', '.tsx', '.js'],
+      fallback: {
+        path: 'path-browserify',
+        os: 'os-browserify/browser',
+        crypto: 'crypto-browserify',
+        buffer: 'buffer',
+        stream: 'stream-browserify',
+        vm: 'vm-browserify',
+      },
+    },
+    module: {
+      rules: [
+        {
+          test: /\.(ts|tsx)$/,
+          exclude: /node_modules/,
+          use: 'babel-loader',
+        },
+        {
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader'],
+        },
+      ],
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: './src/index.html',
+      }),
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(
+          isDevelopment ? 'development' : 'production',
+        ),
+      }),
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+        Buffer: ['buffer', 'Buffer'],
+      }),
+    ],
+    devServer: {
+      static: path.join(__dirname, 'dist'),
+      compress: true,
+      port: 3000,
+    },
+  };
 };
-
-export default config;
