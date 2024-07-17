@@ -1,9 +1,9 @@
-import "./Layout.css";
+import './Layout.css';
 
 /**
  * Layout - Component that gives structure of the page
- * Description - Position other components on the UI
- * 
+ * Description - Position other components on the UI: Sidebar, TopBar and Content
+ *
  */
 const Layout = (): JSX.Element => {
   return (
@@ -15,6 +15,6 @@ const Layout = (): JSX.Element => {
       </main>
     </div>
   );
-}
+};
 
 export default Layout;

@@ -1,12 +1,16 @@
 import React from 'react';
-import "./GlobalError.css";
+import './GlobalError.css';
 
-function GlobalError() {
+/**
+ * GlobalError - Component which displays an error
+ * Description - Displays the error globally regardless of where it happened.
+ */
+function GlobalError(): JSX.Element {
   return (
-	<div>
-	  <p>Error: Testing</p>
-	</div>
-  )
+    <div>
+      <p>Error: Testing</p>
+    </div>
+  );
 }
 
-export default GlobalError
+export default GlobalError;
