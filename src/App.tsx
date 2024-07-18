@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Layout from './components/layout/Layout';
 import Start from './components/start/Start';
@@ -21,7 +21,11 @@ const router = createBrowserRouter([
  *
  */
 const App = (): JSX.Element => {
-  return <Layout />;
+  return (
+    <Router>
+      <Layout />
+    </Router>
+    );
 };
 
 export default App;

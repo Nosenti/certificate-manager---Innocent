@@ -13,8 +13,10 @@ export default (env, argv) => {
     entry: './src/index.tsx',
     mode: isDevelopment ? 'development' : 'production',
     output: {
-      filename: 'bundle.js',
+      filename: '[name].[contenthash].js', 
+      chunkFilename: '[name].[contenthash].js', 
       path: path.resolve(__dirname, 'dist'),
+      publicPath: '/',
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
@@ -53,11 +55,20 @@ export default (env, argv) => {
         process: 'process/browser',
         Buffer: ['buffer', 'Buffer'],
       }),
+      new webpack.HotModuleReplacementPlugin(),
     ],
+    optimization: {
+      splitChunks: {
+        chunks: 'all', 
+      },
+    },
     devServer: {
       static: path.join(__dirname, 'dist'),
       compress: true,
       port: 3000,
+      open: true,
+      historyApiFallback: true,
+      hot: true
     },
   };
 };
