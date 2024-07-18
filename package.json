@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A certificate management app",
   "main": "index.js",
-  "type":"module",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/nosenti/certificate-manager--innocent.git"
@@ -32,6 +32,7 @@
     "process": "^0.11.10",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^6.25.1",
     "stream-browserify": "^3.0.0",
     "vm-browserify": "^1.1.2"
   },

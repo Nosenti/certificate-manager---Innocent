@@ -1,3 +1,23 @@
-.top-bar {
-  font-size: 3rem;
+.body-container {
+	display: flex;
+	min-height: 100vh;
+	font-size: 1.2rem;
+}
+
+.sidebar {
+	background-color: var(--color-grey-navy);
+	width: 20vw;
+}
+
+.middle {
+	width: 80vw;
+}
+
+.header {
+	height: 10%;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.content {
+	background-color: var(--color-grey-dark);
 }
