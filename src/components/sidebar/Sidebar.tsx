@@ -7,7 +7,7 @@ function Sidebar(): JSX.Element {
 
   const toggleMlExpanded = () => {
     setMlExpanded(!mlExpanded);
-  }
+  };
 
   return (
     <>
@@ -36,7 +36,7 @@ function Sidebar(): JSX.Element {
             </span>
             <span>Start</span>
           </NavLink>
-          <div className="ml-op">
+          <div className="ml-op" onClick={toggleMlExpanded}>
             <span>
               <svg
                 className="icon"
@@ -55,13 +55,10 @@ function Sidebar(): JSX.Element {
                 />
               </svg>
             </span>
-            <p
-              className={mlExpanded ? "expanded" : ""}
-              onClick={toggleMlExpanded}
-            >
+            <p className={mlExpanded ? 'expanded' : ''}>
               Machine Learning
             </p>
-            <span>
+            <span className={`arrow ${mlExpanded ? 'expanded' : ''}`}>
               <svg
                 className="icon"
                 aria-hidden="true"
@@ -81,7 +78,7 @@ function Sidebar(): JSX.Element {
               </svg>
             </span>
           </div>
-          <ul className="ml" style={{ display: mlExpanded ? "block" : "none" }}>
+          <ul className="ml" style={{ display: mlExpanded ? 'block' : 'none' }}>
             <li>
               <NavLink className="example" to="/example1">
                 Example 1

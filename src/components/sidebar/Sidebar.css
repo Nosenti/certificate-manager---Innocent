@@ -1,74 +1,90 @@
 .dccs {
-  background-color: #3498db;
-  color: white;
-  padding: 10px;
+  background-color: var(--color-primary);
+  color: var(--color-white);
   text-align: center;
+  height: 10%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  font-size: 1rem;
+  font-weight: lighter;
+  position: relative;
 }
 
 .sidebar-wrapper {
-  padding: 10px;
+  padding-top: 1rem;
   width: 100%;
 }
 
 .sidebar-wrapper div {
-  margin-bottom: 20px;
+  margin-bottom: 1rem;
+}
+
+.nav-item {
+  display: flex;
 }
 
 .nav-item, .example {
   display: flex;
   align-items: center;
-  color: #333;
+  color: var(--color-primary-dark);
   text-decoration: none;
   padding: 10px;
-  border-radius: 4px;
   transition: background-color 0.3s ease;
+  -webkit-transition: background-color 0.3s ease;
+  -moz-transition: background-color 0.3s ease;
+  -ms-transition: background-color 0.3s ease;
+  -o-transition: background-color 0.3s ease;
 }
 
 .nav-item:hover, .example:hover {
   background-color: #e0e0e0;
 }
+span svg{
+  margin-top: .5rem;
 
-.icon {
-  margin-right: 8px;
 }
-
+.icon {
+  margin-right: 1rem;
+  font-size: 2rem;
+  font-weight: 500;
+}
 .sidebar-wrapper div p {
   display: flex;
   align-items: center;
   cursor: pointer;
   margin: 0;
   font-size: 1.2rem;
-  font-weight: bold;
 }
 
 .ml-op {
   display: flex;
   align-items: center;
   cursor: pointer;
+  color: var(--color-primary-dark);
+  justify-content: center;
+  margin-top: 1rem;
 }
 
-.sidebar-wrapper div p::before {
-  display: inline-block;
-  margin-right: 8px;
+.ml-op .icon {
+  margin-right: 10px;
+}
+
+.arrow {
+  margin-left: 1rem;
   transition: transform 0.3s ease;
 }
 
-.sidebar-wrapper div p.expanded::before {
+.arrow.expanded {
   transform: rotate(90deg);
 }
 
 .sidebar-wrapper ul.ml {
   list-style-type: none;
-  padding-left: 20px;
+  padding-left: 2rem;
   display: none;
 }
 
-.sidebar-wrapper ul.ml li {
-  margin: 5px 0;
-}
 
 .sidebar-wrapper div .active {
   color: var(--color-primary);
-  font-weight: bold;
-  border-left: .7rem solid var(--color-primary);
+  border-left: 0.7rem solid var(--color-primary);
 }

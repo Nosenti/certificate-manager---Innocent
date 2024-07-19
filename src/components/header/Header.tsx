@@ -1,9 +1,13 @@
 import "./Header.css"
-
+/**
+ * Header - Header component to contain the user profile
+ * Description - Should contain the quick to access info about the user
+ *  
+ */
 function Header() {
   return (
     <div>
-      <h1>Header</h1>
+      
     </div>
   );
 }

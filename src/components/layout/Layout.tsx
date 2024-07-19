@@ -1,24 +1,30 @@
+import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import './Layout.css';
 import Header from '../header/Header';
 import Sidebar from '../sidebar/Sidebar';
-/**
- * Layout - Component that gives structure of the page
- * Description - Position other components on the UI: Sidebar, Topbar and the page content
- *
- */
+
 const Layout = (): JSX.Element => {
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarVisible(!sidebarVisible);
+  };
+
   return (
     <>
-      <div className='body-container'>
-        <div className='sidebar'>
+      <div className="body-container">
+        <button className="toggle-button" onClick={toggleSidebar}>
+          ☰
+        </button>
+        <div className={`sidebar ${sidebarVisible ? 'visible' : ''}`}>
           <Sidebar />
         </div>
-        <div className='middle'>
-          <div className='header'>
+        <div className="middle">
+          <div className="header">
             <Header />
           </div>
-          <div className='content'>
+          <div className="content">
             <Outlet />
           </div>
         </div>
