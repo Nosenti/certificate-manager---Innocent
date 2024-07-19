@@ -2,7 +2,11 @@ import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
 import { useState } from 'react';
 
-function Sidebar(): JSX.Element {
+interface SidebarProps {
+  closeSidebar: () => void;
+}
+
+function Sidebar({ closeSidebar}: SidebarProps): JSX.Element {
   const [mlExpanded, setMlExpanded] = useState(false);
 
   const toggleMlExpanded = () => {
@@ -16,7 +20,7 @@ function Sidebar(): JSX.Element {
       </div>
       <div className="sidebar-wrapper">
         <div>
-          <NavLink className="nav-item" to="/start">
+          <NavLink className="nav-item" to="/start" onClick={closeSidebar}>
             <span>
               <svg
                 className="icon"
@@ -80,17 +84,17 @@ function Sidebar(): JSX.Element {
           </div>
           <ul className="ml" style={{ display: mlExpanded ? 'block' : 'none' }}>
             <li>
-              <NavLink className="example" to="/example1">
+              <NavLink className="example" to="/example1" onClick={closeSidebar}>
                 Example 1
               </NavLink>
             </li>
             <li>
-              <NavLink className="example" to="/example2">
+              <NavLink className="example" to="/example2" onClick={closeSidebar}>
                 Example 2
               </NavLink>
             </li>
             <li>
-              <NavLink className="example" to="/example3">
+              <NavLink className="example" to="/example3" onClick={closeSidebar}>
                 Example 3
               </NavLink>
             </li>

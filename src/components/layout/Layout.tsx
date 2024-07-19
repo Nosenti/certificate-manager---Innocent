@@ -11,6 +11,10 @@ const Layout = (): JSX.Element => {
     setSidebarVisible(!sidebarVisible);
   };
 
+  const closeSidebar = (): void => {
+    setSidebarVisible(false);
+  };
+
   return (
     <>
       <div className="body-container">
@@ -18,7 +22,7 @@ const Layout = (): JSX.Element => {
           ☰
         </button>
         <div className={`sidebar ${sidebarVisible ? 'visible' : ''}`}>
-          <Sidebar />
+          <Sidebar closeSidebar={closeSidebar} />
         </div>
         <div className="middle">
           <div className="header">
