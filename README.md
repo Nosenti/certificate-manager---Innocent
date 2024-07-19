@@ -23,8 +23,8 @@ The Certificate Manager Application is a web-based application designed to manag
 
 ### Prerequisites
 
-- \[Node.js\](<https://nodejs.org/>) (v14 or later)  
-- \[npm\](<https://www.npmjs.com/>) or \[yarn\](<https://yarnpkg.com/>)
+- Node.js (v14 or later)  
+- npm or yarn
 
 ### Steps
 
