@@ -32,7 +32,7 @@
 }
 
 .button.primary:hover {
-  background-color: #4b31e2;
+  background-color: var(--color-primary-dark);
 }
 
 .button.secondary {
@@ -46,7 +46,7 @@
 }
 
 .button.danger {
-  color: red;
+  color: var(--color-danger);
   background-color: var(--color-red-700);
 }
 

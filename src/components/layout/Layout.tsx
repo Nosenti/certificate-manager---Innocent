@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import './Layout.css';
 import Header from '../header/Header';
 import Sidebar from '../sidebar/Sidebar';
+import './Layout.css';
 
 /**
  * Layout - Component which gives overall structure of the webpage
  * Description - Positions important components: sidebar, topbar and content on the page
- * 
+ *
  */
 const Layout = (): JSX.Element => {
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -15,7 +15,7 @@ const Layout = (): JSX.Element => {
   /**
    * toggleSidebar - toggles sidebar to make it visible/invisible on mobile for responsive layout
    */
-  const toggleSidebar = ():void => {
+  const toggleSidebar = (): void => {
     setSidebarVisible(!sidebarVisible);
   };
 
@@ -25,17 +25,14 @@ const Layout = (): JSX.Element => {
   const closeSidebar = (): void => {
     setSidebarVisible(false);
   };
-
+ 
   return (
     <>
-      <div className="body-container">
-        <button className="toggle-button" onClick={toggleSidebar}>
-          
-            { sidebarVisible?'x':'+'}
-          
-          
+      <div className="bodyContainer">
+        <button className="toggleButton" onClick={toggleSidebar}>
+          {sidebarVisible ? 'x' : '+'}
         </button>
-        <div className={`sidebar ${sidebarVisible ? 'visible' : ''}`}>
+        <div className={`sidebar ${sidebarVisible ? "visible" : ''}`}>
           <Sidebar closeSidebar={closeSidebar} />
         </div>
         <div className="middle">

@@ -20,7 +20,7 @@ function Sidebar({ closeSidebar}: SidebarProps): JSX.Element {
       </div>
       <div className="sidebar-wrapper">
         <div>
-          <NavLink className="nav-item" to="/start" onClick={closeSidebar}>
+          <NavLink className="nav-item" to="/" onClick={closeSidebar}>
             <span>
               <svg
                 className="icon"

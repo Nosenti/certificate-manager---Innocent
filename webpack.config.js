@@ -13,8 +13,8 @@ export default (env, argv) => {
     entry: './src/index.tsx',
     mode: isDevelopment ? 'development' : 'production',
     output: {
-      filename: '[name].[contenthash].js', 
-      chunkFilename: '[name].[contenthash].js', 
+      filename: '[name].[contenthash].js',
+      chunkFilename: '[name].[contenthash].js',
       path: path.resolve(__dirname, 'dist'),
       publicPath: '/',
     },
@@ -37,8 +37,23 @@ export default (env, argv) => {
           use: 'babel-loader',
         },
         {
-          test: /\.css$/,
+          test: /\.css$/, 
+          exclude: /\.module\.css$/,
           use: ['style-loader', 'css-loader'],
+        },
+        {
+          test: /\.module\.css$/, 
+          use: [
+            'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                modules: {
+                  localIdentName: '[name]__[local]__[hash:base64:5]',
+                },
+              },
+            },
+          ],
         },
       ],
     },
@@ -59,7 +74,7 @@ export default (env, argv) => {
     ],
     optimization: {
       splitChunks: {
-        chunks: 'all', 
+        chunks: 'all',
       },
     },
     devServer: {
@@ -68,7 +83,7 @@ export default (env, argv) => {
       port: 3000,
       open: true,
       historyApiFallback: true,
-      hot: true
+      hot: true,
     },
   };
 };

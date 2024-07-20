@@ -4,12 +4,12 @@ import "./Example.css";
  * Example - Placeholder for a component to be used
  * 
  */
-function Example(): JSX.Element {
+function Example2(): JSX.Element {
   return (
 	<div className="ex">
-		  <h1>Example 1</h1>
+		  <h1>Example 2</h1>
 	</div>
   )
 }
 
-export default Example
+export default Example2
