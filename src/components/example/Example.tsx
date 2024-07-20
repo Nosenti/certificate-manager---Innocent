@@ -6,6 +6,7 @@ import { BrowserRouter as Router,Route, Link, Routes } from 'react-router-dom';
 import { useCertificates } from '../../context/CertificateContext';
 
 const columns = [
+  { Header: '', accessor: 'empty' },
   { Header: 'Supplier', accessor: 'supplier' },
   { Header: 'Certificate type', accessor: 'certificateType' },
   { Header: 'Valid from', accessor: 'validFrom' },
