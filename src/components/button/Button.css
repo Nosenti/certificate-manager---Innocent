@@ -15,6 +15,13 @@
   text-align: center;
 }
 
+.button.medium {
+  font-size: 1.2rem;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
 .button.large {
   font-size: 1.6rem;
   padding: 1.2rem 2.4rem;
@@ -26,6 +33,7 @@
 .button.sidebar:hover {
   background-color: var(--color-primary);
 }
+
 .button.primary {
   color: var(--color-grey-navy);
   background-color: var(--color-primary);
@@ -65,4 +73,13 @@
 .button.secondary:disabled,
 .button.secondary.disabled {
   background-color: var(--secondary-color-disabled);
+}
+.button.contained {
+  color: var(--color-white);
+  background-color: var(--color-green-yellow);
+  text-decoration: none;
+}
+
+.button.contained:hover {
+  background-color: var(--color-green-yellow-dark);
 }

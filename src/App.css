@@ -7,6 +7,8 @@
   --color-danger: rgba(199, 76, 76, 0.952);
   --primary-color-disabled: rgba(0, 123, 255, 0.5);
   --secondary-color-disabled: rgba(108, 117, 125, 0.5);
+  --color-green-yellow: #C0D72E;
+  --color-green-yellow-dark: #98ac1a;
 }
 
 * {
