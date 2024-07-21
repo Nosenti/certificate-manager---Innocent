@@ -34,6 +34,10 @@ const router = createBrowserRouter([
         element: <FormPage />
       },
       {
+        path: '/certificates/new',
+        element: <FormPage />
+      },
+      {
         path: '*',
         element: <NotFound />,
       },
