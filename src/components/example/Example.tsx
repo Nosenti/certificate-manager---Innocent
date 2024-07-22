@@ -5,14 +5,7 @@ import Table from '../table/Table';
 import Button from '../button/Button';
 import FormPage from '../certificate-form/CertificateForm';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
-import {CertificateProvider, useCertificates} from '../context/CertificateContext';
-
-// interface Certificate {
-//   supplier: string;
-//   certificateType: string;
-//   validFrom: string;
-//   validTo: string;
-// }
+import {useCertificates} from '../context/CertificateContext';
 
 const columns = [
   { Header: 'Supplier', accessor: 'supplier' },
@@ -35,11 +28,6 @@ const CertificatesTable: React.FC = () => {
  */
 
 const Example: React.FC = () => {
-  // const [certificates, setCertificates] = useState<Certificate[]>([]);
-
-  // useEffect(() => {
-  //   setCertificates(certificates_);
-  // }, []);
   
   return (
    
