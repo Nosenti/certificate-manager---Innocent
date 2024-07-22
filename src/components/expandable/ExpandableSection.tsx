@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import './expandablesection.css';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { ReactComponent as HamburgerIcon } from '../../../public/assets/hamburger.svg';
 
 interface ExpandableSectionProps {
   title: string;
@@ -33,7 +34,7 @@ const ExpandableSection: FC<ExpandableSectionProps> = ({
   }, [location.pathname, initialSelected]);
 
   const toggleExpanded = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent triggering any other click handlers
+    e.stopPropagation();
     setExpanded((prev) => !prev);
     onToggle();
     if (!expanded && initialSelected) {
