@@ -12,6 +12,11 @@ interface FormData {
   pdf: File | null;
 }
 
+enum Options {
+  PermissionOfPrinting = "Permission of Printing",
+  OHSAS18001 = "OHSAS 18001",
+}
+
 const FormPage: React.FC = () => {
   const navigate = useNavigate();
   const { addCertificate } = useCertificates();
@@ -73,11 +78,12 @@ const FormPage: React.FC = () => {
               value={formData.certificateType}
               onChange={handleInputChange}
             >
+              
               <option value="">Select type</option>
-              <option value="Permission of Printing">
+              <option value={ Options.PermissionOfPrinting}>
                 Permission of Printing
               </option>
-              <option value="OHSAS 18001">OHSAS 18001</option>
+              <option value={ Options.OHSAS18001}>OHSAS 18001</option>
               {/* Add more options as needed */}
             </select>
           </label>
@@ -123,10 +129,10 @@ const FormPage: React.FC = () => {
               ></iframe>
             )}
           </div>
-          <button type="submit">Save</button>
-          <button type="button" onClick={handleReset}>
+          <Button type='submit' variation='secondary'>Save</Button>
+          <Button type="button" onClick={handleReset}>
             Reset
-          </button>
+          </Button>
         </div>
       </form>
     </div>
