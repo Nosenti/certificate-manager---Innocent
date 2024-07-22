@@ -25,23 +25,23 @@ const Layout = (): JSX.Element => {
   const closeSidebar = (): void => {
     setSidebarVisible(false);
   };
- 
+
   return (
     <>
       <div className="layout-container">
-        <button 
-        className="toggle-button" 
-        onClick={toggleSidebar}
-        aria-label={sidebarVisible ? 'Close sidebar' : 'Open sidebar'}
-        aria-expanded={sidebarVisible}
-      >
-        {sidebarVisible ? '≡' : '☰'}
-      </button>
-        <aside className={`sidebar ${sidebarVisible ? "visible" : ''}`}>
-        <Sidebar closeSidebar={closeSidebar} />
-      </aside>
+        <button
+          className="toggle-button"
+          onClick={toggleSidebar}
+          aria-label={sidebarVisible ? 'Close sidebar' : 'Open sidebar'}
+          aria-expanded={sidebarVisible}
+        >
+          {sidebarVisible ? '≡' : '☰'}
+        </button>
+        <aside className={`sidebar ${sidebarVisible ? 'visible' : ''}`}>
+          <Sidebar closeSidebar={closeSidebar} />
+        </aside>
         <main className="main-content">
-            <Header />
+          <Header />
           <section className="content">
             <Outlet />
           </section>

@@ -6,6 +6,14 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variation?: 'primary' | 'secondary';
   'aria-label'?: string;
 }
+/**
+ * Button - Reusable component for Button
+ * @param size - size of the button
+ * @param variation - variation (type) of the button
+ * @param disabled - prop to disable the button and make it non-clickable
+ * @param props - custom props to customize the button
+ * @returns
+ */
 const Button: FC<ButtonProps> = ({
   size = 'medium',
   variation = 'primary',
@@ -13,7 +21,7 @@ const Button: FC<ButtonProps> = ({
   'aria-label': ariaLabel,
   ...props
 }) => {
-  const classNames = `button ${size} ${variation} ${disabled? 'disabled': ''}`;
+  const classNames = `button ${size} ${variation} ${disabled ? 'disabled' : ''}`;
   return (
     <button
       className={classNames}

@@ -3,6 +3,7 @@
   align-items: center;
   cursor: pointer;
   padding: 1rem;
+  color: var(--color-primary-dark);
 }
 
 .icon {
@@ -25,5 +26,14 @@
 .expandable-content {
   list-style-type: none;
   padding: 0;
-  margin: 0;
+  margin-left: 1rem;
+}
+
+span svg {
+  margin-top: 0.5rem;
+}
+.icon {
+  margin-right: 1rem;
+  font-size: 2rem;
+  font-weight: 500;
 }

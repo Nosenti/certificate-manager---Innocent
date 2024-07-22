@@ -1,24 +1,27 @@
-import React, { FC, useState } from 'react'
-import "./ExpandableSection.css"
+import React, { FC, useState } from 'react';
+import './ExpandableSection.css';
 
 interface ExpandableSectionProps {
-	title: string,
-	icon: React.ReactNode,
-	children: React.ReactNode
+  title: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
 }
-const ExpandableSection: FC<ExpandableSectionProps> = ({ title, icon, children }) => {
-
-	const [expanded, setExpanded] = useState(false);
+const ExpandableSection: FC<ExpandableSectionProps> = ({
+  title,
+  icon,
+  children,
+}) => {
+  const [expanded, setExpanded] = useState(false);
 
   const toggleExpanded = () => {
-    setExpanded(prev => !prev);
+    setExpanded((prev) => !prev);
   };
   return (
-	 <div>
+    <div>
       <div className="expandable-header" onClick={toggleExpanded}>
         <span className="icon">{icon}</span>
-        <p className={expanded ? "expanded" : ''}>{title}</p>
-        <span className={`arrow ${expanded ? "expanded" : ''}`}>
+        <p className={expanded ? 'expanded' : ''}>{title}</p>
+        <span className={`arrow ${expanded ? 'expanded' : ''}`}>
           <svg
             className="icon"
             aria-hidden="true"
@@ -38,11 +41,14 @@ const ExpandableSection: FC<ExpandableSectionProps> = ({ title, icon, children }
           </svg>
         </span>
       </div>
-      <ul className="expandable-content" style={{ display: expanded ? 'block' : 'none' }}>
+      <ul
+        className="expandable-content"
+        style={{ display: expanded ? 'block' : 'none' }}
+      >
         {children}
       </ul>
     </div>
-  )
-}
+  );
+};
 
-export default ExpandableSection
+export default ExpandableSection;

@@ -1,21 +1,27 @@
 import React, { FC } from 'react';
 import { NavLink } from 'react-router-dom';
-import "./NavItem.css";
+import './NavItem.css';
 
 interface NavItemProps {
-	to: string;
-	icon: React.ReactNode;
-	onClick: () => void;
-	children: React.ReactNode
+  to: string;
+  icon?: React.ReactNode;
+  onClick: () => void;
+  children: React.ReactNode;
 }
-
+/**
+ * NavItem - Navigation Item
+ * @param to - The link you navigate to
+ * @param icon - Option Icon for the navigation link
+ * @param onClick - onClick prop to navigate to another page
+ * @returns
+ */
 const NavItem: FC<NavItemProps> = ({ to, icon, onClick, children }) => {
   return (
-	<NavLink className="nav-item" to={to} onClick={onClick}>
+    <NavLink className="nav-item" to={to} onClick={onClick}>
       <span className="icon">{icon}</span>
       <span>{children}</span>
     </NavLink>
-  )
-}
+  );
+};
 
-export default NavItem
+export default NavItem;

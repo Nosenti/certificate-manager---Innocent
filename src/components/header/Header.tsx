@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import "./Header.css"
+import './Header.css';
 
 interface HeaderProps {
   user?: string;
@@ -8,7 +8,7 @@ interface HeaderProps {
 /**
  * Header - Header component to contain the user profile
  * Description - Should contain the quick to access info about the user
- *  
+ *
  */
 const Header: FC<HeaderProps> = ({ user = 'John Doe' }) => {
   return (

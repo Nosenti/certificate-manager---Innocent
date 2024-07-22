@@ -1,11 +1,32 @@
 .nav-item {
   display: flex;
   align-items: center;
-  padding: 1rem;
   text-decoration: none;
   color: var(--color-text);
 }
 
 .icon {
   margin-right: 0.5rem;
+}
+
+.nav-item:hover {
+  background-color: #e0e0e0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  color: var(--color-primary-dark);
+  text-decoration: none;
+  padding: 10px;
+  transition: background-color 0.3s ease;
+  -webkit-transition: background-color 0.3s ease;
+  -moz-transition: background-color 0.3s ease;
+  -ms-transition: background-color 0.3s ease;
+  -o-transition: background-color 0.3s ease;
+}
+
+.active {
+  color: var(--color-primary);
+  border-left: 0.7rem solid var(--color-primary);
 }

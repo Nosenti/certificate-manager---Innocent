@@ -1,5 +1,7 @@
 import React from 'react';
-
+/**
+ * HomeIcon - Icon showing Home
+ */
 const HomeIcon: React.FC = () => (
   <svg
     aria-hidden="true"

@@ -1,16 +1,16 @@
-import Button from "../button/Button";
-import "./Example.css";
+import { FC } from 'react';
+import './Example.css';
 
 /**
  * Example - Placeholder for a component to be used
- * 
+ *
  */
-function Example(): JSX.Element {
+const Example: FC = (): JSX.Element => {
   return (
-	<section className="ex">
+    <section className="ex">
       <h1>Example 1</h1>
-	</section>
-  )
-}
+    </section>
+  );
+};
 
-export default Example
+export default Example;
