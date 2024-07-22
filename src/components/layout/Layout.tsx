@@ -25,22 +25,34 @@ const Layout = (): JSX.Element => {
   const closeSidebar = (): void => {
     setSidebarVisible(false);
   };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>): void => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      toggleSidebar();
+    }
+  };
  
   return (
     <>
-      <div className="bodyContainer">
-        <button className="toggleButton" onClick={toggleSidebar}>
-          {sidebarVisible ? 'x' : '+'}
-        </button>
-        <div className={`sidebar ${sidebarVisible ? "visible" : ''}`}>
-          <Sidebar closeSidebar={closeSidebar} />
-        </div>
-        <div className="middle">
+      <div className="layout-container">
+        <button 
+        className="toggle-button" 
+        onClick={toggleSidebar}
+        onKeyDown={handleKeyDown}
+        aria-label={sidebarVisible ? 'Close sidebar' : 'Open sidebar'}
+        aria-expanded={sidebarVisible}
+      >
+        {sidebarVisible ? '≡' : '☰'}
+      </button>
+        <aside className={`sidebar ${sidebarVisible ? "visible" : ''}`}>
+        <Sidebar closeSidebar={closeSidebar} />
+      </aside>
+        <main className="main-content">
             <Header />
-          <div className="content">
+          <section className="content">
             <Outlet />
-          </div>
-        </div>
+          </section>
+        </main>
       </div>
     </>
   );

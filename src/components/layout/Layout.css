@@ -1,4 +1,4 @@
-.bodyContainer {
+.layout-container {
   display: flex;
   min-height: 100vh;
   font-size: 1.2rem;
@@ -9,8 +9,11 @@
   width: 20vw;
   transition: transform 0.3s ease;
 }
+.sidebar.visible {
+  transform: translateX(0);
+}
 
-.middle {
+.main-content {
   width: 80vw;
 }
 
@@ -18,7 +21,7 @@
   background-color: var(--color-grey-dark);
 }
 
-.toggleButton {
+.toggle-button {
   display: none;
   position: absolute;
   top: 10px;
@@ -46,15 +49,11 @@
     width: 250px;
   }
 
-  .sidebar.visible {
-    transform: translateX(0);
-  }
-
-  .middle {
+  .main-content {
     width: 100vw;
   }
 
-  .toggleButton {
+  .toggle-button {
     display: block;
   }
 }
