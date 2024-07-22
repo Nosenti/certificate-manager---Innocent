@@ -5,6 +5,7 @@ import Sidebar from '../sidebar/Sidebar';
 import './layout.css';
 import PlusIcon from '../../../public/assets/plus.svg';
 import CloseIcon from '../../../public/assets/close.svg';
+import { CertificateProvider } from '../context/CertificateContext';
 
 /**
  * Layout - Component which gives overall structure of the webpage
