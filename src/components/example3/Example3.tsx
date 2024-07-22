@@ -6,9 +6,9 @@ import "./Example.css";
  */
 function Example3(): JSX.Element {
   return (
-	<div className="ex">
+	<section className="ex">
 		  <h1>Example 3</h1>
-	</div>
+	</section>
   )
 }
 

@@ -1,13 +1,27 @@
-import { FC } from "react";
-import styles from "./Button.module.css"
+import { FC } from 'react';
+import './Button.css';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'small' | 'medium' | 'large';
   variation?: 'primary' | 'secondary';
+  'aria-label'?: string;
 }
-const Button: FC<ButtonProps> = ({ size = "small", variation = "sidebar", ...props }) => {
-  const classNames = `${styles.button} ${styles[size]} ${styles[variation]}`;
-  return <button className={classNames} {...props} />;
+const Button: FC<ButtonProps> = ({
+  size = 'medium',
+  variation = 'primary',
+  disabled = false,
+  'aria-label': ariaLabel,
+  ...props
+}) => {
+  const classNames = `button ${size} ${variation} ${disabled? 'disabled': ''}`;
+  return (
+    <button
+      className={classNames}
+      disabled={disabled}
+      aria-label={ariaLabel}
+      {...props}
+    />
+  );
 };
 
 export default Button;

@@ -1,3 +1,4 @@
+import Button from "../button/Button";
 import "./Example.css";
 
 /**
@@ -6,9 +7,9 @@ import "./Example.css";
  */
 function Example(): JSX.Element {
   return (
-	<div className="ex">
-		  <h1>Example 1</h1>
-	</div>
+	<section className="ex">
+      <h1>Example 1</h1>
+	</section>
   )
 }
 

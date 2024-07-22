@@ -36,9 +36,7 @@ const Layout = (): JSX.Element => {
           <Sidebar closeSidebar={closeSidebar} />
         </div>
         <div className="middle">
-          <div className="header">
             <Header />
-          </div>
           <div className="content">
             <Outlet />
           </div>
