@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from '../header/Header';
 import Sidebar from '../sidebar/Sidebar';
-import './Layout.css';
+import './layout.css';
+import { ReactComponent as PlusIcon} from '../../../public/assets/plus.svg';
+import { ReactComponent as CloseIcon} from '../../../public/assets/close.svg';
 
 /**
  * Layout - Component which gives overall structure of the webpage
@@ -11,17 +13,11 @@ import './Layout.css';
  */
 const Layout = (): JSX.Element => {
   const [sidebarVisible, setSidebarVisible] = useState(false);
-
-  /**
-   * toggleSidebar - toggles sidebar to make it visible/invisible on mobile for responsive layout
-   */
+  
   const toggleSidebar = (): void => {
     setSidebarVisible(!sidebarVisible);
   };
 
-  /**
-   * closeSidebar - close the sidebar when the user clicks on navigation link on mobile
-   */
   const closeSidebar = (): void => {
     setSidebarVisible(false);
   };
@@ -35,7 +31,7 @@ const Layout = (): JSX.Element => {
           aria-label={sidebarVisible ? 'Close sidebar' : 'Open sidebar'}
           aria-expanded={sidebarVisible}
         >
-          {sidebarVisible ? '≡' : '☰'}
+          {sidebarVisible ? <CloseIcon/> : <PlusIcon/>}
         </button>
         <aside className={`sidebar ${sidebarVisible ? 'visible' : ''}`}>
           <Sidebar closeSidebar={closeSidebar} />

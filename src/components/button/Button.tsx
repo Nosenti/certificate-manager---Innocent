@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import './Button.css';
+import './button.css';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'small' | 'medium' | 'large';

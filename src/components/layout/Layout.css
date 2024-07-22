@@ -11,6 +11,10 @@
 }
 .sidebar.visible {
   transform: translateX(0);
+  -webkit-transform: translateX(0);
+  -moz-transform: translateX(0);
+  -ms-transform: translateX(0);
+  -o-transform: translateX(0);
 }
 
 .main-content {
@@ -24,7 +28,7 @@
 .toggle-button {
   display: none;
   position: absolute;
-  top: 10px;
+  top: 15px;
   left: 10px;
   background-color: var(--color-primary);
   color: var(--color-white);

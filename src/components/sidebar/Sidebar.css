@@ -2,3 +2,9 @@
   padding-top: 1rem;
   width: 100%;
 }
+
+.sidebar {
+  background-color: var(--color-grey-navy);
+  width: 20vw;
+  transition: transform 0.3s ease;
+}

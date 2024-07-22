@@ -11,3 +11,6 @@
 .user-info {
   align-content: center;
 }
+.user:hover{
+  cursor: pointer;
+}

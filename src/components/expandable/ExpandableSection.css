@@ -1,8 +1,16 @@
+
+.expandable-section .expandable-header {
+  border-left: .7rem solid transparent;
+  padding-left: .7rem;
+}
+
+.expandable-section.active .expandable-header {
+  border-left: .7rem solid var(--color-primary);
+}
 .expandable-header {
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 1rem;
   color: var(--color-primary-dark);
 }
 

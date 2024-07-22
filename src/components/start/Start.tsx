@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import './Start.css';
+import './start.css';
 
 interface StartProps {
   title?: string;
@@ -10,7 +10,7 @@ interface StartProps {
  */
 const Start: FC<StartProps> = ({ title = 'Start' }) => {
   return (
-    <div className="start">
+    <div className="start-text">
       <h1>{title}</h1>
     </div>
   );

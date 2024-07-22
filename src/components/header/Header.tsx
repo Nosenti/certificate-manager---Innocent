@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import './Header.css';
+import './header.css';
 
 interface HeaderProps {
   user?: string;
@@ -12,11 +12,11 @@ interface HeaderProps {
  */
 const Header: FC<HeaderProps> = ({ user = 'John Doe' }) => {
   return (
-    <div className="header">
+    <header className="header">
       <div className="user-info">
-        {user && <span className="">{user}</span>}
+        {user && <span className="user">{user}</span>}
       </div>
-    </div>
+    </header>
   );
 };
 

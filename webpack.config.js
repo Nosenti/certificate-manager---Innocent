@@ -37,12 +37,12 @@ export default (env, argv) => {
           use: 'babel-loader',
         },
         {
-          test: /\.css$/, 
+          test: /\.css$/,
           exclude: /\.module\.css$/,
           use: ['style-loader', 'css-loader'],
         },
         {
-          test: /\.module\.css$/, 
+          test: /\.module\.css$/,
           use: [
             'style-loader',
             {
@@ -53,6 +53,18 @@ export default (env, argv) => {
                 },
               },
             },
+          ],
+        },
+        {
+          test: /\.svg$/,
+          use: [
+            {
+              loader: '@svgr/webpack',
+              options: {
+                svgo: false,
+              },
+            },
+            
           ],
         },
       ],

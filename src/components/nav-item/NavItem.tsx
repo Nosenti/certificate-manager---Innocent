@@ -1,12 +1,13 @@
 import React, { FC } from 'react';
-import { NavLink } from 'react-router-dom';
-import './NavItem.css';
+import { NavLink, useLocation } from 'react-router-dom';
+import './navItem.css';
 
 interface NavItemProps {
   to: string;
   icon?: React.ReactNode;
   onClick: () => void;
   children: React.ReactNode;
+  isActive?: boolean;
 }
 /**
  * NavItem - Navigation Item
@@ -15,10 +16,15 @@ interface NavItemProps {
  * @param onClick - onClick prop to navigate to another page
  * @returns
  */
-const NavItem: FC<NavItemProps> = ({ to, icon, onClick, children }) => {
+const NavItem: FC<NavItemProps> = ({ to, icon, onClick, children, isActive }) => {
+  const classNames = `nav-item ${isActive ? 'active' : ''} ${to === '/' ? 'start' : ''}`;
   return (
-    <NavLink className="nav-item" to={to} onClick={onClick}>
-      <span className="icon">{icon}</span>
+    <NavLink
+      className={classNames}
+      to={to}
+      onClick={onClick}
+    >
+      {icon && <span className="icon">{icon}</span>}
       <span>{children}</span>
     </NavLink>
   );

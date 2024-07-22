@@ -3,6 +3,7 @@
   align-items: center;
   text-decoration: none;
   color: var(--color-text);
+  border-left: 0.7rem solid var(--color-grey-navy);
 }
 
 .icon {
@@ -10,7 +11,7 @@
 }
 
 .nav-item:hover {
-  background-color: #e0e0e0;
+  background-color: var(--color-grey-light);
 }
 
 .nav-item {
@@ -26,7 +27,10 @@
   -o-transition: background-color 0.3s ease;
 }
 
-.active {
+.nav-item.active{
+  background-color: var(--color-grey-light);
   color: var(--color-primary);
-  border-left: 0.7rem solid var(--color-primary);
+}
+.nav-item.active.start {
+  border-left: .7rem solid var(--color-primary);
 }

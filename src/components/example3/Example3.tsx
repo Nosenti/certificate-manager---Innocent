@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import './Example.css';
+import './example.css';
 
 /**
  * Example - Placeholder for a component to be used
