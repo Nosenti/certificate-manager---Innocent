@@ -25,12 +25,6 @@ const Layout = (): JSX.Element => {
   const closeSidebar = (): void => {
     setSidebarVisible(false);
   };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>): void => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      toggleSidebar();
-    }
-  };
  
   return (
     <>
@@ -38,7 +32,6 @@ const Layout = (): JSX.Element => {
         <button 
         className="toggle-button" 
         onClick={toggleSidebar}
-        onKeyDown={handleKeyDown}
         aria-label={sidebarVisible ? 'Close sidebar' : 'Open sidebar'}
         aria-expanded={sidebarVisible}
       >

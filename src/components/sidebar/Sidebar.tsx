@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
 import { useState } from 'react';
+import SidebarHeader from '../sidebar-header/SidebarHeader';
 
 interface SidebarProps {
   closeSidebar: () => void;
@@ -15,9 +16,7 @@ function Sidebar({ closeSidebar}: SidebarProps): JSX.Element {
 
   return (
     <>
-      <div className="dccs">
-        <h1>DCCS Tuzla</h1>
-      </div>
+      <SidebarHeader/>
       <div className="sidebar-wrapper">
         <div>
           <NavLink className="nav-item" to="/" onClick={closeSidebar}>
