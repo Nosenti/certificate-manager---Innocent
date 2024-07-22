@@ -27,10 +27,10 @@
   -o-transition: background-color 0.3s ease;
 }
 
-.nav-item.active{
+.nav-item.active {
   background-color: var(--color-grey-light);
   color: var(--color-primary);
 }
 .nav-item.active.start {
-  border-left: .7rem solid var(--color-primary);
+  border-left: 0.7rem solid var(--color-primary);
 }

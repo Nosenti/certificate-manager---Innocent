@@ -7,46 +7,49 @@ interface ExpandableSectionProps {
   icon: React.ReactNode;
   children: React.ReactNode;
   initialSelected?: string;
+  isActive: boolean;
+  onToggle: () => void;
 }
 
+/**
+ * ExpandableSection - Create a reusable Expandable section to hold navigation links
+ */
 const ExpandableSection: FC<ExpandableSectionProps> = ({
   title,
   icon,
   children,
   initialSelected,
+  isActive,
+  onToggle,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const [activeChild, setActiveChild] = useState(initialSelected);
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (expanded && initialSelected && location.pathname === initialSelected) {
-      setActiveChild(initialSelected);
-    }
-  }, [expanded, initialSelected, location.pathname]);
-
-  useEffect(() => {
-    if (location.pathname.startsWith('/example')) {
+    if (location.pathname === initialSelected) {
       setExpanded(true);
-    } else {
-      setExpanded(false);
     }
-  }, [location.pathname]);
+  }, [location.pathname, initialSelected]);
 
-  const toggleExpanded = () => {
+  const toggleExpanded = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering any other click handlers
     setExpanded((prev) => !prev);
+    onToggle();
     if (!expanded && initialSelected) {
       navigate(initialSelected);
     }
   };
 
   return (
-    <div className={`expandable-section ${expanded ? 'active' : ''}`}>
-      <div className="expandable-header" onClick={toggleExpanded}>
+    <div className={`expandable-section ${isActive ? 'active' : ''}`}>
+      <div className="expandable-header">
         <span className="icon">{icon}</span>
         <p className={expanded ? 'expanded' : ''}>{title}</p>
-        <span className={`arrow ${expanded ? 'expanded' : ''}`}>
+        <span
+          className={`arrow ${expanded ? 'expanded' : ''}`}
+          onClick={toggleExpanded}
+        >
           <svg
             className="icon"
             aria-hidden="true"
@@ -66,15 +69,16 @@ const ExpandableSection: FC<ExpandableSectionProps> = ({
           </svg>
         </span>
       </div>
-      <ul className="expandable-content" style={{ display: expanded ? 'block' : 'none' }}>
+      <ul
+        className="expandable-content"
+        style={{ display: expanded ? 'block' : 'none' }}
+      >
         {React.Children.map(children, (child) =>
           React.cloneElement(child as React.ReactElement<any>, {
-            isActive: activeChild === (child as React.ReactElement<any>).props.to,
             onClick: () => {
-              setActiveChild((child as React.ReactElement<any>).props.to);
               navigate((child as React.ReactElement<any>).props.to);
             },
-          })
+          }),
         )}
       </ul>
     </div>

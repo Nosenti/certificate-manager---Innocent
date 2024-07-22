@@ -2,9 +2,10 @@ import './sidebar.css';
 import SidebarHeader from '../sidebar-header/SidebarHeader';
 import NavItem from '../nav-item/NavItem';
 import ExpandableSection from '../expandable/ExpandableSection';
-import { ReactComponent as MLIcon } from "../../../public/assets/mlicon.svg";
-import { ReactComponent as HomeIcon } from "../../../public/assets/homeicon.svg";
+import { ReactComponent as MLIcon } from '../../../public/assets/mlicon.svg';
+import { ReactComponent as HomeIcon } from '../../../public/assets/homeicon.svg';
 import { useLocation } from 'react-router-dom';
+import { useState } from 'react';
 
 interface SidebarProps {
   closeSidebar: () => void;
@@ -16,9 +17,14 @@ interface SidebarProps {
  * @param closeSidebar - manages the toggle of the sidebar on mobile view
  * @returns JSX Element
  */
-function Sidebar({ closeSidebar }: SidebarProps): JSX.Element {
+const Sidebar: React.FC<SidebarProps> = ({ closeSidebar }) => {
   const location = useLocation();
-  
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+
+  const handleSectionToggle = (section: string) => {
+    setActiveSection((prev) => (prev === section ? null : section));
+  };
+
   return (
     <>
       <SidebarHeader />
@@ -27,7 +33,10 @@ function Sidebar({ closeSidebar }: SidebarProps): JSX.Element {
           <NavItem
             to="/"
             icon={<HomeIcon />}
-            onClick={closeSidebar}
+            onClick={() => {
+              closeSidebar();
+              setActiveSection(null);
+            }}
             isActive={location.pathname === '/'}
           >
             Start
@@ -35,7 +44,9 @@ function Sidebar({ closeSidebar }: SidebarProps): JSX.Element {
           <ExpandableSection
             title="Machine Learning"
             icon={<MLIcon />}
-            initialSelected='/example1'
+            initialSelected="/example1"
+            isActive={activeSection === 'ml'}
+            onToggle={() => handleSectionToggle('ml')}
           >
             <NavItem
               to="/example1"
@@ -63,6 +74,6 @@ function Sidebar({ closeSidebar }: SidebarProps): JSX.Element {
       </div>
     </>
   );
-}
+};
 
 export default Sidebar;

@@ -1,11 +1,10 @@
-
 .expandable-section .expandable-header {
-  border-left: .7rem solid transparent;
-  padding-left: .7rem;
+  border-left: 0.7rem solid transparent;
+  padding-left: 0.7rem;
 }
 
 .expandable-section.active .expandable-header {
-  border-left: .7rem solid var(--color-primary);
+  border-left: 0.7rem solid var(--color-primary);
 }
 .expandable-header {
   display: flex;

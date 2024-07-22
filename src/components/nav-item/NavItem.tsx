@@ -16,14 +16,16 @@ interface NavItemProps {
  * @param onClick - onClick prop to navigate to another page
  * @returns
  */
-const NavItem: FC<NavItemProps> = ({ to, icon, onClick, children, isActive }) => {
+const NavItem: FC<NavItemProps> = ({
+  to,
+  icon,
+  onClick,
+  children,
+  isActive,
+}) => {
   const classNames = `nav-item ${isActive ? 'active' : ''} ${to === '/' ? 'start' : ''}`;
   return (
-    <NavLink
-      className={classNames}
-      to={to}
-      onClick={onClick}
-    >
+    <NavLink className={classNames} to={to} onClick={onClick}>
       {icon && <span className="icon">{icon}</span>}
       <span>{children}</span>
     </NavLink>
