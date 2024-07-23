@@ -1,6 +1,4 @@
 import './Example.css';
-import certificates_ from '../../data/certificates-table';
-import { useEffect, useState } from 'react';
 import Table from '../table/Table';
 import Button from '../button/Button';
 import FormPage from '../certificate-form/CertificateForm';

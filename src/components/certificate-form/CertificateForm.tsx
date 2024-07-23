@@ -84,7 +84,6 @@ const FormPage: React.FC = () => {
                 Permission of Printing
               </option>
               <option value={ Options.OHSAS18001}>OHSAS 18001</option>
-              {/* Add more options as needed */}
             </select>
           </label>
           <label className='form-input'>
@@ -129,8 +128,8 @@ const FormPage: React.FC = () => {
               ></iframe>
             )}
           </div>
-          <Button type='submit' variation='secondary'>Save</Button>
-          <Button type="button" onClick={handleReset}>
+          <Button type='submit' variation='contained' size='medium'>Save</Button>
+          <Button type="button" variation='transparent' size='medium' onClick={handleReset}>
             Reset
           </Button>
         </div>
