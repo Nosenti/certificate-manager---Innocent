@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import './Table.css';
 
 interface TableColumn {
@@ -34,6 +34,6 @@ const Table: FC<TableProps> = ({ columns, data }) => {
       </table>
     </div>
   );
-}
+};
 
 export default Table;
