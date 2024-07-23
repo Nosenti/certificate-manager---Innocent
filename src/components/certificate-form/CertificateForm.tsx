@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import './FormPage.css';
 import Button from '../button/Button';
 import { useCertificates } from '../context/CertificateContext';
+import FormInput from '../form-input/FormInput';
+import FormSelect from '../form-select/FormSelect';
+import FileUpload from '../file-upload/FileUpload';
+import PDFPreview from '../pdf-preview/PDFPreview';
 
 interface FormData {
   supplier: string;
@@ -17,7 +21,7 @@ enum Options {
   OHSAS18001 = "OHSAS 18001",
 }
 
-const FormPage: React.FC = () => {
+const CertificateForm: React.FC = () => {
   const navigate = useNavigate();
   const { addCertificate } = useCertificates();
   const [formData, setFormData] = useState<FormData>({
@@ -62,72 +66,41 @@ const FormPage: React.FC = () => {
       <h1>New Certificate</h1>
       <form onSubmit={handleSubmit} className="certificate-form">
         <div className="form-left">
-          <label className='form-input'>
-            <span>Supplier:</span>
-            <input
-              type="text"
-              name="supplier"
-              value={formData.supplier}
-              onChange={handleInputChange}
-            />
-          </label>
-          <label className='form-input'>
-            <span>Certificate type:</span>
-            <select
-              name="certificateType"
-              value={formData.certificateType}
-              onChange={handleInputChange}
-            >
-              
-              <option value="">Select type</option>
-              <option value={ Options.PermissionOfPrinting}>
-                Permission of Printing
-              </option>
-              <option value={ Options.OHSAS18001}>OHSAS 18001</option>
-            </select>
-          </label>
-          <label className='form-input'>
-            <span>Valid from:</span>
-            <input
-              type="date"
-              name="validFrom"
-              value={formData.validFrom}
-              onChange={handleInputChange}
-            />
-          </label>
-          <label className='form-input'>
-            <span>Valid to:</span>
-            <input
-              type="date"
-              name="validTo"
-              value={formData.validTo}
-              onChange={handleInputChange}
-            />
-          </label>
+          <FormInput
+            label="Supplier"
+            type="text"
+            name="supplier"
+            value={formData.supplier}
+            onChange={handleInputChange}
+          />
+          <FormSelect
+            label="Certificate type"
+            name="certificateType"
+            value={formData.certificateType}
+            onChange={handleInputChange}
+            options={[
+              { value: Options.PermissionOfPrinting, label: "Permission of Printing" },
+              { value: Options.OHSAS18001, label: "OHSAS 18001" }
+            ]}
+          />
+          <FormInput
+            label="Valid from"
+            type="date"
+            name="validFrom"
+            value={formData.validFrom}
+            onChange={handleInputChange}
+          />
+          <FormInput
+            label="Valid to"
+            type="date"
+            name="validTo"
+            value={formData.validTo}
+            onChange={handleInputChange}
+          />
         </div>
         <div className="form-right">
-          <label className='file-upload-label'>
-            <input
-              id="fileInput"
-              type="file"
-              accept="application/pdf"
-              onChange={handleFileChange}
-              style={{ display: 'none' }}
-            />
-            <Button type='button' variation="primary" size="medium" onClick={() => document.getElementById('fileInput')?.click()}>
-              Upload
-            </Button>
-          </label>
-          <div className='prev'>
-            {formData.pdf && (
-              <iframe
-                src={URL.createObjectURL(formData.pdf)}
-                width="100%"
-                height="100%"
-                title="PDF Preview"
-              ></iframe>
-            )}
-          </div>
+          <FileUpload onFileChange={handleFileChange} />
+          <PDFPreview file={formData.pdf} />
           <Button type='submit' variation='contained' size='medium'>Save</Button>
           <Button type="button" variation='transparent' size='medium' onClick={handleReset}>
             Reset
@@ -138,4 +111,4 @@ const FormPage: React.FC = () => {
   );
 };
 
-export default FormPage;
+export default CertificateForm;
