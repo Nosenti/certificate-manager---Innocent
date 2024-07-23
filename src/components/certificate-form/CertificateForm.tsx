@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './FormPage.css';
 import Button from '../button/Button';
-import { useCertificates } from '../context/CertificateContext';
+import { useCertificates } from '../../context/CertificateContext';
 import FormInput from '../form-input/FormInput';
 import FormSelect from '../form-select/FormSelect';
 import FileUpload from '../file-upload/FileUpload';
 import PDFPreview from '../pdf-preview/PDFPreview';
 
 interface FormData {
+  id?: number,
   supplier: string;
   certificateType: string;
   validFrom: string;
@@ -25,6 +26,7 @@ const CertificateForm: React.FC = () => {
   const navigate = useNavigate();
   const { addCertificate } = useCertificates();
   const [formData, setFormData] = useState<FormData>({
+    id: Date.now(),
     supplier: '',
     certificateType: '',
     validFrom: '',

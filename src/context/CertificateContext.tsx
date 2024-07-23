@@ -5,15 +5,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import certificates_ from '../../data/certificates-table';
-
-interface Certificate {
-  supplier: string;
-  certificateType: string;
-  validFrom: string;
-  validTo: string;
-  pdf: File | null;
-}
+import { initDB, getCertificates, addCertificate as addCertificateToDB, Certificate } from '../data/db';
 
 interface CertificatesContextType {
   certificates: Certificate[];
@@ -31,15 +23,41 @@ interface Props {
 
 function CertificateProvider({ children }: Props) {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [isDBReady, setIsDBReady] = useState<boolean>(false);
 
   useEffect(() => {
-    setCertificates(certificates_);
+    const handleInitDB = async () => {
+      try {
+        const status = await initDB();
+        setIsDBReady(status);
+        if (status) {
+          const storedCertificates = await getCertificates();
+          setCertificates(storedCertificates);
+        } else {
+          console.log("Error: DB not initialized");
+        }
+      } catch (error) {
+        console.error("DB initialization failed", error);
+      }
+    };
+
+    handleInitDB();
   }, []);
 
-  const addCertificate = (certificate: Certificate) => {
-    const newCertificates = [...certificates, certificate];
-    setCertificates(newCertificates);
+  const addCertificate = async (certificate: Certificate) => {
+    if (!isDBReady) {
+      console.log("DB is not ready");
+      return;
+    }
+    try {
+      await addCertificateToDB(certificate);
+      const storedCertificates = await getCertificates();
+      setCertificates(storedCertificates);
+    } catch (error) {
+      console.error("Error adding certificate", error);
+    }
   };
+
   return (
     // 2) Provide value to child components
     <CertificateContext.Provider
