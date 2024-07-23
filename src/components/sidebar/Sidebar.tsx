@@ -2,8 +2,8 @@ import './sidebar.css';
 import SidebarHeader from '../sidebar-header/SidebarHeader';
 import NavItem from '../nav-item/NavItem';
 import ExpandableSection from '../expandable/ExpandableSection';
-import { ReactComponent as MLIcon } from '../../../public/assets/mlicon.svg';
-import { ReactComponent as HomeIcon } from '../../../public/assets/homeicon.svg';
+import MLIcon from '../../../public/assets/mlicon.svg';
+import HomeIcon from '../../../public/assets/homeicon.svg';
 import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 

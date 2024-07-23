@@ -1,12 +1,12 @@
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, Children, ReactElement, cloneElement, ReactNode } from 'react';
 import './expandablesection.css';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ReactComponent as HamburgerIcon } from '../../../public/assets/hamburger.svg';
+import ArrowIcon from '../../../public/assets/arrow.svg';
 
 interface ExpandableSectionProps {
   title: string;
-  icon: React.ReactNode;
-  children: React.ReactNode;
+  icon: ReactNode;
+  children: ReactNode;
   initialSelected?: string;
   isActive: boolean;
   onToggle: () => void;
@@ -51,33 +51,17 @@ const ExpandableSection: FC<ExpandableSectionProps> = ({
           className={`arrow ${expanded ? 'expanded' : ''}`}
           onClick={toggleExpanded}
         >
-          <svg
-            className="icon"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="m9 5 7 7-7 7"
-            />
-          </svg>
+          <ArrowIcon/>
         </span>
       </div>
       <ul
         className="expandable-content"
         style={{ display: expanded ? 'block' : 'none' }}
       >
-        {React.Children.map(children, (child) =>
-          React.cloneElement(child as React.ReactElement<any>, {
+        {Children.map(children, (child) =>
+          cloneElement(child as ReactElement<any>, {
             onClick: () => {
-              navigate((child as React.ReactElement<any>).props.to);
+              navigate((child as ReactElement<any>).props.to);
             },
           }),
         )}

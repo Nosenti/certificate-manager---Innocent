@@ -3,8 +3,8 @@ import { Outlet } from 'react-router-dom';
 import Header from '../header/Header';
 import Sidebar from '../sidebar/Sidebar';
 import './layout.css';
-import { ReactComponent as PlusIcon } from '../../../public/assets/plus.svg';
-import { ReactComponent as CloseIcon } from '../../../public/assets/close.svg';
+import PlusIcon from '../../../public/assets/plus.svg';
+import CloseIcon from '../../../public/assets/close.svg';
 
 /**
  * Layout - Component which gives overall structure of the webpage
