@@ -5,7 +5,7 @@ import ExpandableSection from '../expandable/ExpandableSection';
 import MLIcon from '../../../public/assets/mlicon.svg';
 import HomeIcon from '../../../public/assets/homeicon.svg';
 import { useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 
 interface SidebarProps {
   closeSidebar: () => void;
@@ -17,13 +17,28 @@ interface SidebarProps {
  * @param closeSidebar - manages the toggle of the sidebar on mobile view
  * @returns JSX Element
  */
-const Sidebar: React.FC<SidebarProps> = ({ closeSidebar }) => {
+const Sidebar: FC<SidebarProps> = ({ closeSidebar }) => {
   const location = useLocation();
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
   const handleSectionToggle = (section: string) => {
     setActiveSection((prev) => (prev === section ? null : section));
   };
+
+  const navItems = [
+    {
+      path: "/example1",
+      name: "Example 1",
+    },
+    {
+      path: "/example2",
+      name: "Example 2",
+    },
+    {
+      path: "/example3",
+      name: "Example 3",
+    },
+  ];
 
   return (
     <>
@@ -48,27 +63,16 @@ const Sidebar: React.FC<SidebarProps> = ({ closeSidebar }) => {
             isActive={activeSection === 'ml'}
             onToggle={() => handleSectionToggle('ml')}
           >
-            <NavItem
-              to="/example1"
-              onClick={closeSidebar}
-              isActive={location.pathname === '/example1'}
-            >
-              Example 1
-            </NavItem>
-            <NavItem
-              to="/example2"
-              onClick={closeSidebar}
-              isActive={location.pathname === '/example2'}
-            >
-              Example 2
-            </NavItem>
-            <NavItem
-              to="/example3"
-              onClick={closeSidebar}
-              isActive={location.pathname === '/example3'}
-            >
-              Example 3
-            </NavItem>
+            {navItems.map((item) => (
+              <NavItem
+                key={item.path}
+                to={item.path}
+                onClick={closeSidebar}
+                isActive={location.pathname === item.path}
+              >
+                {item.name}
+              </NavItem>
+            ))}
           </ExpandableSection>
         </div>
       </div>

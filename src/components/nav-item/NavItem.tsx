@@ -1,12 +1,12 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { NavLink} from 'react-router-dom';
 import './navItem.css';
 
 interface NavItemProps {
   to: string;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   onClick: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
   isActive?: boolean;
 }
 /**
