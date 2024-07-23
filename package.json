@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A certificate management app",
   "main": "index.js",
-  "type":"module",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/nosenti/certificate-manager--innocent.git"
@@ -32,6 +32,7 @@
     "process": "^0.11.10",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^6.25.1",
     "stream-browserify": "^3.0.0",
     "vm-browserify": "^1.1.2"
   },
@@ -44,6 +45,7 @@
     "@babel/preset-typescript": "^7.24.7",
     "@eslint/compat": "^1.1.0",
     "@eslint/js": "^9.6.0",
+    "@svgr/webpack": "^8.1.0",
     "@types/node": "^20.14.10",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
@@ -62,6 +64,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.34.4",
     "eslint-plugin-react-hooks": "^4.6.2",
+    "file-loader": "^6.2.0",
     "globals": "^15.8.0",
     "html-webpack-plugin": "^5.6.0",
     "prettier": "^3.3.2",

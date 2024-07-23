@@ -1,0 +1,14 @@
+.dccs {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  /* text-align: center; */
+  padding-left: 1.7rem;
+  height: 10%;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  font-size: 1rem;
+  font-weight: lighter;
+  position: relative;
+  align-content: center;
+}

@@ -5,7 +5,9 @@
     "strict": true,
     "module": "ESNext",
     "jsx": "react-jsx",
+    "allowJs": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
@@ -15,9 +17,11 @@
     "experimentalDecorators": true,
     "strictNullChecks": true,
     "baseUrl": "src",
+    "isolatedModules": true,
+    "noEmit": true,
     "paths": {
       "@/*": ["*"]
     }
   },
-  "include": ["src", "types"]
+  "include": ["src", "types", "public"]
 }

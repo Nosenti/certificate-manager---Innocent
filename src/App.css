@@ -1,9 +1,22 @@
-body {
-  font-family: Arial, sans-serif;
-  font-size: 62.5%;
+:root {
+  --color-primary: #3f9ac9;
+  --color-grey-navy: #e7e9ea;
+  --color-grey-light: #e0e0e0;
+  --color-white: #fff;
+  --color-primary-dark: #0e5579;
+  --color-danger: rgba(199, 76, 76, 0.952);
+  --primary-color-disabled: rgba(0, 123, 255, 0.5);
+  --secondary-color-disabled: rgba(108, 117, 125, 0.5);
 }
 
-.app {
-  text-align: center;
-  margin-top: 50px;
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 62.5%;
+  line-height: 1.7;
+  min-height: 100vh;
 }
