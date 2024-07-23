@@ -11,6 +11,11 @@ interface SidebarProps {
   closeSidebar: () => void;
 }
 
+interface NavItemType {
+  path: string;
+  name: string;
+}
+
 /**
  * Sidebar - Sidebar of the app
  * Description - Contains sidebar components: SidebarHeader, NavigationItems
@@ -25,7 +30,9 @@ const Sidebar: FC<SidebarProps> = ({ closeSidebar }) => {
     setActiveSection((prev) => (prev === section ? null : section));
   };
 
-  const navItems = [
+
+
+  const navItems: NavItemType[] = [
     {
       path: "/example1",
       name: "Example 1",
