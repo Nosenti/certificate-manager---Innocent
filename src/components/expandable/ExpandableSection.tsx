@@ -1,4 +1,12 @@
-import { FC, useEffect, useState, Children, ReactElement, cloneElement, ReactNode } from 'react';
+import {
+  FC,
+  useEffect,
+  useState,
+  Children,
+  ReactElement,
+  cloneElement,
+  ReactNode,
+} from 'react';
 import './expandablesection.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ArrowIcon from '../../../public/assets/arrow.svg';
@@ -51,7 +59,7 @@ const ExpandableSection: FC<ExpandableSectionProps> = ({
           className={`arrow ${expanded ? 'expanded' : ''}`}
           onClick={toggleExpanded}
         >
-          <ArrowIcon/>
+          <ArrowIcon />
         </span>
       </div>
       <ul

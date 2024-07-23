@@ -30,20 +30,18 @@ const Sidebar: FC<SidebarProps> = ({ closeSidebar }) => {
     setActiveSection((prev) => (prev === section ? null : section));
   };
 
-
-
   const navItems: NavItemType[] = [
     {
-      path: "/example1",
-      name: "Example 1",
+      path: '/example1',
+      name: 'Example 1',
     },
     {
-      path: "/example2",
-      name: "Example 2",
+      path: '/example2',
+      name: 'Example 2',
     },
     {
-      path: "/example3",
-      name: "Example 3",
+      path: '/example3',
+      name: 'Example 3',
     },
   ];
 
