@@ -2,8 +2,8 @@ import './Example.css';
 import Table from '../table/Table';
 import Button from '../button/Button';
 import FormPage from '../certificate-form/CertificateForm';
-import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
-import {useCertificates} from '../context/CertificateContext';
+import { BrowserRouter as Router,Route, Link, Routes } from 'react-router-dom';
+import { useCertificates } from '../../context/CertificateContext';
 
 const columns = [
   { Header: 'Supplier', accessor: 'supplier' },
@@ -14,6 +14,7 @@ const columns = [
 
 const CertificatesTable: React.FC = () => {
   const { certificates } = useCertificates();
+  console.log("cet_ ", certificates);
 
   return <Table columns={columns} data={certificates} />;
 };
@@ -26,7 +27,6 @@ const CertificatesTable: React.FC = () => {
  */
 
 const Example: React.FC = () => {
-  
   return (
    
     <div className="ex">
