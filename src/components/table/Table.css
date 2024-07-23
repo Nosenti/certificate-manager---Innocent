@@ -25,3 +25,15 @@ tr:hover {
   background-color: var(--color-grey-navy);
 }
 
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .table-container{
+    font-size: 1rem;
+  }
+  th, td {
+  padding: 4px;
+  text-align: left;
+}
+}
+
+

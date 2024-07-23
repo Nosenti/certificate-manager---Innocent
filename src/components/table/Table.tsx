@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import './Table.css';
 
 interface TableColumn {
@@ -11,7 +11,7 @@ interface TableProps {
   data: Record<string, any>[];
 }
 
-const Table: React.FC<TableProps> = ({ columns, data }) => {
+const Table: FC<TableProps> = ({ columns, data }) => {
   return (
     <div className="table-container">
       <table>
