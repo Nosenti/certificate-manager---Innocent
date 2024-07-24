@@ -17,7 +17,7 @@ const columns = [
 const CertificatesTable: React.FC = () => {
   const { certificates } = useCertificates();
 
-  return <Table columns={columns} data={certificates} />;
+  return <Table columns={columns} data={dataWithActions} />;
 };
 
 /**
@@ -40,6 +40,7 @@ const Example: React.FC = () => {
       <CertificatesTable/>
       <Routes>
         <Route path="certificates/new" element={<FormPage />} />
+        <Route path="certificates/edit/:id" element={<FormPage />} />
       </Routes>
       </div>
      
