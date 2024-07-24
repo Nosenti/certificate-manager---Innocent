@@ -37,12 +37,17 @@ function CertificatesTable(): JSX.Element {
   return (
     <section className="certificates-table" aria-labelledby="certificatesTitle">
       <h1>Certificates</h1>
-      <span className='new-certificate'>
-        <Button variation='contained' size='medium'>
-         <Link to="/certificates/new" style={{ color: 'inherit', textDecoration: 'none' }}>Add New Certificate</Link>
-      </Button>
+      <span className="new-certificate">
+        <Button variation="contained" size="medium">
+          <Link
+            to="/certificates/new"
+            style={{ color: 'inherit', textDecoration: 'none' }}
+          >
+            Add New Certificate
+          </Link>
+        </Button>
       </span>
-      
+
       <Table columns={columns} data={certificates} />
     </section>
   );

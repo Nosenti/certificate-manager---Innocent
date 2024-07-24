@@ -21,18 +21,11 @@ const FormInput: FC<FormInputProps> = ({
     <>
       <label className="form-input">
         <span>{label}:</span>
-        <input
-          type={type}
-          name={name}
-          value={value}
-          onChange={onChange}
-        />
-        <span className='form-error'>
+        <input type={type} name={name} value={value} onChange={onChange} />
+        <span className="form-error">
           {error && <p className="error">{error}</p>}
         </span>
-        
       </label>
-      
     </>
   );
 };

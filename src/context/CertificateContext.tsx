@@ -5,7 +5,12 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { initDB, getCertificates, addCertificate as addCertificateToDB, Certificate } from '../data/db';
+import {
+  initDB,
+  getCertificates,
+  addCertificate as addCertificateToDB,
+  Certificate,
+} from '../data/db';
 
 interface CertificatesContextType {
   certificates: Certificate[];
@@ -34,10 +39,10 @@ function CertificateProvider({ children }: Props) {
           const storedCertificates = await getCertificates();
           setCertificates(storedCertificates);
         } else {
-          console.log("Error: DB not initialized");
+          console.log('Error: DB not initialized');
         }
       } catch (error) {
-        console.error("DB initialization failed", error);
+        console.error('DB initialization failed', error);
       }
     };
 
@@ -49,12 +54,15 @@ function CertificateProvider({ children }: Props) {
       return;
     }
     try {
-      const certificateWithId = { ...certificate, id: certificate.id ?? Date.now() };
+      const certificateWithId = {
+        ...certificate,
+        id: certificate.id ?? Date.now(),
+      };
       await addCertificateToDB(certificateWithId);
       const storedCertificates = await getCertificates();
       setCertificates(storedCertificates);
     } catch (error) {
-      console.error("Error adding certificate", error);
+      console.error('Error adding certificate', error);
     }
   };
 

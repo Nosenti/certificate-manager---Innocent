@@ -1,6 +1,6 @@
 .table-container {
   overflow-x: auto;
-  margin-top: .8rem;
+  margin-top: 0.8rem;
 }
 
 table {
@@ -32,7 +32,7 @@ tr:hover {
 /* Responsive Styles */
 @media (max-width: 768px) {
   .table-container {
-    font-size: .8rem;
+    font-size: 0.8rem;
   }
   th,
   td {

@@ -77,7 +77,7 @@ export const addCertificate = async (
   certificate: Certificate,
 ): Promise<void> => {
   if (!db) {
-	  throw new Error('DB is not initialized');
+    throw new Error('DB is not initialized');
   }
   return new Promise((resolve, reject) => {
     const transaction = db.transaction([Stores.Certificates], 'readwrite');

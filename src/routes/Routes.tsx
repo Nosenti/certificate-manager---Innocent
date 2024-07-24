@@ -29,11 +29,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/certificates/new',
-        element: <FormPage />
+        element: <FormPage />,
       },
       {
         path: '/certificates/new',
-        element: <FormPage />
+        element: <FormPage />,
       },
       {
         path: '*',

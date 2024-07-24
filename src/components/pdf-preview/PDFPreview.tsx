@@ -6,7 +6,7 @@ interface PDFPreviewProps {
 
 const PDFPreview: React.FC<PDFPreviewProps> = ({ file }) => {
   return (
-    <div className='prev'>
+    <div className="prev">
       {file && (
         <iframe
           src={URL.createObjectURL(file)}

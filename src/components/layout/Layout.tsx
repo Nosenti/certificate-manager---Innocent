@@ -26,26 +26,26 @@ const Layout = (): JSX.Element => {
   return (
     <>
       <CertificateProvider>
-      <div className="layout-container">
-        <button
-          className="toggle-button"
-          onClick={toggleSidebar}
-          aria-label={sidebarVisible ? 'Close sidebar' : 'Open sidebar'}
-          aria-expanded={sidebarVisible}
-        >
-          {sidebarVisible ? <CloseIcon /> : <PlusIcon />}
-        </button>
-        <aside className={`sidebar ${sidebarVisible ? 'visible' : ''}`}>
-          <Sidebar closeSidebar={closeSidebar} />
-        </aside>
-        <main className="main-content">
-          <Header />
-          <section className="content">
-            <Outlet />
-          </section>
-        </main>
+        <div className="layout-container">
+          <button
+            className="toggle-button"
+            onClick={toggleSidebar}
+            aria-label={sidebarVisible ? 'Close sidebar' : 'Open sidebar'}
+            aria-expanded={sidebarVisible}
+          >
+            {sidebarVisible ? <CloseIcon /> : <PlusIcon />}
+          </button>
+          <aside className={`sidebar ${sidebarVisible ? 'visible' : ''}`}>
+            <Sidebar closeSidebar={closeSidebar} />
+          </aside>
+          <main className="main-content">
+            <Header />
+            <section className="content">
+              <Outlet />
+            </section>
+          </main>
         </div>
-        </CertificateProvider>
+      </CertificateProvider>
     </>
   );
 };

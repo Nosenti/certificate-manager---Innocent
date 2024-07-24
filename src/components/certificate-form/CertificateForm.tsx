@@ -78,7 +78,8 @@ const CertificateForm: React.FC = () => {
     if (!formData.validFrom)
       newErrors.validFrom = 'Valid from date is required';
     if (!formData.validTo) newErrors.validTo = 'Valid to date is required';
-    if (formData.validFrom > formData.validTo) newErrors.validTo = 'End date should be after start date';
+    if (formData.validFrom > formData.validTo)
+      newErrors.validTo = 'End date should be after start date';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -95,7 +96,7 @@ const CertificateForm: React.FC = () => {
               name="supplier"
               value={formData.supplier}
               onChange={handleInputChange}
-              error = {errors.supplier}
+              error={errors.supplier}
             />
             <span className="form-btn">
               <SearchIcon />
@@ -109,7 +110,7 @@ const CertificateForm: React.FC = () => {
             label="Certificate type"
             name="certificateType"
             value={formData.certificateType}
-            error={ errors.certificateType}
+            error={errors.certificateType}
             onChange={handleInputChange}
             options={[
               {
@@ -125,7 +126,7 @@ const CertificateForm: React.FC = () => {
             name="validFrom"
             value={formData.validFrom}
             onChange={handleInputChange}
-            error = {errors.validFrom}
+            error={errors.validFrom}
           />
           <FormInput
             label="Valid to"
@@ -133,7 +134,7 @@ const CertificateForm: React.FC = () => {
             name="validTo"
             value={formData.validTo}
             onChange={handleInputChange}
-            error = {errors.validTo}
+            error={errors.validTo}
           />
         </div>
         <div className="form-right">

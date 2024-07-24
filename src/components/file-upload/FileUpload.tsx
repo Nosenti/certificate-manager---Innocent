@@ -7,7 +7,7 @@ interface FileUploadProps {
 
 const FileUpload: React.FC<FileUploadProps> = ({ onFileChange }) => {
   return (
-    <label className='file-upload-label'>
+    <label className="file-upload-label">
       <input
         id="fileInput"
         type="file"
@@ -15,7 +15,12 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileChange }) => {
         onChange={onFileChange}
         style={{ display: 'none' }}
       />
-      <Button type='button' variation="primary" size="medium" onClick={() => document.getElementById('fileInput')?.click()}>
+      <Button
+        type="button"
+        variation="primary"
+        size="medium"
+        onClick={() => document.getElementById('fileInput')?.click()}
+      >
         Upload
       </Button>
     </label>

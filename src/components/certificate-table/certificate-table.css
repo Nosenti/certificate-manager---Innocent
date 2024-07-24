@@ -2,9 +2,9 @@
   margin: 2rem 4rem 0 4rem;
 }
 
-.certificates-table h1{
+.certificates-table h1 {
   color: var(--color-primary);
-  margin-bottom: .8rem;
+  margin-bottom: 0.8rem;
 }
 .new-certificate {
   margin-bottom: 1rem;
