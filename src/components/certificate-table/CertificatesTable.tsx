@@ -11,7 +11,7 @@ interface Certificate {
 }
 
 interface Column {
-  Header: string,
+  Header: string;
   accessor: keyof Certificate;
 }
 
@@ -30,7 +30,6 @@ const columns: Column[] = [
  */
 
 function CertificatesTable(): JSX.Element {
-
   return (
     <section className="certificates-table" aria-labelledby="certificatesTitle">
       <h1>Certificates</h1>

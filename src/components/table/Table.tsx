@@ -13,7 +13,11 @@ interface TableProps<T> {
   caption?: string;
 }
 
-function Table<T extends { id: string }>({ columns, data, caption }: TableProps<T>): JSX.Element {
+function Table<T extends { id: string }>({
+  columns,
+  data,
+  caption,
+}: TableProps<T>): JSX.Element {
   if (data.length === 0) {
     return <p>No data available</p>;
   }
@@ -46,6 +50,6 @@ function Table<T extends { id: string }>({ columns, data, caption }: TableProps<
       </table>
     </div>
   );
-};
+}
 
 export default Table;
