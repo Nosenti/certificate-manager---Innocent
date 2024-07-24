@@ -31,7 +31,7 @@ function Example(): JSX.Element {
   }, []);
 =======
 const CertificatesTable: React.FC = () => {
-  const { certificates } = useCertificates();
+  const { certificates, deleteCertificate } = useCertificates();
   
   const dataWithActions = certificates.map((cert) => ({
     ...cert,
@@ -40,13 +40,17 @@ const CertificatesTable: React.FC = () => {
         +
         <div className="dropdown-menu">
           <button>Edit</button>
-          <button>Delete</button>
+          <button onClick={() => handleDelete(cert.id!)}>Delete</button>
         </div>
       </div>
     )
   }));
 
-  return <Table columns={columns} data={dataWithActions} />;
+  const handleDelete = async (id: number) => {
+    await deleteCertificate(id);
+  };
+
+  return <Table columns={columns} data={dataWithActions} onDelete={handleDelete} />;
 };
 
 /**
