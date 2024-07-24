@@ -1,5 +1,5 @@
 import './Example.css';
-import certificates_ from '../../data/certificates-table';
+import certificatesData from '../../data/certificates-table';
 import { useEffect, useState } from 'react';
 import Table from '../table/Table';
 
@@ -10,8 +10,12 @@ interface Certificate {
   validTo: string;
 }
 
-const columns = [
-  { Header: '', accessor: 'empty' },
+interface Column {
+  Header: string,
+  accessor: keyof Certificate;
+}
+
+const columns: Column[] = [
   { Header: 'Supplier', accessor: 'supplier' },
   { Header: 'Certificate type', accessor: 'certificateType' },
   { Header: 'Valid from', accessor: 'validFrom' },
@@ -26,15 +30,11 @@ const columns = [
  */
 
 function Example(): JSX.Element {
-  const [certificates, setCertificates] = useState<Certificate[]>([]);
 
-  useEffect(() => {
-    setCertificates(certificates_);
-  }, []);
   return (
     <div className="ex">
       <h1>Example 1</h1>
-      <Table columns={columns} data={certificates} />
+      <Table columns={columns} data={certificatesData} />
     </div>
   );
 }
