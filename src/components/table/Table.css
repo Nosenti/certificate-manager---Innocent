@@ -1,0 +1,40 @@
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+tr {
+  border: 1px solid var(--color-grey-dark);
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: var(--color-grey-navy);
+  font-weight: bold;
+}
+
+tr:hover {
+  background-color: var(--color-grey-navy);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .table-container {
+    font-size: 1rem;
+  }
+  th,
+  td {
+    padding: 4px;
+    text-align: left;
+  }
+}

@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Start from '../components/start/Start';
-import Example from '../components/example/Example';
+import Example from '../components/certificate-table/CertificatesTable';
 import Example2 from '../components/example2/Example2';
 import Example3 from '../components/example3/Example3';
 import NotFound from '../components/not-found/NotFound';
