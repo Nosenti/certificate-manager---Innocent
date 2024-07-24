@@ -15,9 +15,26 @@ const columns = [
 ];
 
 const CertificatesTable: React.FC = () => {
-  const { certificates } = useCertificates();
+  const { certificates, deleteCertificate } = useCertificates();
+  
+  const dataWithActions = certificates.map((cert) => ({
+    ...cert,
+    actions: (
+      <div className="cog-container">
+        +
+        <div className="dropdown-menu">
+          <button>Edit</button>
+          <button onClick={() => handleDelete(cert.id!)}>Delete</button>
+        </div>
+      </div>
+    )
+  }));
 
-  return <Table columns={columns} data={dataWithActions} />;
+  const handleDelete = async (id: number) => {
+    await deleteCertificate(id);
+  };
+
+  return <Table columns={columns} data={dataWithActions} onDelete={handleDelete} />;
 };
 
 /**

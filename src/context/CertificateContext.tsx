@@ -17,6 +17,7 @@ interface CertificatesContextType {
   certificates: Certificate[];
   addCertificate: (certificate: Certificate) => void;
   updateCertificate: (certificate: Certificate) => void;
+  deleteCertificate: (id: number) => Promise<void>;
 }
 
 const CertificateContext = createContext<CertificatesContextType | undefined>(
@@ -76,6 +77,12 @@ function CertificateProvider({ children }: Props) {
     } catch (error) {
       console.log('Error editing a certificate', error);
     }
+  };
+
+  const deleteCertificate = async (id: number) => {
+    await deleteCertificateFromDB(id);
+    const storedCertificates = await getCertificates();
+    setCertificates(storedCertificates);
   };
 
   return (
