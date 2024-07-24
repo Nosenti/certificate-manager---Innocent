@@ -1,9 +1,9 @@
-import './Example.css';
+import './certificate-table.css';
 import certificatesData from '../../data/certificates-table';
-import { useEffect, useState } from 'react';
 import Table from '../table/Table';
 
 interface Certificate {
+  id: string;
   supplier: string;
   certificateType: string;
   validFrom: string;
@@ -29,14 +29,14 @@ const columns: Column[] = [
  * @returns JSX Element
  */
 
-function Example(): JSX.Element {
+function CertificatesTable(): JSX.Element {
 
   return (
-    <div className="ex">
-      <h1>Example 1</h1>
+    <section className="certificates-table" aria-labelledby="certificatesTitle">
+      <h1>Certificates</h1>
       <Table columns={columns} data={certificatesData} />
-    </div>
+    </section>
   );
 }
 
-export default Example;
+export default CertificatesTable;
