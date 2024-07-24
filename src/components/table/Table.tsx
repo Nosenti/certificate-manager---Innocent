@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import './Table.css';
+import { useNavigate } from 'react-router-dom';
 
 interface TableColumn<T> {
   Header: string;

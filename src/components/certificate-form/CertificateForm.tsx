@@ -57,6 +57,15 @@ const CertificateForm: React.FC = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [resetFile, setResetFile] = useState(false);
 
+  useEffect(() => {
+    if (id) {
+      const certificate = certificates.find(cert => cert.id === parseInt(id));
+      if (certificate) {
+        setFormData(certificate);
+      }
+    }
+  }, [id, certificates])
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
