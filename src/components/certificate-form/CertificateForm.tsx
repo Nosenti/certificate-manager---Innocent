@@ -7,9 +7,11 @@ import FormInput from '../form-input/FormInput';
 import FormSelect from '../form-select/FormSelect';
 import FileUpload from '../file-upload/FileUpload';
 import PDFPreview from '../pdf-preview/PDFPreview';
+import SearchIcon from '../../../public/assets/search.svg';
+import RemoveIcon from '../../../public/assets/close-small.svg';
 
 interface FormData {
-  id?: number,
+  id?: number;
   supplier: string;
   certificateType: string;
   validFrom: string;
@@ -18,8 +20,8 @@ interface FormData {
 }
 
 enum Options {
-  PermissionOfPrinting = "Permission of Printing",
-  OHSAS18001 = "OHSAS 18001",
+  PermissionOfPrinting = 'Permission of Printing',
+  OHSAS18001 = 'OHSAS 18001',
 }
 
 const CertificateForm: React.FC = () => {
@@ -33,6 +35,7 @@ const CertificateForm: React.FC = () => {
     validTo: '',
     pdf: null,
   });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -48,41 +51,72 @@ const CertificateForm: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addCertificate(formData);
-    navigate('/example1');
+    if (validate()) {
+      addCertificate(formData);
+      navigate('/example1');
+    }
   };
 
   const handleReset = () => {
     setFormData({
+      id: Date.now(),
       supplier: '',
       certificateType: '',
       validFrom: '',
       validTo: '',
       pdf: null,
     });
-    (document.getElementById('fileInput') as HTMLInputElement).value = "";
+    (document.getElementById('fileInput') as HTMLInputElement).value = '';
+    setErrors({});
+  };
+
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {};
+    if (!formData.supplier) newErrors.supplier = 'Supplier is required';
+    if (!formData.certificateType)
+      newErrors.certificateType = 'Certificate type is required';
+    if (!formData.validFrom)
+      newErrors.validFrom = 'Valid from date is required';
+    if (!formData.validTo) newErrors.validTo = 'Valid to date is required';
+    if (formData.validFrom > formData.validTo) newErrors.validTo = 'End date should be after start date';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   return (
-    <div className="form-page">
+    <section className="form-page">
       <h1>New Certificate</h1>
       <form onSubmit={handleSubmit} className="certificate-form">
         <div className="form-left">
-          <FormInput
-            label="Supplier"
-            type="text"
-            name="supplier"
-            value={formData.supplier}
-            onChange={handleInputChange}
-          />
+          <div className="supplier-form-input">
+            <FormInput
+              label="Supplier"
+              type="text"
+              name="supplier"
+              value={formData.supplier}
+              onChange={handleInputChange}
+              error = {errors.supplier}
+            />
+            <span className="form-btn">
+              <SearchIcon />
+            </span>
+            <span className="form-btn">
+              <RemoveIcon />
+            </span>
+          </div>
+
           <FormSelect
             label="Certificate type"
             name="certificateType"
             value={formData.certificateType}
+            error={ errors.certificateType}
             onChange={handleInputChange}
             options={[
-              { value: Options.PermissionOfPrinting, label: "Permission of Printing" },
-              { value: Options.OHSAS18001, label: "OHSAS 18001" }
+              {
+                value: Options.PermissionOfPrinting,
+                label: 'Permission of Printing',
+              },
+              { value: Options.OHSAS18001, label: 'OHSAS 18001' },
             ]}
           />
           <FormInput
@@ -91,6 +125,7 @@ const CertificateForm: React.FC = () => {
             name="validFrom"
             value={formData.validFrom}
             onChange={handleInputChange}
+            error = {errors.validFrom}
           />
           <FormInput
             label="Valid to"
@@ -98,18 +133,28 @@ const CertificateForm: React.FC = () => {
             name="validTo"
             value={formData.validTo}
             onChange={handleInputChange}
+            error = {errors.validTo}
           />
         </div>
         <div className="form-right">
           <FileUpload onFileChange={handleFileChange} />
           <PDFPreview file={formData.pdf} />
-          <Button type='submit' variation='contained' size='medium'>Save</Button>
-          <Button type="button" variation='transparent' size='medium' onClick={handleReset}>
-            Reset
-          </Button>
+          <div className="form-action-buttons">
+            <Button type="submit" variation="contained" size="medium">
+              Save
+            </Button>
+            <Button
+              type="button"
+              variation="transparent"
+              size="medium"
+              onClick={handleReset}
+            >
+              Reset
+            </Button>
+          </div>
         </div>
       </form>
-    </div>
+    </section>
   );
 };
 

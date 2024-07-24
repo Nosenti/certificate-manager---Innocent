@@ -25,6 +25,7 @@ const Layout = (): JSX.Element => {
 
   return (
     <>
+      <CertificateProvider>
       <div className="layout-container">
         <button
           className="toggle-button"
@@ -43,7 +44,8 @@ const Layout = (): JSX.Element => {
             <Outlet />
           </section>
         </main>
-      </div>
+        </div>
+        </CertificateProvider>
     </>
   );
 };

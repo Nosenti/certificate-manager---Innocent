@@ -46,11 +46,11 @@ function CertificateProvider({ children }: Props) {
 
   const addCertificate = async (certificate: Certificate) => {
     if (!isDBReady) {
-      console.log("DB is not ready");
       return;
     }
     try {
-      await addCertificateToDB(certificate);
+      const certificateWithId = { ...certificate, id: certificate.id ?? Date.now() };
+      await addCertificateToDB(certificateWithId);
       const storedCertificates = await getCertificates();
       setCertificates(storedCertificates);
     } catch (error) {

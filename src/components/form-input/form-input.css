@@ -14,3 +14,8 @@ input, select, button {
   margin-bottom: 1rem;
   padding: .3rem;
 }
+
+.form-error{
+  color: var(--color-danger);
+  margin-top: -.1rem;
+}

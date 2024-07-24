@@ -7,13 +7,13 @@ interface TableColumn<T> {
   render?: (value: T[keyof T]) => ReactNode;
 }
 
-interface TableProps<T> {
+interface TableProps<T extends {id: number}> {
   columns: TableColumn<T>[];
   data: T[];
   caption?: string;
 }
 
-function Table<T extends { id: string }>({
+function Table<T extends { id: number }>({
   columns,
   data,
   caption,

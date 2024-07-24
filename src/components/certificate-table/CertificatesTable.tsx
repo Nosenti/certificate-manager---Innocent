@@ -1,9 +1,11 @@
 import './certificate-table.css';
-import certificatesData from '../../data/certificates-table';
+import { useCertificates } from '../../context/CertificateContext';
 import Table from '../table/Table';
+import Button from '../button/Button';
+import { Link } from 'react-router-dom';
 
 interface Certificate {
-  id: string;
+  id: number;
   supplier: string;
   certificateType: string;
   validFrom: string;
@@ -30,10 +32,18 @@ const columns: Column[] = [
  */
 
 function CertificatesTable(): JSX.Element {
+  const { certificates } = useCertificates();
+
   return (
     <section className="certificates-table" aria-labelledby="certificatesTitle">
       <h1>Certificates</h1>
-      <Table columns={columns} data={certificatesData} />
+      <span className='new-certificate'>
+        <Button variation='contained' size='medium'>
+         <Link to="/certificates/new" style={{ color: 'inherit', textDecoration: 'none' }}>Add New Certificate</Link>
+      </Button>
+      </span>
+      
+      <Table columns={columns} data={certificates} />
     </section>
   );
 }
