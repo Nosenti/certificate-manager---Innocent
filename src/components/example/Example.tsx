@@ -2,10 +2,12 @@ import './Example.css';
 import Table from '../table/Table';
 import Button from '../button/Button';
 import FormPage from '../certificate-form/CertificateForm';
+import CogIcon from "../../../public/assets/cog.svg";
 import { BrowserRouter as Router,Route, Link, Routes } from 'react-router-dom';
 import { useCertificates } from '../../context/CertificateContext';
 
 const columns = [
+  { Header: '', accessor: 'actions' },
   { Header: 'Supplier', accessor: 'supplier' },
   { Header: 'Certificate type', accessor: 'certificateType' },
   { Header: 'Valid from', accessor: 'validFrom' },
@@ -19,7 +21,7 @@ const CertificatesTable: React.FC = () => {
     ...cert,
     actions: (
       <div className="cog-container">
-        +
+        <CogIcon/>
         <div className="dropdown-menu">
           <button>Edit</button>
           <button>Delete</button>

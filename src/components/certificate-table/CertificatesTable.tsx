@@ -2,6 +2,7 @@ import './certificate-table.css';
 import { useCertificates } from '../../context/CertificateContext';
 import Table from '../table/Table';
 import Button from '../button/Button';
+import CogIcon from "../../../public/assets/cog.svg";
 import { Link } from 'react-router-dom';
 import { Certificate } from '../../../types/types';
 
@@ -26,6 +27,19 @@ const columns: Column<Certificate>[] = [
 
 function CertificatesTable(): JSX.Element {
   const { certificates } = useCertificates();
+
+  const dataWithActions = certificates.map((cert) => ({
+    ...cert,
+    actions: (
+      <div className="cog-container">
+        <CogIcon/>
+        <div className="dropdown-menu">
+          <button>Edit</button>
+          <button>Delete</button>
+        </div>
+      </div>
+    )
+  }));
 
   return (
     <section className="certificates-table" aria-labelledby="certificatesTitle">
