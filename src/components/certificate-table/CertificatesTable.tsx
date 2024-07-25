@@ -2,7 +2,7 @@ import './certificate-table.css';
 import { useCertificates } from '../../context/CertificateContext';
 import Table from '../table/Table';
 import Button from '../button/Button';
-import CogIcon from "../../../public/assets/cog.svg";
+import CogIcon from '../../../public/assets/cog.svg';
 import { Link } from 'react-router-dom';
 import { Certificate } from '../../../types/types';
 
@@ -11,6 +11,8 @@ interface Column<T> {
   accessor: keyof T;
 }
 
+const columns: Column[] = [
+  { Header: ' ', accessor: 'actions' },
 const columns: Column<Certificate>[] = [
   { Header: 'Supplier', accessor: 'supplier' },
   { Header: 'Certificate type', accessor: 'certificateType' },
@@ -32,13 +34,13 @@ function CertificatesTable(): JSX.Element {
     ...cert,
     actions: (
       <div className="cog-container">
-        <CogIcon/>
+        <CogIcon />
         <div className="dropdown-menu">
           <button>Edit</button>
           <button>Delete</button>
         </div>
       </div>
-    )
+    ),
   }));
 
   return (

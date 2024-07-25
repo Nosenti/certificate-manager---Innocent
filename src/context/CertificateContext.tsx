@@ -9,6 +9,8 @@ import {
   initDB,
   getCertificates,
   addCertificate as addCertificateToDB,
+  Certificate,
+  updateCertificate as updateCertificateInDB,
 } from '../data/db';
 import { Certificate } from '../../types/types';
 
@@ -72,18 +74,17 @@ function CertificateProvider({ children }: Props) {
       await updateCertificateInDB(certificate);
       const storedCertificates = await getCertificates();
       setCertificates(storedCertificates);
-      
     } catch (error) {
-      console.log("Error editing a certificate", error);
+      console.log('Error editing a certificate', error);
     }
-  }
+  };
 
   return (
     <CertificateContext.Provider
       value={{
         certificates,
         addCertificate,
-        updateCertificate
+        updateCertificate,
       }}
     >
       {children}

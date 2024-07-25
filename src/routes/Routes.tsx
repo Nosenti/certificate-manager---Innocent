@@ -37,11 +37,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/certificates/new',
-        element: <FormPage />
+        element: <FormPage />,
       },
       {
         path: '/certificates/edit/:id',
-        element: <FormPage />
+        element: <FormPage />,
       },
       {
         path: '*',

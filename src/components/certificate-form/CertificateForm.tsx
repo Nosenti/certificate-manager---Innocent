@@ -59,12 +59,12 @@ const CertificateForm: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      const certificate = certificates.find(cert => cert.id === parseInt(id));
+      const certificate = certificates.find((cert) => cert.id === parseInt(id));
       if (certificate) {
         setFormData(certificate);
       }
     }
-  }, [id, certificates])
+  }, [id, certificates]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -99,7 +99,7 @@ const CertificateForm: React.FC = () => {
 
   return (
     <section className="form-page">
-      <h1>New Certificate</h1>
+      <h1>{id ? 'Edit Certificate' : 'New Certificate'}</h1>
       <form onSubmit={handleSubmit} className="certificate-form">
         <div className="form-left">
           <div className="supplier-form-input">

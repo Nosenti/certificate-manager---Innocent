@@ -1,7 +1,7 @@
 import { ReactNode, useState } from 'react';
 import './Table.css';
 import { useNavigate } from 'react-router-dom';
-import CogIcon from "../../../public/assets/cog.svg"
+import CogIcon from '../../../public/assets/cog.svg';
 
 interface TableColumn<T> {
   Header: string;
@@ -22,7 +22,7 @@ function Table<T extends { id: number }>({
 }: TableProps<T>): JSX.Element {
   const [dropdownVisible, setDropdownVisible] = useState<number | null>(null);
   const navigate = useNavigate();
-  
+
   const handleDropdownToggle = (index: number) => {
     setDropdownVisible(dropdownVisible === index ? null : index);
   };
@@ -50,12 +50,17 @@ function Table<T extends { id: number }>({
           {data.map((row, rowIndex) => (
             <tr key={rowIndex}>
               <td>
-                <div className="cog-container" onClick={() => handleDropdownToggle(rowIndex)}>
-                  <CogIcon/>
+                <div
+                  className="cog-container"
+                  onClick={() => handleDropdownToggle(rowIndex)}
+                >
+                  <CogIcon />
                   {dropdownVisible === rowIndex && (
                     <div className="dropdown-menu">
                       <button onClick={() => handleEdit(row.id!)}>Edit</button>
-                      <button onClick={() => console.log("Delete Clicked")}>Delete</button>
+                      <button onClick={() => console.log('Delete Clicked')}>
+                        Delete
+                      </button>
                     </div>
                   )}
                 </div>
