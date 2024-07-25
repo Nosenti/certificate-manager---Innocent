@@ -96,7 +96,6 @@ const CertificateForm: React.FC = () => {
               name="supplier"
               value={formData.supplier}
               onChange={handleInputChange}
-              error={errors.supplier}
             />
             <span className="form-btn">
               <SearchIcon />

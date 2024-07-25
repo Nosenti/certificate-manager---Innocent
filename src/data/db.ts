@@ -16,7 +16,6 @@ export enum Stores {
 
 export const initDB = async (): Promise<boolean> => {
   try {
-    console.log('start DB initialization...');
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(Stores.Certificates, version);
 
@@ -80,6 +79,10 @@ export const addCertificate = async (
     throw new Error('DB is not initialized');
   }
   return new Promise((resolve, reject) => {
+    if (!db) {
+      console.log("database not properly initialized");
+      return;
+    }
     const transaction = db.transaction([Stores.Certificates], 'readwrite');
     const store = transaction.objectStore(Stores.Certificates);
     const request = store.add(certificate);
