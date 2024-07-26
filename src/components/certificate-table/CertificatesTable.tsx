@@ -2,45 +2,64 @@ import './certificate-table.css';
 import { useCertificates } from '../../context/CertificateContext';
 import Table from '../table/Table';
 import Button from '../button/Button';
+import { Link, useNavigate } from 'react-router-dom';
+import { Certificate as BaseCertificate } from '../../../types/types';
 import CogIcon from '../../../public/assets/cog.svg';
-import { Link } from 'react-router-dom';
-import { Certificate } from '../../../types/types';
+import { useState } from 'react';
 
 interface Column<T> {
   Header: string;
   accessor: keyof T;
+  render?: (value: T[keyof T], row: T, rowIndex: number) => React.ReactNode;
 }
 
-const columns: Column[] = [
-  { Header: ' ', accessor: 'actions' },
-const columns: Column<Certificate>[] = [
-  { Header: 'Supplier', accessor: 'supplier' },
-  { Header: 'Certificate type', accessor: 'certificateType' },
-  { Header: 'Valid from', accessor: 'validFrom' },
-  { Header: 'Valid to', accessor: 'validTo' },
-];
+interface Certificate extends BaseCertificate {
+  actions: React.ReactNode;
+}
 
-/**
- * Example - content wrapper for the certificates table
- * Description - Component which has the certificates table
- * and create certificate button
- * @returns JSX Element
- */
-
-function CertificatesTable(): JSX.Element {
+const CertificatesTable: React.FC = () => {
   const { certificates } = useCertificates();
+  const navigate = useNavigate();
+  const [dropdownVisible, setDropdownVisible] = useState<number | null>(null);
+
+  const handleEdit = (id: number) => {
+    navigate(`/certificates/edit/${id}`);
+  };
+
+  const handleDropdownToggle = (index: number) => {
+    setDropdownVisible(dropdownVisible === index ? null : index);
+  };
+
+  const columns: Column<Certificate>[] = [
+    {
+      Header: ' ',
+      accessor: 'actions',
+      render: (_, row, rowIndex) => (
+        <div
+          className="cog-container"
+          onClick={() => handleDropdownToggle(rowIndex)}
+        >
+          <CogIcon />
+          {dropdownVisible === rowIndex && (
+            <div className="dropdown-menu">
+              <button onClick={() => handleEdit(row.id)}>Edit</button>
+              <button onClick={() => console.log('delete clicked')}>
+                Delete
+              </button>
+            </div>
+          )}
+        </div>
+      ),
+    },
+    { Header: 'Supplier', accessor: 'supplier' },
+    { Header: 'Certificate type', accessor: 'certificateType' },
+    { Header: 'Valid from', accessor: 'validFrom' },
+    { Header: 'Valid to', accessor: 'validTo' },
+  ];
 
   const dataWithActions = certificates.map((cert) => ({
     ...cert,
-    actions: (
-      <div className="cog-container">
-        <CogIcon />
-        <div className="dropdown-menu">
-          <button>Edit</button>
-          <button>Delete</button>
-        </div>
-      </div>
-    ),
+    actions: null, // This will be replaced by the `render` function in columns
   }));
 
   return (
@@ -56,10 +75,9 @@ function CertificatesTable(): JSX.Element {
           </Link>
         </Button>
       </span>
-
-      <Table<Certificate> columns={columns} data={certificates} />
+      <Table<Certificate> columns={columns} data={dataWithActions} />
     </section>
   );
-}
+};
 
 export default CertificatesTable;

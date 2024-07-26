@@ -9,7 +9,6 @@ import {
   initDB,
   getCertificates,
   addCertificate as addCertificateToDB,
-  Certificate,
   updateCertificate as updateCertificateInDB,
 } from '../data/db';
 import { Certificate } from '../../types/types';

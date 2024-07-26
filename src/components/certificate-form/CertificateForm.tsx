@@ -1,5 +1,5 @@
-import React, { useState, useReducer } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useReducer, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import './FormPage.css';
 import Button from '../button/Button';
 import { useCertificates } from '../../context/CertificateContext';
@@ -32,7 +32,8 @@ const initialState: FormData = {
 
 type FormAction =
   | { type: 'UPDATE_FIELD'; field: string; value: string | File | null }
-  | { type: 'RESET' };
+  | { type: 'RESET' }
+  | { type: 'SET_INITIAL_STATE'; payload: FormData };
 
 const formReducer = (state: FormData, action: FormAction): FormData => {
   switch (action.type) {
@@ -40,6 +41,8 @@ const formReducer = (state: FormData, action: FormAction): FormData => {
       return { ...state, [action.field]: action.value };
     case 'RESET':
       return initialState;
+    case 'SET_INITIAL_STATE':
+      return action.payload;
     default:
       return state;
   }
@@ -52,7 +55,8 @@ enum Options {
 
 const CertificateForm: React.FC = () => {
   const navigate = useNavigate();
-  const { addCertificate } = useCertificates();
+  const { id } = useParams<{ id: string }>();
+  const { addCertificate, certificates, updateCertificate } = useCertificates();
   const [formData, dispatch] = useReducer(formReducer, initialState);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [resetFile, setResetFile] = useState(false);
@@ -61,7 +65,7 @@ const CertificateForm: React.FC = () => {
     if (id) {
       const certificate = certificates.find((cert) => cert.id === parseInt(id));
       if (certificate) {
-        setFormData(certificate);
+        dispatch({ type: 'SET_INITIAL_STATE', payload: certificate });
       }
     }
   }, [id, certificates]);
@@ -83,7 +87,12 @@ const CertificateForm: React.FC = () => {
     const { isValid, errors } = validateForm(formData);
 
     if (isValid) {
-      addCertificate(formData);
+      if (id) {
+        updateCertificate(formData);
+      } else {
+        addCertificate(formData);
+      }
+
       navigate('/example1');
     } else {
       setErrors(errors);
