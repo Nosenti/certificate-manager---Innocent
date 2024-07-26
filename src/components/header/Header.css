@@ -10,7 +10,9 @@
 }
 .user-info {
   align-content: center;
+  margin-right: 3rem;
 }
+
 .user:hover {
   cursor: pointer;
 }

@@ -2,21 +2,26 @@
   border: none;
   border-radius: var(--border-radius-sm);
   box-shadow: var(--shadow-sm);
-  font-size: 1.4rem;
-  padding: 1.2rem 1.6rem;
+  padding: 1rem 1.2rem;
   font-weight: 500;
 }
 
 .button.small {
-  font-size: 1.2rem;
+  font-size: 0.8rem;
   padding: 0.4rem 0.8rem;
-  text-transform: uppercase;
+  font-weight: 600;
+  text-align: center;
+}
+
+.button.medium {
+  font-size: 1rem;
+  padding: 0.5rem 1.5rem;
   font-weight: 600;
   text-align: center;
 }
 
 .button.large {
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   padding: 1.2rem 2.4rem;
   font-weight: 500;
 }
@@ -26,6 +31,7 @@
 .button.sidebar:hover {
   background-color: var(--color-primary);
 }
+
 .button.primary {
   color: var(--color-grey-navy);
   background-color: var(--color-primary);
@@ -35,24 +41,11 @@
   background-color: var(--color-primary-dark);
 }
 
-.button.secondary {
-  color: var(--color-grey-600);
-  background: var(--color-grey-0);
-  border: 1px solid var(--color-grey-200);
-}
-
-.button.secondary:hover {
-  background-color: var(--color-grey-50);
-}
-
 .button.danger {
-  color: var(--color-danger);
-  background-color: var(--color-red-700);
+  color: var(--color-white);
+  background-color: var(--color-danger);
 }
 
-.button.danger:hover {
-  background-color: var(--color-red-800);
-}
 .button:disabled,
 .button.disabled {
   cursor: not-allowed;
@@ -62,7 +55,21 @@
 .button.primary.disabled {
   background-color: var(--primary-color-disabled);
 }
-.button.secondary:disabled,
-.button.secondary.disabled {
-  background-color: var(--secondary-color-disabled);
+
+.button.contained {
+  color: var(--color-white);
+  background-color: var(--color-green-yellow);
+  text-decoration: none;
+}
+
+.button.contained:hover {
+  background-color: var(--color-green-yellow-dark);
+}
+
+.button.tranparent {
+  border: 1px solid var(--color-grey-navy) !important;
+  color: var(--color-white);
+}
+.button.tranparent:hover {
+  background-color: var(--color-grey-navy);
 }

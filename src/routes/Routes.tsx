@@ -5,6 +5,7 @@ import Example from '../components/certificate-table/CertificatesTable';
 import Example2 from '../components/example2/Example2';
 import Example3 from '../components/example3/Example3';
 import NotFound from '../components/not-found/NotFound';
+import FormPage from '../components/certificate-form/CertificateForm';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,14 @@ const router = createBrowserRouter([
       {
         path: '/example3',
         element: <Example3 />,
+      },
+      {
+        path: '/certificates/new',
+        element: <FormPage />,
+      },
+      {
+        path: '/certificates/new',
+        element: <FormPage />,
       },
       {
         path: '*',

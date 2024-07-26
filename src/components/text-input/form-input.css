@@ -1,0 +1,23 @@
+.form-input {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+}
+
+label {
+  margin-bottom: 0.5rem;
+  font-style: italic;
+  font-size: 1rem;
+}
+
+input,
+select,
+button {
+  margin-bottom: 1rem;
+  padding: 0.3rem;
+}
+
+.form-error {
+  color: var(--color-danger);
+  margin-top: -0.1rem;
+}

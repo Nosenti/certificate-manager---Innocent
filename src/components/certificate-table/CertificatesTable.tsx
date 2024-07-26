@@ -1,21 +1,16 @@
 import './certificate-table.css';
-import certificatesData from '../../data/certificates-table';
+import { useCertificates } from '../../context/CertificateContext';
 import Table from '../table/Table';
+import Button from '../button/Button';
+import { Link } from 'react-router-dom';
+import { Certificate } from '../../../types/types';
 
-interface Certificate {
-  id: string;
-  supplier: string;
-  certificateType: string;
-  validFrom: string;
-  validTo: string;
-}
-
-interface Column {
+interface Column<T> {
   Header: string;
-  accessor: keyof Certificate;
+  accessor: keyof T;
 }
 
-const columns: Column[] = [
+const columns: Column<Certificate>[] = [
   { Header: 'Supplier', accessor: 'supplier' },
   { Header: 'Certificate type', accessor: 'certificateType' },
   { Header: 'Valid from', accessor: 'validFrom' },
@@ -30,10 +25,23 @@ const columns: Column[] = [
  */
 
 function CertificatesTable(): JSX.Element {
+  const { certificates } = useCertificates();
+
   return (
     <section className="certificates-table" aria-labelledby="certificatesTitle">
       <h1>Certificates</h1>
-      <Table columns={columns} data={certificatesData} />
+      <span className="new-certificate">
+        <Button variation="contained" size="medium">
+          <Link
+            to="/certificates/new"
+            style={{ color: 'inherit', textDecoration: 'none' }}
+          >
+            Add New Certificate
+          </Link>
+        </Button>
+      </span>
+
+      <Table<Certificate> columns={columns} data={certificates} />
     </section>
   );
 }
