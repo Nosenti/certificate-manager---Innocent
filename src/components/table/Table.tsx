@@ -1,6 +1,5 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode} from 'react';
 import './Table.css';
-import { useNavigate } from 'react-router-dom';
 
 interface TableColumn<T> {
   Header: string;
@@ -19,7 +18,6 @@ function Table<T extends { id: number }>({
   data,
   caption,
 }: TableProps<T>): JSX.Element {
-  const navigate = useNavigate();
 
   if (data.length === 0) {
     return <p>No data available</p>;
@@ -43,7 +41,7 @@ function Table<T extends { id: number }>({
             <tr key={row.id}>
               {columns.map((column) => (
                 <td key={`${row.id}-${String(column.accessor)}`}>
-                  {column.render
+                  {column?.render
                     ? column.render(row[column.accessor], row, rowIndex)
                     : String(row[column.accessor])}
                 </td>
