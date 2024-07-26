@@ -9,15 +9,14 @@ import {
   initDB,
   getCertificates,
   addCertificate as addCertificateToDB,
-  Certificate,
 } from '../data/db';
+import { Certificate } from '../../types/types';
 
 interface CertificatesContextType {
   certificates: Certificate[];
   addCertificate: (certificate: Certificate) => void;
 }
 
-// 1) Create Context
 const CertificateContext = createContext<CertificatesContextType | undefined>(
   undefined,
 );
@@ -37,6 +36,10 @@ function CertificateProvider({ children }: Props) {
         setIsDBReady(status);
         if (status) {
           const storedCertificates = await getCertificates();
+          const updatedCertificates = storedCertificates.map((cert, index) => ({
+            ...cert,
+            id: cert.id ?? Date.now(),
+          }));
           setCertificates(storedCertificates);
         } else {
           console.log('Error: DB not initialized');
@@ -54,11 +57,8 @@ function CertificateProvider({ children }: Props) {
       return;
     }
     try {
-      const certificateWithId = {
-        ...certificate,
-        id: certificate.id ?? Date.now(),
-      };
-      await addCertificateToDB(certificateWithId);
+      certificate.id = Date.now();
+      await addCertificateToDB(certificate);
       const storedCertificates = await getCertificates();
       setCertificates(storedCertificates);
     } catch (error) {
@@ -67,7 +67,6 @@ function CertificateProvider({ children }: Props) {
   };
 
   return (
-    // 2) Provide value to child components
     <CertificateContext.Provider
       value={{
         certificates,

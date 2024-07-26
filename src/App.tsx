@@ -1,6 +1,7 @@
 import { RouterProvider } from 'react-router-dom';
 import './App.css';
 import router from './routes/Routes';
+import { CertificateProvider } from './context/CertificateContext';
 
 /**
  * App - component that serves as the main container of the entire application
@@ -8,7 +9,11 @@ import router from './routes/Routes';
  *
  */
 const App = (): JSX.Element => {
-  return <RouterProvider router={router} />;
+  return (
+    <CertificateProvider>
+      <RouterProvider router={router} />
+    </CertificateProvider>
+  );
 };
 
 export default App;

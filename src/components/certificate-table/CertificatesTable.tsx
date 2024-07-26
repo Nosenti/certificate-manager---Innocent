@@ -3,21 +3,14 @@ import { useCertificates } from '../../context/CertificateContext';
 import Table from '../table/Table';
 import Button from '../button/Button';
 import { Link } from 'react-router-dom';
+import { Certificate } from '../../../types/types';
 
-interface Certificate {
-  id: number;
-  supplier: string;
-  certificateType: string;
-  validFrom: string;
-  validTo: string;
-}
-
-interface Column {
+interface Column<T> {
   Header: string;
-  accessor: keyof Certificate;
+  accessor: keyof T;
 }
 
-const columns: Column[] = [
+const columns: Column<Certificate>[] = [
   { Header: 'Supplier', accessor: 'supplier' },
   { Header: 'Certificate type', accessor: 'certificateType' },
   { Header: 'Valid from', accessor: 'validFrom' },
@@ -48,7 +41,7 @@ function CertificatesTable(): JSX.Element {
         </Button>
       </span>
 
-      <Table columns={columns} data={certificates} />
+      <Table<Certificate> columns={columns} data={certificates} />
     </section>
   );
 }

@@ -1,14 +1,6 @@
+import { Certificate } from '../../types/types';
 let db: IDBDatabase | null = null;
 const version = 1;
-
-export interface Certificate {
-  id?: number;
-  supplier: string;
-  certificateType: string;
-  validFrom: string;
-  validTo: string;
-  pdf: File | null;
-}
 
 export enum Stores {
   Certificates = 'certificates',
@@ -80,7 +72,7 @@ export const addCertificate = async (
   }
   return new Promise((resolve, reject) => {
     if (!db) {
-      console.log("database not properly initialized");
+      console.log('database not properly initialized');
       return;
     }
     const transaction = db.transaction([Stores.Certificates], 'readwrite');

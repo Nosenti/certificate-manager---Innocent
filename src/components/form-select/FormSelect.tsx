@@ -1,12 +1,19 @@
 import { FC } from 'react';
 import './form-select.css';
 
+interface Option {
+  value: string;
+  label: string;
+}
+
 interface FormSelectProps {
   label: string;
   name: string;
   value: string;
-  error: string;
-  options: { value: string; label: string }[];
+  error?: string;
+  required?: boolean;
+  options: Option[];
+  defaultOptionLabel?: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
@@ -16,14 +23,25 @@ const FormSelect: FC<FormSelectProps> = ({
   value,
   options,
   error,
+  required = false,
+  defaultOptionLabel = 'Select an option',
   onChange,
 }) => {
+  const id = `select-${name}`;
+
   return (
     <>
-      <label className="form-input">
+      <label htmlFor={id} className="form-input">
         <span>{label}:</span>
-        <select name={name} value={value} onChange={onChange}>
-          <option value="">Select type</option>
+        <select
+          id={id}
+          name={name}
+          value={value}
+          onChange={onChange}
+          required={required}
+          aria-invalid={error ? 'true' : 'false'}
+        >
+          <option value="">{defaultOptionLabel}</option>
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}

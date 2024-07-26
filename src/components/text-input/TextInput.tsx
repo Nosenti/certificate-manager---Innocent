@@ -1,17 +1,15 @@
 import { FC } from 'react';
 import './form-input.css';
 
-interface FormInputProps {
+interface TextInputProps {
   label: string;
-  type: string;
   name: string;
   value: string;
   error?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
-const FormInput: FC<FormInputProps> = ({
+const TextInput: FC<TextInputProps> = ({
   label,
-  type,
   name,
   value,
   error,
@@ -21,7 +19,7 @@ const FormInput: FC<FormInputProps> = ({
     <>
       <label className="form-input">
         <span>{label}:</span>
-        <input type={type} name={name} value={value} onChange={onChange} />
+        <input type="text" name={name} value={value} onChange={onChange} />
         <span className="form-error">
           {error && <p className="error">{error}</p>}
         </span>
@@ -30,4 +28,4 @@ const FormInput: FC<FormInputProps> = ({
   );
 };
 
-export default FormInput;
+export default TextInput;
