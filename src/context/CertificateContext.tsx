@@ -10,6 +10,7 @@ import {
   getCertificates,
   addCertificate as addCertificateToDB,
   updateCertificate as updateCertificateInDB,
+  deleteCertificate as deleteCertificateFromDB
 } from '../data/db';
 import { Certificate } from '../../types/types';
 
@@ -91,6 +92,7 @@ function CertificateProvider({ children }: Props) {
         certificates,
         addCertificate,
         updateCertificate,
+        deleteCertificate
       }}
     >
       {children}

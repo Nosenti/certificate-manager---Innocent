@@ -18,7 +18,7 @@ interface Certificate extends BaseCertificate {
 }
 
 const CertificatesTable: React.FC = () => {
-  const { certificates } = useCertificates();
+  const { certificates, deleteCertificate } = useCertificates();
   const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState<number | null>(null);
 
