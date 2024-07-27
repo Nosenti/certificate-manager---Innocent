@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { FC, memo } from 'react';
 
 interface PDFPreviewProps {
   file: File | null;
 }
 
-const PDFPreview: React.FC<PDFPreviewProps> = ({ file }) => {
+const PDFPreview: FC<PDFPreviewProps> = memo(({ file }) => {
   return (
     <div className="prev">
       {file && (
@@ -17,6 +17,6 @@ const PDFPreview: React.FC<PDFPreviewProps> = ({ file }) => {
       )}
     </div>
   );
-};
+});
 
 export default PDFPreview;

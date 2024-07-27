@@ -5,12 +5,12 @@ import Button from '../button/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import { Certificate as BaseCertificate } from '../../../types/types';
 import CogIcon from '../../../public/assets/cog.svg';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Column<T> {
   Header: string;
   accessor: keyof T;
-  render?: (value: T[keyof T], row: T, rowIndex: number) => React.ReactNode;
+  render?: (row: T, rowIndex: number) => React.ReactNode;
 }
 
 interface Certificate extends BaseCertificate {
@@ -21,6 +21,7 @@ const CertificatesTable: React.FC = () => {
   const { certificates } = useCertificates();
   const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState<number | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   const handleEdit = (id: number) => {
     navigate(`/certificates/edit/${id}`);
@@ -30,14 +31,28 @@ const CertificatesTable: React.FC = () => {
     setDropdownVisible(dropdownVisible === index ? null : index);
   };
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      setDropdownVisible(null);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const columns: Column<Certificate>[] = [
     {
       Header: ' ',
       accessor: 'actions',
-      render: (_, row, rowIndex) => (
+      render: (row, rowIndex) => (
         <div
           className="cog-container"
           onClick={() => handleDropdownToggle(rowIndex)}
+          ref={ dropdownRef}
         >
           <CogIcon />
           {dropdownVisible === rowIndex && (
@@ -59,7 +74,7 @@ const CertificatesTable: React.FC = () => {
 
   const dataWithActions = certificates.map((cert) => ({
     ...cert,
-    actions: null, // This will be replaced by the `render` function in columns
+    actions: null,
   }));
 
   return (
@@ -68,7 +83,7 @@ const CertificatesTable: React.FC = () => {
       <span className="new-certificate">
         <Button variation="contained" size="medium">
           <Link
-            to="/certificates/new"
+            to="/new-certificate"
             style={{ color: 'inherit', textDecoration: 'none' }}
           >
             Add New Certificate

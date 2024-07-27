@@ -8,9 +8,14 @@
   align-self: center;
   padding-right: 1rem;
 }
+
+.user{
+  color: var(--color-grey-dark);
+}
 .user-info {
   align-content: center;
   margin-right: 3rem;
+  color: var(--color-grey-dark);
 }
 
 .user:hover {

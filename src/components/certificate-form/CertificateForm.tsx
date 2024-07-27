@@ -8,6 +8,7 @@ import DateInput from '../date-input/DateInput';
 import FormSelect from '../form-select/FormSelect';
 import FileUpload from '../file-upload/FileUpload';
 import PDFPreview from '../pdf-preview/PDFPreview';
+import ResetModal from '../reset-modal/ResetModal';
 import SearchIcon from '../../../public/assets/search.svg';
 import RemoveIcon from '../../../public/assets/close-small.svg';
 import { validateForm } from '../../utils/validation';
@@ -60,6 +61,7 @@ const CertificateForm: React.FC = () => {
   const [formData, dispatch] = useReducer(formReducer, initialState);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [resetFile, setResetFile] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -70,41 +72,54 @@ const CertificateForm: React.FC = () => {
     }
   }, [id, certificates]);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    dispatch({ type: 'UPDATE_FIELD', field: name, value });
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files ? e.target.files[0] : null;
-    dispatch({ type: 'UPDATE_FIELD', field: 'pdf', value: file });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const { isValid, errors } = validateForm(formData);
-
-    if (isValid) {
-      if (id) {
-        updateCertificate(formData);
-      } else {
-        addCertificate(formData);
-      }
-
-      navigate('/example1');
-    } else {
-      setErrors(errors);
+  const handleInputChange = 
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name, value } = e.target;
+      dispatch({ type: 'UPDATE_FIELD', field: name, value });
     }
-  };
+  ;
 
-  const handleReset = () => {
+  const handleFileChange =
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files ? e.target.files[0] : null;
+      dispatch({ type: 'UPDATE_FIELD', field: 'pdf', value: file });
+    };
+
+  const handleSubmit = 
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      const { isValid, errors } = validateForm(formData);
+
+      if (isValid) {
+        if (id) {
+          updateCertificate(formData);
+        } else {
+          addCertificate(formData);
+        }
+
+        navigate('/certificates');
+      } else {
+        setErrors(errors);
+      }
+    }
+
+  const handleResetConfirm = () => {
     dispatch({ type: 'RESET' });
     setErrors({});
     setResetFile(true);
     setTimeout(() => setResetFile(false), 0);
+    setShowModal(false);
   };
+
+  const handleReset = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal =() => {
+    setShowModal(false);
+  };
+
+  
 
   return (
     <section className="form-page">
@@ -173,6 +188,13 @@ const CertificateForm: React.FC = () => {
           </div>
         </div>
       </form>
+      <ResetModal
+        show={showModal}
+        title="Confirm Reset"
+        message="Are you sure you want to reset the form?"
+        onConfirm={handleResetConfirm}
+        onCancel={handleCloseModal}
+      />
     </section>
   );
 };

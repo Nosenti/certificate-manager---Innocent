@@ -18,7 +18,7 @@
 }
 
 .dropdown-menu {
-  display: none; /* Hide by default */
+  display: none;
   flex-direction: column;
   position: absolute;
   top: 20px;
@@ -31,7 +31,7 @@
 
 .cog-container:hover .dropdown-menu,
 .cog-container .dropdown-menu {
-  display: flex; /* Show on hover or when active */
+  display: flex;
 }
 
 .dropdown-menu button {
@@ -43,5 +43,11 @@
 }
 
 .dropdown-menu button:hover {
-  background-color: #f0f0f0;
+  background-color: var(--color-grey-hover);
+}
+
+@media (max-width: 768px) {
+  .certificates-table {
+    margin: 1rem 1rem 0 1rem;
+  }
 }

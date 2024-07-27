@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import './form-input.css';
 
 interface TextInputProps {
@@ -8,7 +8,7 @@ interface TextInputProps {
   error?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
-const TextInput: FC<TextInputProps> = ({
+const TextInput: FC<TextInputProps> = memo(({
   label,
   name,
   value,
@@ -26,6 +26,6 @@ const TextInput: FC<TextInputProps> = ({
       </label>
     </>
   );
-};
+});
 
 export default TextInput;

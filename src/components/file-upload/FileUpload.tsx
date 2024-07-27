@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { ChangeEvent, FC, memo, useEffect, useState } from 'react';
 import Button from '../button/Button';
 import './file-upload.css';
 
@@ -7,7 +7,7 @@ interface FileUploadProps {
   resetFile: boolean;
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ onFileChange, resetFile }) => {
+const FileUpload: FC<FileUploadProps> = memo(({ onFileChange, resetFile }) => {
   const [fileName, setFileName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,7 +19,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileChange, resetFile }) => {
     }
   }, [resetFile]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {
       if (file.type !== 'application/pdf') {
@@ -60,6 +60,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileChange, resetFile }) => {
       {error && <p className="error-message">{error}</p>}
     </div>
   );
-};
+});
 
 export default FileUpload;

@@ -6,9 +6,9 @@ interface StartProps {
 }
 /**
  * Start - Placeholder component
- * Description - Placeholder for the Start page
+ * Description - Placeholder for the Home page
  */
-const Start: FC<StartProps> = ({ title = 'Start' }) => {
+const Start: FC<StartProps> = ({ title = 'Home' }) => {
   return (
     <div className="start-text">
       <h1>{title}</h1>

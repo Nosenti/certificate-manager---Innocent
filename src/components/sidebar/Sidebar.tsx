@@ -32,16 +32,12 @@ const Sidebar: FC<SidebarProps> = ({ closeSidebar }) => {
 
   const navItems: NavItemType[] = [
     {
-      path: '/example1',
-      name: 'Example 1',
+      path: '/certificates',
+      name: 'All Certificates',
     },
     {
-      path: '/example2',
-      name: 'Example 2',
-    },
-    {
-      path: '/example3',
-      name: 'Example 3',
+      path: '/new-certificate',
+      name: 'New Certificate',
     },
   ];
 
@@ -59,13 +55,13 @@ const Sidebar: FC<SidebarProps> = ({ closeSidebar }) => {
             }}
             isActive={location.pathname === '/'}
           >
-            Start
+            Home
           </NavItem>
           <ExpandableSection
-            title="Machine Learning"
+            title="Certificates Action"
             icon={<MLIcon />}
-            initialSelected="/example1"
-            isActive={activeSection === 'ml'}
+            initialSelected="/certificates"
+            isActive={activeSection === 'certificates'}
             onToggle={() => handleSectionToggle('ml')}
           >
             {navItems.map((item) => (
@@ -73,7 +69,7 @@ const Sidebar: FC<SidebarProps> = ({ closeSidebar }) => {
                 key={item.path}
                 to={item.path}
                 onClick={closeSidebar}
-                isActive={location.pathname === item.path}
+                isActive={location.pathname.startsWith(item.path)}
               >
                 {item.name}
               </NavItem>

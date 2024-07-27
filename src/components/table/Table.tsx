@@ -4,7 +4,7 @@ import './Table.css';
 interface TableColumn<T> {
   Header: string;
   accessor: keyof T;
-  render?: (value: T[keyof T], row: T, rowIndex: number) => ReactNode;
+  render?: (row: T, rowIndex: number) => ReactNode;
 }
 
 interface TableProps<T extends { id: number }> {
@@ -42,7 +42,7 @@ function Table<T extends { id: number }>({
               {columns.map((column) => (
                 <td key={`${row.id}-${String(column.accessor)}`}>
                   {column?.render
-                    ? column.render(row[column.accessor], row, rowIndex)
+                    ? column.render(row, rowIndex)
                     : String(row[column.accessor])}
                 </td>
               ))}
