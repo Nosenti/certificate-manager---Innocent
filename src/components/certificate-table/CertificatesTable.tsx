@@ -94,6 +94,7 @@ const CertificatesTable: React.FC = () => {
             to="/new-certificate"
             style={{ color: 'inherit', textDecoration: 'none' }}
           >
+            {t.addNewCertificate}
             {t.newCertificate}
           </Link>
         </Button>
