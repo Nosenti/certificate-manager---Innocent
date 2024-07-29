@@ -1,17 +1,20 @@
-import { Certificate } from '../../types/types';
+import { Certificate, Supplier } from '../../types/types';
+
 let db: IDBDatabase | null = null;
 const version = 1;
 
 export enum Stores {
   Certificates = 'certificates',
+  Suppliers = 'suppliers',
 }
 
 export const initDB = async (): Promise<boolean> => {
   try {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(Stores.Certificates, version);
+      const request = indexedDB.open('CertificatesManagerDB', version);
 
       request.onupgradeneeded = () => {
+        console.log('db: ', db);
         db = request.result;
         console.log('Upgrading or initializing database', db);
 
@@ -22,8 +25,44 @@ export const initDB = async (): Promise<boolean> => {
             autoIncrement: true,
           });
         }
+
+        if (!db.objectStoreNames.contains(Stores.Suppliers)) {
+          console.log('Creating suppliers store');
+          const supplierStore = db.createObjectStore(Stores.Suppliers, {
+            keyPath: 'id',
+            autoIncrement: true,
+          });
+          
+          supplierStore.transaction.oncomplete = () => {
+            const supplierTransaction = db!.transaction(
+              [Stores.Suppliers],
+              'readwrite',
+            );
+            const supplierStoreTransaction = supplierTransaction.objectStore(
+              Stores.Suppliers,
+            );
+
+            const suppliers: Supplier[] = [
+              {
+                id: 1,
+                supplierName: 'ANDEMIS GmbH',
+                supplierIndex: '1',
+                city: 'Stuttgart',
+              },
+              {
+                id: 2,
+                supplierName: 'IMLER AG',
+                supplierIndex: '2',
+                city: 'Berlin',
+              },
+            ];
+            suppliers.forEach((supplier) => {
+              supplierStoreTransaction.add(supplier);
+            });
+          };
+        }
       };
-      console.log('request: ', request);
+
       request.onsuccess = () => {
         db = request.result;
         console.log('request.onsuccess - initDB', db.version);
@@ -42,14 +81,15 @@ export const initDB = async (): Promise<boolean> => {
 };
 
 export const getCertificates = async (): Promise<Certificate[]> => {
-  if (!db) {
-    throw new Error('DB is not initialized');
-  }
+  
 
   return new Promise((resolve, reject) => {
-    const transaction = db?.transaction([Stores.Certificates], 'readonly');
-    const store = transaction?.objectStore(Stores.Certificates);
-    const request = store?.getAll();
+    if (!db) {
+      throw new Error('DB is not initialized');
+    }
+    const transaction = db.transaction([Stores.Certificates], 'readonly');
+    const store = transaction.objectStore(Stores.Certificates);
+    const request = store.getAll();
     if (!request) {
       console.log('Request error');
       return;
@@ -67,13 +107,10 @@ export const getCertificates = async (): Promise<Certificate[]> => {
 export const addCertificate = async (
   certificate: Certificate,
 ): Promise<void> => {
-  if (!db) {
-    throw new Error('DB is not initialized');
-  }
+  
   return new Promise((resolve, reject) => {
     if (!db) {
-      console.log('database not properly initialized');
-      return;
+      throw new Error('DB is not initialized');
     }
     const transaction = db.transaction([Stores.Certificates], 'readwrite');
     const store = transaction.objectStore(Stores.Certificates);
@@ -123,6 +160,48 @@ export const deleteCertificate = async (id: number): Promise<void> => {
 
     request.onsuccess = () => {
       resolve();
+    };
+
+    request.onerror = () => {
+      reject(request.error);
+    };
+  });
+};
+
+export const getSuppliers = async (
+  supplierName?: string,
+  supplierIndex?: string,
+  city?: string,
+): Promise<Supplier[]> => {
+
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject('DB is not initialized');
+      return;
+    }
+    const transaction = db.transaction([Stores.Suppliers], 'readonly');
+    const store = transaction.objectStore(Stores.Suppliers);
+    const request = store.getAll();
+    if (!request) {
+      console.log('Request error');
+      return;
+    }
+    request.onsuccess = () => {
+      let suppliers = request.result;
+      console.log("sup: ", suppliers);
+      if (supplierName)
+        suppliers = suppliers.filter((supplier) =>
+          supplier.supplierName.includes(supplierName),
+        );
+      if (supplierIndex)
+        suppliers = suppliers.filter((supplier) =>
+          supplier.supplierIndex.includes(supplierIndex),
+        );
+      if (city)
+        suppliers = suppliers.filter((supplier) =>
+          supplier.city.includes(city),
+        );
+      resolve(suppliers);
     };
 
     request.onerror = () => {

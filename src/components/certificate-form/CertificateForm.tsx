@@ -9,6 +9,7 @@ import FormSelect from '../form-select/FormSelect';
 import FileUpload from '../file-upload/FileUpload';
 import PDFPreview from '../pdf-preview/PDFPreview';
 import ResetModal from '../modal/Modal';
+import SupplierLookup from '../supplier-lookup/SupplierLookup';
 import SearchIcon from '../../../public/assets/search.svg';
 import RemoveIcon from '../../../public/assets/close-small.svg';
 import { validateForm } from '../../utils/validation';
@@ -66,6 +67,7 @@ const CertificateForm: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
   const [certificateToDelete, setCertificateToDelete] = useState<number | null>(null);
+  const [showSupplierLookup, setShowSupplierLookup] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -80,8 +82,7 @@ const CertificateForm: React.FC = () => {
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { name, value } = e.target;
       dispatch({ type: 'UPDATE_FIELD', field: name, value });
-    }
-  ;
+    };
 
   const handleFileChange =
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,7 +109,7 @@ const CertificateForm: React.FC = () => {
       } else {
         setErrors(errors);
       }
-    }
+    };
 
   const handleResetConfirm = () => {
     dispatch({ type: 'RESET' });
@@ -122,7 +123,7 @@ const CertificateForm: React.FC = () => {
     setShowModal(true);
   };
 
-  const handleCloseModal =() => {
+  const handleCloseModal = () => {
     setShowModal(false);
   };
 
@@ -141,10 +142,10 @@ const CertificateForm: React.FC = () => {
               value={formData.supplier}
               onChange={handleInputChange}
             />
-            <span className="form-btn">
+            <span className="form-btn" onClick={() => setShowSupplierLookup(true)}>
               <SearchIcon />
             </span>
-            <span className="form-btn">
+            <span className="form-btn" onClick={() => dispatch({ type: 'UPDATE_FIELD', field: 'supplier', value: '' })}>
               <RemoveIcon />
             </span>
           </div>
@@ -209,6 +210,11 @@ const CertificateForm: React.FC = () => {
         message="Are you sure you want to reset the form?"
         onConfirm={handleResetConfirm}
         onCancel={handleCloseModal}
+      />
+      <SupplierLookup
+        show={showSupplierLookup}
+        onClose={() => setShowSupplierLookup(false)}
+        onSelect={handleSupplierSelect}
       />
     </section>
   );
