@@ -80,3 +80,10 @@ export interface Locales {
   en: Locale;
   de: Locale;
 }
+
+export interface Supplier {
+  id: number;
+  supplierName: string;
+  supplierIndex: string;
+  city: string
+}
