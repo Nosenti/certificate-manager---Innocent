@@ -218,6 +218,7 @@ const CertificateForm: React.FC = () => {
 
   return (
     <section className="form-page">
+      <h1>{id ? t.editCertificate : t.newCertificate}</h1>
       <form onSubmit={handleSubmit} className="certificate-form">
         <div className="form-left">
           <div className="supplier-form-input">
