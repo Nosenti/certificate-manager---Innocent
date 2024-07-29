@@ -8,6 +8,12 @@ import Table from '../table/Table';
 import TextInput from '../text-input/TextInput';
 import SupplierRowSelect from '../supplier-row-select/SupplierRowSelect';
 import CaretDown from '../../../public/assets/caret-down.svg';
+import { useLanguage } from '../../context/LanguageContext';
+import en from '../../locales/en.json';
+import de from '../../locales/de.json';
+import { Locales } from '../../../types/types';
+
+const locales: Locales = { en, de };
 
 interface SupplierLookupProps {
   show: boolean;
@@ -26,20 +32,12 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
     city: '',
   });
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
-  const [filteredSuppliers, setFilteredSuppliers] = useState<Supplier[]>([]);
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(
     null,
   );
+  const { language } = useLanguage();
 
-  useEffect(() => {
-    const fetchSuppliers = async () => {
-      const results = await getSuppliers();
-      setSuppliers(results);
-      setFilteredSuppliers(results);
-    };
-
-    fetchSuppliers();
-  }, [filters]);
+  const t = locales[language as keyof Locales];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -124,7 +122,7 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
               Search
             </Button>
             <Button size="medium" variation="transparent" onClick={handleReset}>
-              Reset
+              {t.reset}
             </Button>
           </div>
         </div>
@@ -159,10 +157,10 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
             onClick={handleSelectClick}
             disabled={!selectedSupplier}
           >
-            Select
+            {t.select}
           </Button>
           <Button size="medium" variation="transparent" onClick={onClose}>
-            Cancel
+            {t.cancel}
           </Button>
         </div>
       </div>

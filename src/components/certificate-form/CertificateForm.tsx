@@ -73,6 +73,7 @@ const CertificateForm: React.FC = () => {
   );
   const [selectedSupplier, setSelectedSupplier] = useState<string | null>(null);
   const [showSupplierLookup, setShowSupplierLookup] = useState(false);
+  const { language } = useLanguage();
 
   useEffect(() => {
     if (id) {
@@ -83,6 +84,14 @@ const CertificateForm: React.FC = () => {
     }
   }, [id, certificates]);
 
+  const t = locales[language as keyof Locales];
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+    dispatch({ type: 'UPDATE_FIELD', field: name, value });
+  };
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
@@ -157,11 +166,12 @@ const CertificateForm: React.FC = () => {
 
   return (
     <section className="form-page">
+      <h1>{id ? t.editCertificate : t.newCertificate}</h1>
       <form onSubmit={handleSubmit} className="certificate-form">
         <div className="form-left">
           <div className="supplier-form-input">
             <TextInput
-              label="Supplier"
+              label={t.supplier}
               name="supplier"
               value={formData.supplier}
               onChange={handleInputChange}
@@ -183,7 +193,7 @@ const CertificateForm: React.FC = () => {
           </div>
 
           <FormSelect
-            label="Certificate type"
+            label={t.certificateType}
             name="certificateType"
             value={formData.certificateType}
             error={errors.certificateType}
@@ -197,14 +207,14 @@ const CertificateForm: React.FC = () => {
             ]}
           />
           <DateInput
-            label="Valid from"
+            label={t.validFrom}
             name="validFrom"
             value={formData.validFrom}
             onChange={handleInputChange}
             error={errors.validFrom}
           />
           <DateInput
-            label="Valid to"
+            label={t.validTo}
             name="validTo"
             value={formData.validTo}
             onChange={handleInputChange}

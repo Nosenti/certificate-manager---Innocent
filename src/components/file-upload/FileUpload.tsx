@@ -1,6 +1,12 @@
 import { ChangeEvent, FC, memo, useEffect, useState } from 'react';
 import Button from '../button/Button';
 import './file-upload.css';
+import en from '../../locales/en.json';
+import de from '../../locales/de.json';
+import { Locales } from '../../../types/types';
+import { useLanguage } from '../../context/LanguageContext';
+
+const locales: Locales = { en, de };
 
 interface FileUploadProps {
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -9,10 +15,12 @@ interface FileUploadProps {
   file: File | null;
 }
 
-const FileUpload: FC<FileUploadProps> = memo(
-  ({ onFileChange, resetFile, onFileRemove, file }) => {
-    const [fileName, setFileName] = useState<string | null>(null);
-    const [error, setError] = useState<string | null>(null);
+const FileUpload: FC<FileUploadProps> = memo(({ onFileChange, resetFile, onFileRemove, file }) => {
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { language } = useLanguage();
+
+  const t = locales[language as keyof Locales];
 
     useEffect(() => {
       if (resetFile) {
