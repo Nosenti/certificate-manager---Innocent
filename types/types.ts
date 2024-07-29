@@ -43,8 +43,11 @@ export interface Locale {
   supplierIndex: string;
   city: string;
   searchForSuppliers: string;
+<<<<<<< HEAD
   update: string;
   remove: string;
+=======
+>>>>>>> 18c6991 (task7-KAN-38 rebase 3/6)
 }
 
 export interface Locales {
