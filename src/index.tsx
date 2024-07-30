@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import { LanguageProvider } from './context/LanguageContext';
 import { UserProvider } from './context/UserContext';
+import { CommentProvider } from './context/CommentContext';
 
 const container: HTMLElement | null = document.getElementById('root');
 
@@ -15,7 +16,9 @@ if (container) {
     <StrictMode>
       <LanguageProvider>
         <UserProvider>
-          <App />
+          <CommentProvider>
+            <App />
+            </CommentProvider>
           </UserProvider>
       </LanguageProvider>
       

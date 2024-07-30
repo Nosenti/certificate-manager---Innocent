@@ -20,6 +20,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { addSupplier, getSuppliers } from '../../data/db';
 import { Supplier } from '../../../types/types';
 import Table, { Column } from '../table/Table';
+import CommentSection from '../comment-section/CommentSection';
 
 interface FormData {
   id: number;
@@ -335,6 +336,7 @@ const CertificateForm: React.FC = () => {
         onClose={() => setShowParticipantLookup(false)}
         onSelect={handleParticipantSelect}
       />
+      <CommentSection/>
     </section>
   );
 };
