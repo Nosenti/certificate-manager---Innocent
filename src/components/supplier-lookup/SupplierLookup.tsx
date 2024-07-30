@@ -94,23 +94,23 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
             <span className='search-criteria-title-caret'>
               <CaretDown />
             </span>
-            Search Criteria
+            {t.searchCriteria}
           </div>
           <div className="search-inputs">
             <TextInput
-              label="Supplier name"
+              label={t.supplierName}
               name="supplierName"
               value={filters.supplierName}
               onChange={handleInputChange}
             />
             <TextInput
-              label="Supplier index"
+              label={t.supplierIndex}
               name="supplierIndex"
               value={filters.supplierIndex}
               onChange={handleInputChange}
             />
             <TextInput
-              label="City"
+              label={t.city}
               name="city"
               value={filters.city}
               onChange={handleInputChange}
@@ -119,7 +119,7 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
 
           <div className="supplier-btns">
             <Button size="medium" onClick={handleSearch}>
-              Search
+              {t.search}
             </Button>
             <Button size="medium" variation="transparent" onClick={handleReset}>
               {t.reset}
@@ -131,7 +131,7 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
             <span className='search-criteria-title-caret'>
               <CaretDown />
             </span>
-            Supplier list
+            {t.supplierList}
           </div>
           {filteredSuppliers.length > 0 ? (
             <Table<Supplier>

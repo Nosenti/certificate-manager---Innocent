@@ -40,3 +40,6 @@
   align-items: center;
   gap: 10px;
 }
+.language-info-dropdown select{
+  border: 2px solid var(--color-grey-navy);
+}
