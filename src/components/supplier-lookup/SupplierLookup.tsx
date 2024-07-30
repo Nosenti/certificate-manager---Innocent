@@ -6,6 +6,7 @@ import Modal from '../modal/Modal';
 import Button from '../button/Button';
 import Table from '../table/Table';
 import TextInput from '../text-input/TextInput';
+import CaretDown from '../../../public/assets/caret-down.svg';
 
 interface SupplierLookupProps {
   show: boolean;
@@ -75,7 +76,10 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
     <Modal show={show} title="Search for suppliers" onClose={onClose}>
       <div className="supplier-lookup">
         <div className="search-criteria">
-          <div className="search-criteria-title">Search Criteria</div>
+          <div className="search-criteria-title">
+            <span><CaretDown/></span>
+            Search Criteria
+          </div>
           <div className="search-inputs">
             <TextInput
               label="Supplier name"
@@ -111,7 +115,10 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
           </div>
         </div>
         <div className="supplier-list">
-          <div className="search-criteria-title">Supplier list</div>
+          <div className="search-criteria-title">
+            <span><CaretDown/></span>
+            Supplier list
+          </div>
           {suppliers.length > 0 ? (
             <Table<Supplier>
               columns={columns}
