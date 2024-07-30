@@ -10,6 +10,7 @@ import FileUpload from '../file-upload/FileUpload';
 import PDFPreview from '../pdf-preview/PDFPreview';
 import ResetModal from '../confirm-modal/ConfirmModal';
 import SupplierLookup from '../supplier-lookup/SupplierLookup';
+import ParticipantLookup from '../participant-lookup/ParticipantLookup';
 import SearchIcon from '../../../public/assets/search.svg';
 import RemoveIcon from '../../../public/assets/close-small.svg';
 import { validateForm } from '../../utils/validation';
@@ -25,6 +26,7 @@ interface FormData {
   validFrom: string;
   validTo: string;
   pdf: File | null;
+  assignedUsers: { name: string, department: string; email: string }[];
 }
 
 const initialState: FormData = {
@@ -34,12 +36,15 @@ const initialState: FormData = {
   validFrom: '',
   validTo: '',
   pdf: null,
+  assignedUsers: [],
 };
 
 type FormAction =
   | { type: 'UPDATE_FIELD'; field: string; value: string | File | null }
   | { type: 'RESET' }
-  | { type: 'SET_INITIAL_STATE'; payload: FormData };
+  | { type: 'SET_INITIAL_STATE'; payload: FormData }
+  | { type: 'ADD_ASSIGNED_USERS'; users: { name: string; department: string; email: string }[] }
+  | { type: 'REMOVE_ASSIGNED_USER'; index: number };
 
 const formReducer = (state: FormData, action: FormAction): FormData => {
   switch (action.type) {
@@ -49,6 +54,11 @@ const formReducer = (state: FormData, action: FormAction): FormData => {
       return initialState;
     case 'SET_INITIAL_STATE':
       return action.payload;
+    case 'ADD_ASSIGNED_USERS':
+      return { ...state, assignedUsers: [...state.assignedUsers, ...action.users] };
+    case 'REMOVE_ASSIGNED_USER':
+      const assignedUsers = state.assignedUsers.filter((_, i) => i !== action.index);
+      return { ...state, assignedUsers };
     default:
       return state;
   }
@@ -70,7 +80,8 @@ const CertificateForm: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState<string | null>(null);
   const [showSupplierLookup, setShowSupplierLookup] = useState(false);
-  const {  t } = useLanguage();
+  const [showParticipantLookup, setShowParticipantLookup] = useState(false);
+  const { language } = useLanguage();
 
   useEffect(() => {
     if (id) {
@@ -152,6 +163,15 @@ const CertificateForm: React.FC = () => {
     setShowSupplierLookup(false);
   };
 
+  const handleParticipantSelect = (participants: { name: string; department: string; email: string }[]) => {
+    dispatch({ type: 'ADD_ASSIGNED_USERS', users: participants });
+    setShowParticipantLookup(false); // Hide the modal after selection
+  };
+
+  const handleRemoveAssignedUser = (index: number) => {
+    dispatch({ type: 'REMOVE_ASSIGNED_USER', index });
+  };
+
   return (
     <section className="form-page">
       <form onSubmit={handleSubmit} className="certificate-form">
@@ -199,6 +219,35 @@ const CertificateForm: React.FC = () => {
             onChange={handleInputChange}
             error={errors.validTo}
           />
+          <div className='assigned-users'>
+            <label>Assigned users</label>
+            <Button variation='contained' size='medium' onClick={()=> setShowParticipantLookup(true)}>Add participant</Button>
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Department</th>
+                  <th>E-mail</th>
+                  <th>Remove</th>
+                </tr>
+              </thead>
+              <tbody>
+                {formData?.assignedUsers?.map((user, index) => (
+                  <tr key={index}>
+                    <td>{user.name}</td>
+                    <td>{user.department}</td>
+                    <td>{user.email}</td>
+                    <td>
+                      <button type="button" onClick={() => handleRemoveAssignedUser(index)}>
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          
         </div>
         <div className="form-right">
           <div className="upload-actions">
@@ -240,6 +289,11 @@ const CertificateForm: React.FC = () => {
         show={showSupplierLookup}
         onClose={() => setShowSupplierLookup(false)}
         onSelect={handleSupplierSelect}
+      />
+      <ParticipantLookup
+        show={showParticipantLookup}
+        onClose={() => setShowParticipantLookup(false)}
+        onSelect={handleParticipantSelect}
       />
     </section>
   );
