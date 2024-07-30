@@ -88,6 +88,16 @@ export interface Supplier {
   city: string
 }
 
+export interface Participant {
+  id: number;
+  name: string;
+  firstName: string;
+  userID: string;
+  department: string;
+  plant: string;
+  email: string;
+}
+
 export interface Locale {
   language: string;
   english: string;

@@ -15,7 +15,6 @@ export const initDB = async (): Promise<boolean> => {
       const request = indexedDB.open('CertificatesManagerDB', version);
 
       request.onupgradeneeded = () => {
-        console.log('db: ', db);
         db = request.result;
         console.log('Upgrading or initializing database', db);
 
