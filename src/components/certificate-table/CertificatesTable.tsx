@@ -1,16 +1,16 @@
 import './certificate-table.css';
 import { useCertificates } from '../../context/CertificateContext';
+import useClickOutside from '../../hooks/useClickOutside';
 import Table from '../table/Table';
 import Button from '../button/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import { Certificate as BaseCertificate } from '../../../types/types';
-import CogIcon from '../../../public/assets/cog.svg';
-import { useEffect, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
+import ActionMenu from '../action-menu/ActionMenu';
 
-interface Column<T> {
-  Header: string;
-  accessor: keyof T;
-  render?: (row: T, rowIndex: number) => React.ReactNode;
+interface Column {
+  header: string;
+  accessor: keyof Certificate;
 }
 
 interface Certificate extends BaseCertificate {
@@ -21,65 +21,37 @@ const CertificatesTable: React.FC = () => {
   const { certificates } = useCertificates();
   const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState<number | null>(null);
-  const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   const handleEdit = (id: number) => {
-    navigate(`/certificates/edit/${id}`);
+   id && navigate(`/certificates/edit/${id}`);
+  };
+  const handleDelete = (id: number) => {
+    console.log('Delete to be implemented in the next task');
   };
 
   const handleDropdownToggle = (index: number) => {
     setDropdownVisible(dropdownVisible === index ? null : index);
   };
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-      setDropdownVisible(null);
-    }
+  const handleClickOutside = () => {
+    setDropdownVisible(null);
   };
+  const dropdownRef = useClickOutside<HTMLDivElement>(handleClickOutside);
 
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  const columns: Column[] = useMemo(() =>[
+    { header: 'Supplier', accessor: 'supplier' },
+    { header: 'Certificate type', accessor: 'certificateType' },
+    { header: 'Valid from', accessor: 'validFrom' },
+    { header: 'Valid to', accessor: 'validTo' },
+  ], [handleDelete, handleEdit]);
 
-  const columns: Column<Certificate>[] = [
-    {
-      Header: ' ',
-      accessor: 'actions',
-      render: (row, rowIndex) => (
-        <div
-          className="cog-container"
-          onClick={() => handleDropdownToggle(rowIndex)}
-          ref={ dropdownRef}
-        >
-          <CogIcon />
-          {dropdownVisible === rowIndex && (
-            <div className="dropdown-menu">
-              <button onClick={() => handleEdit(row.id)}>Edit</button>
-              <button onClick={() => console.log('delete clicked')}>
-                Delete
-              </button>
-            </div>
-          )}
-        </div>
-      ),
-    },
-    { Header: 'Supplier', accessor: 'supplier' },
-    { Header: 'Certificate type', accessor: 'certificateType' },
-    { Header: 'Valid from', accessor: 'validFrom' },
-    { Header: 'Valid to', accessor: 'validTo' },
-  ];
-
-  const dataWithActions = certificates.map((cert) => ({
+  const dataWithActions: any = certificates.map((cert) => ({
     ...cert,
-    actions: null,
+    actions: ActionMenu,
   }));
 
   return (
     <section className="certificates-table" aria-labelledby="certificatesTitle">
-      <h1>Certificates</h1>
       <span className="new-certificate">
         <Button variation="contained" size="medium">
           <Link
@@ -90,7 +62,14 @@ const CertificatesTable: React.FC = () => {
           </Link>
         </Button>
       </span>
-      <Table<Certificate> columns={columns} data={dataWithActions} />
+      <Table
+        columns={columns}
+        data={dataWithActions}
+        render={(row: any) => {
+          return (
+          <ActionMenu row={row} onEdit={()=>handleEdit(row)} onDelete={() => handleDelete(row)} />
+        )}}
+      />
     </section>
   );
 };

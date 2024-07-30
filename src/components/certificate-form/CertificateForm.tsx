@@ -12,6 +12,7 @@ import ResetModal from '../reset-modal/ResetModal';
 import SearchIcon from '../../../public/assets/search.svg';
 import RemoveIcon from '../../../public/assets/close-small.svg';
 import { validateForm } from '../../utils/validation';
+import { useNotification } from '../../context/NotificationContext';
 
 interface FormData {
   id: number;
@@ -58,6 +59,7 @@ const CertificateForm: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { addCertificate, certificates, updateCertificate } = useCertificates();
+  const { notify } = useNotification();
   const [formData, dispatch] = useReducer(formReducer, initialState);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [resetFile, setResetFile] = useState(false);
@@ -98,6 +100,7 @@ const CertificateForm: React.FC = () => {
         }
 
         navigate('/certificates');
+        notify('Submitted successfully', 'success');
       } else {
         setErrors(errors);
       }
@@ -123,7 +126,6 @@ const CertificateForm: React.FC = () => {
 
   return (
     <section className="form-page">
-      <h1>{id ? 'Edit Certificate' : 'New Certificate'}</h1>
       <form onSubmit={handleSubmit} className="certificate-form">
         <div className="form-left">
           <div className="supplier-form-input">
@@ -175,16 +177,19 @@ const CertificateForm: React.FC = () => {
           <PDFPreview file={formData.pdf} />
           <div className="form-action-buttons">
             <Button type="submit" variation="contained" size="medium">
-              Save
+              {id ? "Update" : "Save"}
             </Button>
-            <Button
+            {
+              !id ? <Button
               type="button"
               variation="transparent"
               size="medium"
               onClick={handleReset}
             >
               Reset
-            </Button>
+            </Button> : ''
+            }
+            
           </div>
         </div>
       </form>
