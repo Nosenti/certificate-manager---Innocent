@@ -1,7 +1,7 @@
 import { Certificate, Supplier, Participant } from '../../types/types';
 
 let db: IDBDatabase | null = null;
-const version = 1;
+const version = 2; 
 
 export enum Stores {
   Certificates = 'certificates',
@@ -327,6 +327,7 @@ export const getParticipants = async (
     };
   });
 };
+<<<<<<< HEAD
 
 export const addSupplier = async (supplier: Supplier): Promise<void> => {
   return new Promise((resolve, reject) => {
@@ -347,3 +348,5 @@ export const addSupplier = async (supplier: Supplier): Promise<void> => {
     };
   });
 };
+=======
+>>>>>>> 017e9be (task8-KAN-39 rebase 6/8)
