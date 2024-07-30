@@ -1,0 +1,17 @@
+/* src/components/user-switch/UserSwitch.css */
+
+.user-switch {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.user-switch label {
+  margin-right: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.user-switch select {
+  padding: 0.2rem 0.5rem;
+}
