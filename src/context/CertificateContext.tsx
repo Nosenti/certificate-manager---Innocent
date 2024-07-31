@@ -9,12 +9,14 @@ import {
   initDB,
   getCertificates,
   addCertificate as addCertificateToDB,
+  updateCertificate as updateCertificateInDB,
 } from '../data/db';
 import { Certificate } from '../../types/types';
 
 interface CertificatesContextType {
   certificates: Certificate[];
   addCertificate: (certificate: Certificate) => void;
+  updateCertificate: (certificate: Certificate) => void;
 }
 
 const CertificateContext = createContext<CertificatesContextType | undefined>(
@@ -66,11 +68,22 @@ function CertificateProvider({ children }: Props) {
     }
   };
 
+  const updateCertificate = async (certificate: Certificate) => {
+    try {
+      await updateCertificateInDB(certificate);
+      const storedCertificates = await getCertificates();
+      setCertificates(storedCertificates);
+    } catch (error) {
+      console.log('Error editing a certificate', error);
+    }
+  };
+
   return (
     <CertificateContext.Provider
       value={{
         certificates,
         addCertificate,
+        updateCertificate,
       }}
     >
       {children}

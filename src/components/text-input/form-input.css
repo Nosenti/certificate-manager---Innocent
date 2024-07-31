@@ -13,11 +13,43 @@ label {
 input,
 select,
 button {
-  margin-bottom: 1rem;
   padding: 0.3rem;
 }
 
 .form-error {
   color: var(--color-danger);
   margin-top: -0.1rem;
+}
+
+
+
+.form-input label {
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--color-grey-dark);
+}
+
+.form-input span {
+  margin-bottom: 0.5rem;
+}
+
+.form-input input, .form-input select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 10px solid var(--color-grey-dark);
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.form-input input:focus {
+  border-color: var(--color-primary);
+}
+
+.form-error {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-danger);
 }

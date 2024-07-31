@@ -24,8 +24,8 @@ const FormSelect: FC<FormSelectProps> = ({
   options,
   error,
   required = false,
-  defaultOptionLabel = 'Select an option',
   onChange,
+  defaultOptionLabel = 'Select an option',
 }) => {
   const id = `select-${name}`;
 

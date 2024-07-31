@@ -9,3 +9,45 @@
 .new-certificate {
   margin-bottom: 1rem;
 }
+
+.cog-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  color: var(--color-primary);
+}
+
+.dropdown-menu {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 20px;
+  left: 0;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-grey-navy);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.cog-container:hover .dropdown-menu,
+.cog-container .dropdown-menu {
+  display: flex;
+}
+
+.dropdown-menu button {
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown-menu button:hover {
+  background-color: var(--color-grey-hover);
+}
+
+@media (max-width: 768px) {
+  .certificates-table {
+    margin: 1rem 1rem 0 1rem;
+  }
+}

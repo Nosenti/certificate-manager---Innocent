@@ -1,3 +1,4 @@
+// src/components/sidebar/Sidebar.tsx
 import './sidebar.css';
 import SidebarHeader from '../sidebar-header/SidebarHeader';
 import NavItem from '../nav-item/NavItem';
@@ -32,16 +33,12 @@ const Sidebar: FC<SidebarProps> = ({ closeSidebar }) => {
 
   const navItems: NavItemType[] = [
     {
-      path: '/example1',
-      name: 'Example 1',
+      path: '/certificates',
+      name: 'All Certificates',
     },
     {
-      path: '/example2',
-      name: 'Example 2',
-    },
-    {
-      path: '/example3',
-      name: 'Example 3',
+      path: '/new-certificate',
+      name: 'New Certificate',
     },
   ];
 
@@ -59,21 +56,21 @@ const Sidebar: FC<SidebarProps> = ({ closeSidebar }) => {
             }}
             isActive={location.pathname === '/'}
           >
-            Start
+            Home
           </NavItem>
           <ExpandableSection
-            title="Machine Learning"
+            title="Certificates Action"
             icon={<MLIcon />}
-            initialSelected="/example1"
-            isActive={activeSection === 'ml'}
-            onToggle={() => handleSectionToggle('ml')}
+            initialSelected="/certificates"
+            isActive={activeSection === 'certificates'}
+            onToggle={() => handleSectionToggle('certificates')}
           >
             {navItems.map((item) => (
               <NavItem
                 key={item.path}
                 to={item.path}
                 onClick={closeSidebar}
-                isActive={location.pathname === item.path}
+                isActive={location.pathname.startsWith(item.path)}
               >
                 {item.name}
               </NavItem>

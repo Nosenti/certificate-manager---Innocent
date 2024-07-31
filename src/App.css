@@ -4,9 +4,10 @@
   --color-grey-navy: #e7e9ea;
   --color-grey-dark: #ddd;
   --color-white: #fff;
-  --color-white: #fff;
+  --color-grey-hover: #f0f0f0;
   --color-primary-dark: #0e5579;
   --color-danger: rgba(199, 76, 76, 0.952);
+  --color-success: #4caf50;
   --primary-color-disabled: rgba(0, 123, 255, 0.5);
   --secondary-color-disabled: rgba(108, 117, 125, 0.5);
   --color-green-yellow: #c0d72e;
@@ -24,3 +25,4 @@ body {
   line-height: 1.7;
   min-height: 100vh;
 }
+

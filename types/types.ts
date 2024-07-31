@@ -4,4 +4,5 @@ export interface Certificate {
   certificateType: string;
   validFrom: string;
   validTo: string;
+  pdf: File | null
 }

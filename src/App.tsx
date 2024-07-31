@@ -2,6 +2,7 @@ import { RouterProvider } from 'react-router-dom';
 import './App.css';
 import router from './routes/Routes';
 import { CertificateProvider } from './context/CertificateContext';
+import { NotificationProvider } from './context/NotificationContext';
 
 /**
  * App - component that serves as the main container of the entire application
@@ -10,9 +11,11 @@ import { CertificateProvider } from './context/CertificateContext';
  */
 const App = (): JSX.Element => {
   return (
-    <CertificateProvider>
-      <RouterProvider router={router} />
-    </CertificateProvider>
+    <NotificationProvider>
+      <CertificateProvider>
+        <RouterProvider router={router} />
+      </CertificateProvider>
+    </NotificationProvider>
   );
 };
 

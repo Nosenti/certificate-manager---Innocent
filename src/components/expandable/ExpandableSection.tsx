@@ -7,7 +7,7 @@ import {
   cloneElement,
   ReactNode,
 } from 'react';
-import './expandablesection.css';
+import './expandable-section.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ArrowIcon from '../../../public/assets/arrow.svg';
 
@@ -44,15 +44,18 @@ const ExpandableSection: FC<ExpandableSectionProps> = ({
   const toggleExpanded = (e: React.MouseEvent) => {
     e.stopPropagation();
     setExpanded((prev) => !prev);
+  };
+
+  const handleSectionClick = () => {
     onToggle();
-    if (!expanded && initialSelected) {
+    if (initialSelected) {
       navigate(initialSelected);
     }
   };
 
   return (
     <div className={`expandable-section ${isActive ? 'active' : ''}`}>
-      <div className="expandable-header">
+      <div className="expandable-header" onClick={handleSectionClick}>
         <span className="icon">{icon}</span>
         <p className={expanded ? 'expanded' : ''}>{title}</p>
         <span
@@ -62,6 +65,7 @@ const ExpandableSection: FC<ExpandableSectionProps> = ({
           <ArrowIcon />
         </span>
       </div>
+
       <ul
         className="expandable-content"
         style={{ display: expanded ? 'block' : 'none' }}

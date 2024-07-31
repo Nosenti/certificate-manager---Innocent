@@ -88,3 +88,25 @@ export const addCertificate = async (
     };
   });
 };
+
+export const updateCertificate = async (
+  certificate: Certificate,
+): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject('DB is not initialized');
+      return;
+    }
+    const transaction = db.transaction([Stores.Certificates], 'readwrite');
+    const store = transaction.objectStore(Stores.Certificates);
+    const request = store.put(certificate);
+
+    request.onsuccess = () => {
+      resolve();
+    };
+
+    request.onerror = () => {
+      reject(request.error);
+    };
+  });
+};

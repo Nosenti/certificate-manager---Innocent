@@ -1,0 +1,39 @@
+
+.expandable-section {
+  display: flex;
+  flex-direction: column;
+  color: var(--color-primary-dark);
+}
+
+.expandable-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+  border-left: .7rem solid transparent;
+}
+
+.expandable-section.active .expandable-header {
+  border-left-color: var(--color-primary);
+}
+
+.expandable-header .icon {
+  margin-right: 8px;
+  display: flex;
+  justify-items: center;
+}
+
+.expandable-header .arrow {
+  margin-right: 4px;
+  cursor: pointer;
+  display: flex;
+  justify-items: center;
+}
+
+.expandable-header .arrow.expanded {
+  transform: rotate(90deg);
+}
+
+.expandable-content {
+  padding-left: 24px;
+}
