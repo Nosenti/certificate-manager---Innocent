@@ -18,20 +18,20 @@ interface HeaderProps {
  *
  */
 const Header: FC<HeaderProps> = ({ user = 'John Doe' }) => {
-  const location = useLocation();
+  const location = useLocation(); // Use the useLocation hook here
+  const { language, setLanguage } = useLanguage();
+  const t = locales[language as keyof Locales];
   let routeTitle = '';
 
   if (location.pathname === '/new-certificate') {
-    routeTitle = 'New Certificate';
+    routeTitle = t.newCertificate;
   } else if (location.pathname.includes('/certificates/edit')) {
-    routeTitle = 'Edit Certificate';
+    routeTitle = t.editCertificate;
   } else if (location.pathname.includes('/certificates')) {
-    routeTitle = 'All Certificates';
-  } else if (location.pathname.includes('/')) {
-    routeTitle = 'Home';
+    routeTitle = t.allCertificates;
+  } else if (location.pathname === '/') { // Match exact root path
+    routeTitle = t.home;
   }
-  const { language, setLanguage } = useLanguage();
-  const t = locales[language as keyof Locales];
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(e.target.value);
@@ -48,15 +48,13 @@ const Header: FC<HeaderProps> = ({ user = 'John Doe' }) => {
         </div>
       </div>
       <div className="language-info">
-        <p>language:</p>
-
-        <span className='language-info-dropdown'>
+        <p>Language:</p>
+        <span className="language-info-dropdown">
           <select value={language} onChange={handleLanguageChange}>
-          <option value="en">{t.english}</option>
-          <option value="de">{t.german}</option>
-        </select>
+            <option value="en">{t.english}</option>
+            <option value="de">{t.german}</option>
+          </select>
         </span>
-        
       </div>
     </header>
   );

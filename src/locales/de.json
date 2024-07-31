@@ -26,5 +26,6 @@
   "supplierList": "Lieferantenliste",
   "supplierName": "Lieferantenname",
   "supplierIndex": "Lieferantenindex",
-  "city": "Stadt"
+  "city": "Stadt",
+  "update": "Aktualisieren"
 }

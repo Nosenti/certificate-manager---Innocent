@@ -14,8 +14,12 @@ import SearchIcon from '../../../public/assets/search.svg';
 import RemoveIcon from '../../../public/assets/close-small.svg';
 import { validateForm } from '../../utils/validation';
 import { useNotification } from '../../context/NotificationContext';
-import { Supplier, Certificate } from '../../../types/types';
-import { addSupplier, getSuppliers } from '../../data/db';
+import en from '../../locales/en.json';
+import de from '../../locales/de.json';
+import { Locales } from '../../../types/types';
+import { useLanguage } from '../../context/LanguageContext';
+
+const locales: Locales = { en, de };
 
 interface FormData {
   id: number;
@@ -86,23 +90,17 @@ const CertificateForm: React.FC = () => {
 
   const t = locales[language as keyof Locales];
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    dispatch({ type: 'UPDATE_FIELD', field: name, value });
-  };
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    dispatch({ type: 'UPDATE_FIELD', field: name, value });
-  };
+  const handleInputChange = 
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name, value } = e.target;
+      dispatch({ type: 'UPDATE_FIELD', field: name, value });
+    };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files ? e.target.files[0] : null;
-    dispatch({ type: 'UPDATE_FIELD', field: 'pdf', value: file });
-  };
+  const handleFileChange =
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files ? e.target.files[0] : null;
+      dispatch({ type: 'UPDATE_FIELD', field: 'pdf', value: file });
+    };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,11 +127,12 @@ const CertificateForm: React.FC = () => {
         notify('Certificate created successfully', 'success');
       }
 
-      navigate('/certificates');
-    } else {
-      setErrors(errors);
-    }
-  };
+        navigate('/certificates');
+        
+      } else {
+        setErrors(errors);
+      }
+    };
 
   const handleResetConfirm = () => {
     dispatch({ type: 'RESET' });
@@ -156,17 +155,12 @@ const CertificateForm: React.FC = () => {
   };
 
   const handleSupplierSelect = (supplier: { supplierName: string }) => {
-    dispatch({
-      type: 'UPDATE_FIELD',
-      field: 'supplier',
-      value: supplier.supplierName,
-    });
+    dispatch({ type: 'UPDATE_FIELD', field: 'supplier', value: supplier.supplierName });
     setShowSupplierLookup(false);
   };
 
   return (
     <section className="form-page">
-      <h1>{id ? t.editCertificate : t.newCertificate}</h1>
       <form onSubmit={handleSubmit} className="certificate-form">
         <div className="form-left">
           <div className="supplier-form-input">
@@ -176,18 +170,10 @@ const CertificateForm: React.FC = () => {
               value={formData.supplier}
               onChange={handleInputChange}
             />
-            <span
-              className="form-btn"
-              onClick={() => setShowSupplierLookup(true)}
-            >
+            <span className="form-btn" onClick={() => setShowSupplierLookup(true)}>
               <SearchIcon />
             </span>
-            <span
-              className="form-btn"
-              onClick={() =>
-                dispatch({ type: 'UPDATE_FIELD', field: 'supplier', value: '' })
-              }
-            >
+            <span className="form-btn" onClick={() => dispatch({ type: 'UPDATE_FIELD', field: 'supplier', value: '' })}>
               <RemoveIcon />
             </span>
           </div>
@@ -207,7 +193,7 @@ const CertificateForm: React.FC = () => {
             ]}
           />
           <DateInput
-            label={t.validFrom}
+            label={ t.validFrom}
             name="validFrom"
             value={formData.validFrom}
             onChange={handleInputChange}
@@ -234,20 +220,19 @@ const CertificateForm: React.FC = () => {
           <PDFPreview file={formData.pdf} />
           <div className="form-action-buttons">
             <Button type="submit" variation="contained" size="medium">
-              {id ? 'Update' : 'Save'}
+              {id ? t.update : t.save}
             </Button>
-            {!id ? (
-              <Button
-                type="button"
-                variation="transparent"
-                size="medium"
-                onClick={handleReset}
-              >
-                Reset
-              </Button>
-            ) : (
-              ''
-            )}
+            {
+              !id ? <Button
+              type="button"
+              variation="transparent"
+              size="medium"
+              onClick={handleReset}
+            >
+              {t.reset}
+            </Button> : ''
+            }
+            
           </div>
         </div>
       </form>

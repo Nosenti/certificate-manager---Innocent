@@ -1,4 +1,3 @@
-// src/components/sidebar/Sidebar.tsx
 import './sidebar.css';
 import SidebarHeader from '../sidebar-header/SidebarHeader';
 import NavItem from '../nav-item/NavItem';

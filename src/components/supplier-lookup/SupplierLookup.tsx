@@ -87,7 +87,7 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
   ];
 
   return (
-    <Modal show={show} title="Search for suppliers" onClose={onClose}>
+    <Modal show={show} title={t.searchForSuppliers} onClose={onClose}>
       <div className="supplier-lookup">
         <div className="search-criteria">
           <div className="search-criteria-title">
