@@ -110,3 +110,23 @@ export const updateCertificate = async (
     };
   });
 };
+
+export const deleteCertificate = async (id: number): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject('DB is not initialized');
+      return;
+    }
+    const transaction = db.transaction([Stores.Certificates], 'readwrite');
+    const store = transaction.objectStore(Stores.Certificates);
+    const request = store.delete(id);
+
+    request.onsuccess = () => {
+      resolve();
+    };
+
+    request.onerror = () => {
+      reject(request.error);
+    };
+  });
+};

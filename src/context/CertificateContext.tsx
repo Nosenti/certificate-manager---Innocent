@@ -10,6 +10,7 @@ import {
   getCertificates,
   addCertificate as addCertificateToDB,
   updateCertificate as updateCertificateInDB,
+  deleteCertificate as deleteCertificateFromDB
 } from '../data/db';
 import { Certificate } from '../../types/types';
 
@@ -17,6 +18,7 @@ interface CertificatesContextType {
   certificates: Certificate[];
   addCertificate: (certificate: Certificate) => void;
   updateCertificate: (certificate: Certificate) => void;
+  deleteCertificate: (id: number) => Promise<void>;
 }
 
 const CertificateContext = createContext<CertificatesContextType | undefined>(
@@ -78,12 +80,19 @@ function CertificateProvider({ children }: Props) {
     }
   };
 
+  const deleteCertificate = async (id: number) => {
+    await deleteCertificateFromDB(id);
+    const storedCertificates = await getCertificates();
+    setCertificates(storedCertificates);
+  };
+
   return (
     <CertificateContext.Provider
       value={{
         certificates,
         addCertificate,
         updateCertificate,
+        deleteCertificate
       }}
     >
       {children}
