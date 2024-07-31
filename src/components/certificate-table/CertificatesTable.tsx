@@ -8,7 +8,7 @@ import { Certificate as BaseCertificate } from '../../../types/types';
 import { useMemo, useState } from 'react';
 import ActionMenu from '../action-menu/ActionMenu';
 import { useNotification } from '../../context/NotificationContext';
-import Modal from '../modal/Modal';
+import Modal from '../confirm-modal/ConfirmModal';
 
 interface Column {
   header: string;

@@ -8,7 +8,7 @@ import DateInput from '../date-input/DateInput';
 import FormSelect from '../form-select/FormSelect';
 import FileUpload from '../file-upload/FileUpload';
 import PDFPreview from '../pdf-preview/PDFPreview';
-import ResetModal from '../modal/Modal';
+import ResetModal from '../confirm-modal/ConfirmModal';
 import SupplierLookup from '../supplier-lookup/SupplierLookup';
 import SearchIcon from '../../../public/assets/search.svg';
 import RemoveIcon from '../../../public/assets/close-small.svg';

@@ -173,7 +173,6 @@ export const getSuppliers = async (
   supplierIndex?: string,
   city?: string,
 ): Promise<Supplier[]> => {
-
   return new Promise((resolve, reject) => {
     if (!db) {
       reject('DB is not initialized');
@@ -188,18 +187,22 @@ export const getSuppliers = async (
     }
     request.onsuccess = () => {
       let suppliers = request.result;
-      console.log("sup: ", suppliers);
+
       if (supplierName)
         suppliers = suppliers.filter((supplier) =>
-          supplier.supplierName.includes(supplierName),
+          supplier.supplierName
+            .toLowerCase()
+            .includes(supplierName.toLowerCase()),
         );
       if (supplierIndex)
         suppliers = suppliers.filter((supplier) =>
-          supplier.supplierIndex.includes(supplierIndex),
+          supplier.supplierIndex
+            .toLowerCase()
+            .includes(supplierIndex.toLowerCase()),
         );
       if (city)
         suppliers = suppliers.filter((supplier) =>
-          supplier.city.includes(city),
+          supplier.city.toLowerCase().includes(city.toLowerCase()),
         );
       resolve(suppliers);
     };
@@ -209,3 +212,4 @@ export const getSuppliers = async (
     };
   });
 };
+
