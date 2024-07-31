@@ -44,6 +44,7 @@ export interface Locale {
   city: string;
   searchForSuppliers: string;
   update: string;
+  remove: string;
 }
 
 export interface Locales {

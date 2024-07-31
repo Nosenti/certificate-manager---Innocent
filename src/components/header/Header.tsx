@@ -29,7 +29,8 @@ const Header: FC<HeaderProps> = ({ user = 'John Doe' }) => {
     routeTitle = t.editCertificate;
   } else if (location.pathname.includes('/certificates')) {
     routeTitle = t.allCertificates;
-  } else if (location.pathname === '/') { // Match exact root path
+  } else if (location.pathname === '/') {
+    // Match exact root path
     routeTitle = t.home;
   }
 
@@ -46,15 +47,15 @@ const Header: FC<HeaderProps> = ({ user = 'John Doe' }) => {
         <div className="user-info">
           {user && <span className="user">{user}</span>}
         </div>
-      </div>
-      <div className="language-info">
-        <p>Language:</p>
-        <span className="language-info-dropdown">
-          <select value={language} onChange={handleLanguageChange}>
-            <option value="en">{t.english}</option>
-            <option value="de">{t.german}</option>
-          </select>
-        </span>
+        <div className="language-info">
+          <p>Language:</p>
+          <span className="language-info-dropdown">
+            <select value={language} onChange={handleLanguageChange}>
+              <option value="en">{t.english}</option>
+              <option value="de">{t.german}</option>
+            </select>
+          </span>
+        </div>
       </div>
     </header>
   );

@@ -27,5 +27,6 @@
   "supplierName": "Supplier Name",
   "supplierIndex": "Supplier Index",
   "city": "City",
-  "update": "Update"
+  "update": "Update",
+  "remove": "remove"
 }
