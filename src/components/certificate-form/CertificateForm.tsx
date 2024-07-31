@@ -8,7 +8,7 @@ import DateInput from '../date-input/DateInput';
 import FormSelect from '../form-select/FormSelect';
 import FileUpload from '../file-upload/FileUpload';
 import PDFPreview from '../pdf-preview/PDFPreview';
-import ResetModal from '../reset-modal/ResetModal';
+import ResetModal from '../modal/Modal';
 import SearchIcon from '../../../public/assets/search.svg';
 import RemoveIcon from '../../../public/assets/close-small.svg';
 import { validateForm } from '../../utils/validation';
@@ -64,6 +64,8 @@ const CertificateForm: React.FC = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [resetFile, setResetFile] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
+  const [certificateToDelete, setCertificateToDelete] = useState<number | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -127,8 +129,6 @@ const CertificateForm: React.FC = () => {
   const handleFileRemove = () => {
     dispatch({ type: 'UPDATE_FIELD', field: 'pdf', value: null });
   };
-
-  
 
   return (
     <section className="form-page">
