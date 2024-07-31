@@ -131,6 +131,11 @@ const CertificateForm: React.FC = () => {
     dispatch({ type: 'UPDATE_FIELD', field: 'pdf', value: null });
   };
 
+  const handleSupplierSelect = (supplier: { supplierName: string }) => {
+    dispatch({ type: 'UPDATE_FIELD', field: 'supplier', value: supplier.supplierName });
+    setShowSupplierLookup(false);
+  };
+
   return (
     <section className="form-page">
       <form onSubmit={handleSubmit} className="certificate-form">
