@@ -117,10 +117,11 @@ const CertificateForm: React.FC = () => {
     dispatch({ type: 'UPDATE_FIELD', field: name, value });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files ? e.target.files[0] : null;
-    dispatch({ type: 'UPDATE_FIELD', field: 'pdf', value: file });
-  };
+  const handleFileChange =
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files ? e.target.files[0] : null;
+      dispatch({ type: 'UPDATE_FIELD', field: 'pdf', value: file });
+    };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -173,11 +174,7 @@ const CertificateForm: React.FC = () => {
   };
 
   const handleSupplierSelect = (supplier: { supplierName: string }) => {
-    dispatch({
-      type: 'UPDATE_FIELD',
-      field: 'supplier',
-      value: supplier.supplierName,
-    });
+    dispatch({ type: 'UPDATE_FIELD', field: 'supplier', value: supplier.supplierName });
     setShowSupplierLookup(false);
   };
 
@@ -218,7 +215,6 @@ const CertificateForm: React.FC = () => {
 
   return (
     <section className="form-page">
-      <h1>{id ? t.editCertificate : t.newCertificate}</h1>
       <form onSubmit={handleSubmit} className="certificate-form">
         <div className="form-left">
           <div className="supplier-form-input">
@@ -228,18 +224,10 @@ const CertificateForm: React.FC = () => {
               value={formData.supplier}
               onChange={handleInputChange}
             />
-            <span
-              className="form-btn"
-              onClick={() => setShowSupplierLookup(true)}
-            >
+            <span className="form-btn" onClick={() => setShowSupplierLookup(true)}>
               <SearchIcon />
             </span>
-            <span
-              className="form-btn"
-              onClick={() =>
-                dispatch({ type: 'UPDATE_FIELD', field: 'supplier', value: '' })
-              }
-            >
+            <span className="form-btn" onClick={() => dispatch({ type: 'UPDATE_FIELD', field: 'supplier', value: '' })}>
               <RemoveIcon />
             </span>
           </div>
@@ -259,7 +247,7 @@ const CertificateForm: React.FC = () => {
             ]}
           />
           <DateInput
-            label={t.validFrom}
+            label={ t.validFrom}
             name="validFrom"
             value={formData.validFrom}
             onChange={handleInputChange}
