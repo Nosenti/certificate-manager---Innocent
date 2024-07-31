@@ -23,7 +23,7 @@ const CertificatesTable: React.FC = () => {
   const [dropdownVisible, setDropdownVisible] = useState<number | null>(null);
 
   const handleEdit = (id: number) => {
-   id && navigate(`/certificates/edit/${id}`);
+    id && navigate(`/certificates/edit/${id}`);
   };
   const handleDelete = (id: number) => {
     console.log('Delete to be implemented in the next task');
@@ -38,16 +38,22 @@ const CertificatesTable: React.FC = () => {
   };
   const dropdownRef = useClickOutside<HTMLDivElement>(handleClickOutside);
 
-  const columns: Column[] = useMemo(() =>[
+  const columns: Column[] = useMemo(() => [
     { header: 'Supplier', accessor: 'supplier' },
     { header: 'Certificate type', accessor: 'certificateType' },
     { header: 'Valid from', accessor: 'validFrom' },
     { header: 'Valid to', accessor: 'validTo' },
-  ], [handleDelete, handleEdit]);
+  ], []);
 
-  const dataWithActions: any = certificates.map((cert) => ({
+  const dataWithActions: Certificate[] = certificates.map((cert) => ({
     ...cert,
-    actions: ActionMenu,
+    actions: (
+      <ActionMenu
+        row={cert}
+        onEdit={() => handleEdit(cert.id)}
+        onDelete={() => handleDelete(cert.id)}
+      />
+    ),
   }));
 
   return (
@@ -65,10 +71,16 @@ const CertificatesTable: React.FC = () => {
       <Table
         columns={columns}
         data={dataWithActions}
-        render={(row: any) => {
-          return (
-          <ActionMenu row={row} onEdit={()=>handleEdit(row)} onDelete={() => handleDelete(row)} />
-        )}}
+        render={(id?: number) => {
+          const row = certificates.find(cert => cert.id === id);
+          return row ? (
+            <ActionMenu
+              row={row}
+              onEdit={() => handleEdit(row.id)}
+              onDelete={() => handleDelete(row.id)}
+            />
+          ) : null;
+        }}
       />
     </section>
   );
