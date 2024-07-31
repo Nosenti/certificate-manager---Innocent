@@ -6,6 +6,7 @@ import Modal from '../modal/Modal';
 import Button from '../button/Button';
 import Table from '../table/Table';
 import TextInput from '../text-input/TextInput';
+import SupplierRowSelect from '../supplier-row-select/SupplierRowSelect';
 import CaretDown from '../../../public/assets/caret-down.svg';
 
 interface SupplierLookupProps {
@@ -55,21 +56,9 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
   };
 
   const columns = [
-    {
-      Header: '',
-      accessor: 'select' as keyof Supplier,
-      render: (row: Supplier) => (
-        <input
-          type="radio"
-          name="supplier"
-          checked={selectedSupplier?.id === row.id}
-          onChange={() => handleRowSelect(row)}
-        />
-      ),
-    },
-    { Header: 'Supplier name', accessor: 'supplierName' as keyof Supplier },
-    { Header: 'Supplier index', accessor: 'supplierIndex' as keyof Supplier },
-    { Header: 'City', accessor: 'city' as keyof Supplier },
+    { header: 'Supplier name', accessor: 'supplierName' as keyof Supplier },
+    { header: 'Supplier index', accessor: 'supplierIndex' as keyof Supplier },
+    { header: 'City', accessor: 'city' as keyof Supplier },
   ];
 
   return (
@@ -123,6 +112,14 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
             <Table<Supplier>
               columns={columns}
               data={suppliers}
+              render={(id?: number) => (
+                <SupplierRowSelect
+                  suppliers={suppliers}
+                  selectedSupplier={selectedSupplier}
+                  onRowSelect={handleRowSelect}
+                  id={id}
+                />
+              )}
             />
           ) : (
             <p>No suppliers</p>

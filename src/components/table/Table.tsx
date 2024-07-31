@@ -4,7 +4,7 @@ import React from 'react';
 export interface Column<T> {
   header: string;
   accessor: keyof T;
-  render?: (value: T[keyof T]) => React.ReactNode;
+  render?: (value: T[keyof T], row: T) => React.ReactNode;
 }
 
 interface TableProps<T> {
@@ -54,7 +54,7 @@ function Table<T extends { id?: number }>({
                 {columns.map((column) => (
                   <td key={`${row.id}-${String(column.accessor)}`}>
                     {column.render
-                      ? column.render(row[column.accessor])
+                      ? column.render(row[column.accessor], row)
                       : String(row[column.accessor])}
                   </td>
                 ))}
