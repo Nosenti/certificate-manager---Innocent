@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Certificate as BaseCertificate } from '../../../types/types';
 import { useMemo, useState } from 'react';
 import ActionMenu from '../action-menu/ActionMenu';
+import { useNotification } from '../../context/NotificationContext';
 
 interface Column {
   header: string;
@@ -21,12 +22,14 @@ const CertificatesTable: React.FC = () => {
   const { certificates, deleteCertificate } = useCertificates();
   const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState<number | null>(null);
+  const { notify } = useNotification();
 
   const handleEdit = (id: number) => {
     id && navigate(`/certificates/edit/${id}`);
   };
   const handleDelete = (id: number) => {
-    console.log('Delete to be implemented in the next task');
+    deleteCertificate(id);
+    notify('Certificate deleted successfully', 'success');
   };
 
   const handleDropdownToggle = (index: number) => {
