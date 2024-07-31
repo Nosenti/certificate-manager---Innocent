@@ -124,6 +124,7 @@ export interface Locale {
   supplierIndex: string;
   city: string;
   searchForSuppliers: string;
+  update: string;
 }
 
 export interface Locales {
