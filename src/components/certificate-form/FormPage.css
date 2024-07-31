@@ -55,8 +55,23 @@ form {
   gap: 0.5rem;
 }
 
+.upload-actions {
+  display: flex;
+
+}
+
 .supplier-form-input{
   display: flex;
+}
+
+.remove-button{
+  background-color: var(--color-danger);
+  border: none;
+  padding: .5rem 1rem ;
+  margin-left: 1rem;
+  color: var(--color-white);
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 /* Tablet Landscape: from 600 to 900px */

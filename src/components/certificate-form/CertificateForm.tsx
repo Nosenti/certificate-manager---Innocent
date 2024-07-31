@@ -95,12 +95,14 @@ const CertificateForm: React.FC = () => {
       if (isValid) {
         if (id) {
           updateCertificate(formData);
+          notify('Certificate updated successfully', 'success');
         } else {
           addCertificate(formData);
+          notify('Certificate created successfully', 'success');
         }
 
         navigate('/certificates');
-        notify('Submitted successfully', 'success');
+        
       } else {
         setErrors(errors);
       }
@@ -120,6 +122,10 @@ const CertificateForm: React.FC = () => {
 
   const handleCloseModal =() => {
     setShowModal(false);
+  };
+
+  const handleFileRemove = () => {
+    dispatch({ type: 'UPDATE_FIELD', field: 'pdf', value: null });
   };
 
   
@@ -173,7 +179,11 @@ const CertificateForm: React.FC = () => {
           />
         </div>
         <div className="form-right">
-          <FileUpload onFileChange={handleFileChange} resetFile={resetFile} />
+          <div className='upload-actions'>
+            <FileUpload onFileChange={handleFileChange} resetFile={resetFile} onFileRemove={handleFileRemove} file={formData.pdf} />
+          
+          </div>
+          
           <PDFPreview file={formData.pdf} />
           <div className="form-action-buttons">
             <Button type="submit" variation="contained" size="medium">

@@ -17,11 +17,13 @@ const Header: FC<HeaderProps> = ({ user = 'John Doe' }) => {
 
   if (location.pathname === '/new-certificate') {
     routeTitle = 'New Certificate';
-  } else if (location.pathname.includes('/certificates')) {
-    routeTitle = 'All Certificates';
-  } else if (location.pathname.includes('/certificates/edit')) {
+  }  else if (location.pathname.includes('/certificates/edit')) {
     routeTitle = 'Edit Certificate';
-  } else if (location.pathname.includes('/')) {
+  }
+  else if (location.pathname.includes('/certificates')) {
+    routeTitle = 'All Certificates';
+  }
+  else if (location.pathname.includes('/')) {
     routeTitle = 'Home';
   }
   return (

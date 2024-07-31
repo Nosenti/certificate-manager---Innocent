@@ -5,9 +5,11 @@ import './file-upload.css';
 interface FileUploadProps {
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   resetFile: boolean;
+  onFileRemove: () => void;
+  file: File | null,
 }
 
-const FileUpload: FC<FileUploadProps> = memo(({ onFileChange, resetFile }) => {
+const FileUpload: FC<FileUploadProps> = memo(({ onFileChange, resetFile, onFileRemove, file }) => {
   const [fileName, setFileName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,6 +37,14 @@ const FileUpload: FC<FileUploadProps> = memo(({ onFileChange, resetFile }) => {
       }
     }
   };
+
+  const handleRemoveFile = () => {
+    setFileName(null);
+    setError(null);
+    (document.getElementById('fileInput') as HTMLInputElement).value = '';
+    onFileRemove();
+  };
+
   return (
     <div className="file-upload-container">
       <label className="file-upload-label" aria-label="Upload PDF file">
@@ -55,6 +65,17 @@ const FileUpload: FC<FileUploadProps> = memo(({ onFileChange, resetFile }) => {
         >
           Upload
         </Button>
+        {file && (
+          <Button
+            type="button"
+            size="medium"
+            className="remove-button"
+            onClick={handleRemoveFile}
+            aria-label="Remove"
+          >
+            Remove
+          </Button>
+        )}
       </label>
       {fileName && <p className="file-name">Selected file: {fileName}</p>}
       {error && <p className="error-message">{error}</p>}
