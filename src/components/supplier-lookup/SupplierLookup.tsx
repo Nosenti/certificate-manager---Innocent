@@ -32,10 +32,21 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
     city: '',
   });
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [filteredSuppliers, setFilteredSuppliers] = useState<Supplier[]>([]);
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(
     null,
   );
   const { language } = useLanguage();
+
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      const results = await getSuppliers();
+      setSuppliers(results);
+      setFilteredSuppliers(results);
+    };
+
+    fetchSuppliers();
+  }, [filters]);
 
   const t = locales[language as keyof Locales];
 
@@ -81,9 +92,9 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
   };
 
   const columns = [
-    { header: 'Supplier name', accessor: 'supplierName' as keyof Supplier },
-    { header: 'Supplier index', accessor: 'supplierIndex' as keyof Supplier },
-    { header: 'City', accessor: 'city' as keyof Supplier },
+    { header: t.supplierName, accessor: 'supplierName' as keyof Supplier },
+    { header: t.supplierIndex, accessor: 'supplierIndex' as keyof Supplier },
+    { header: t.city, accessor: 'city' as keyof Supplier },
   ];
 
   return (

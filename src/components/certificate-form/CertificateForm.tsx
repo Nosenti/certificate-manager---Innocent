@@ -18,6 +18,8 @@ import en from '../../locales/en.json';
 import de from '../../locales/de.json';
 import { Locales } from '../../../types/types';
 import { useLanguage } from '../../context/LanguageContext';
+import { addSupplier, getSuppliers } from '../../data/db';
+import { Supplier } from '../../../types/types';
 
 const locales: Locales = { en, de };
 
@@ -71,10 +73,6 @@ const CertificateForm: React.FC = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [resetFile, setResetFile] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-  const [certificateToDelete, setCertificateToDelete] = useState<number | null>(
-    null,
-  );
   const [selectedSupplier, setSelectedSupplier] = useState<string | null>(null);
   const [showSupplierLookup, setShowSupplierLookup] = useState(false);
   const { language } = useLanguage();

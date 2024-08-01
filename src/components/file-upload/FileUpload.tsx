@@ -72,7 +72,7 @@ const FileUpload: FC<FileUploadProps> = memo(({ onFileChange, resetFile, onFileR
             onClick={() => document.getElementById('fileInput')?.click()}
             aria-label="Upload"
           >
-            Upload
+            {t.upload}
           </Button>
           {file && (
             <Button
@@ -82,7 +82,7 @@ const FileUpload: FC<FileUploadProps> = memo(({ onFileChange, resetFile, onFileR
               onClick={handleRemoveFile}
               aria-label="Remove"
             >
-              Remove
+              {t.remove}
             </Button>
           )}
         </label>
