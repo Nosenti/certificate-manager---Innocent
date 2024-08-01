@@ -1,6 +1,6 @@
 import React from 'react';
 import './modal.css';
-import RemoveIcon from "../../../public/assets/close.svg";
+import RemoveIcon from '../../../public/assets/close.svg';
 
 interface ModalProps {
   show: boolean;
@@ -17,7 +17,9 @@ const Modal: React.FC<ModalProps> = ({ show, title, children, onClose }) => {
       <div className="modal">
         <div className="modal-header">
           <h2>{title}</h2>
-          <button onClick={onClose}><RemoveIcon/></button>
+          <button onClick={onClose}>
+            <RemoveIcon />
+          </button>
         </div>
         <div className="modal-content">{children}</div>
       </div>

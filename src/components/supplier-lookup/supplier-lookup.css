@@ -3,32 +3,39 @@
   margin-bottom: 20px;
   flex-direction: column;
 }
-.search-criteria-title{
-	color: var(--color-white);
-	background-color: var(--color-primary);
-	height: 2rem;
-	width: 100%;
-	text-align: left;
-	display: flex;
-	align-items: center;
-	gap: 1rem;
-	padding-left: 5px;
+.search-criteria-title {
+  color: var(--color-white);
+  background-color: var(--color-primary);
+  height: 2rem;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding-left: 5px;
 }
 
-.search-inputs{
-	display: flex;
-	gap: 10px;
+.search-criteria-title-caret{
+  display: flex;
+  align-items: center;
+  font-size: .5rem;
+}
+
+.search-inputs {
+  display: flex;
+  gap: 10px;
 }
 
 .supplier-list {
   max-height: 200px;
   overflow-y: auto;
 }
-.supplier-btns, .supplier-list-actions {
-	display: flex;
-	text-align: left;
-	gap: 10px;
+.supplier-btns,
+.supplier-list-actions {
+  display: flex;
+  text-align: left;
+  gap: 10px;
 }
-.supplier-list-actions{
-	margin-top: 1rem;
+.supplier-list-actions {
+  margin-top: 1rem;
 }

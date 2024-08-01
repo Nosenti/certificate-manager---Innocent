@@ -14,6 +14,8 @@ import SearchIcon from '../../../public/assets/search.svg';
 import RemoveIcon from '../../../public/assets/close-small.svg';
 import { validateForm } from '../../utils/validation';
 import { useNotification } from '../../context/NotificationContext';
+import { Supplier, Certificate } from '../../../types/types';
+import { addSupplier, getSuppliers } from '../../data/db';
 
 interface FormData {
   id: number;
@@ -66,7 +68,10 @@ const CertificateForm: React.FC = () => {
   const [resetFile, setResetFile] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-  const [certificateToDelete, setCertificateToDelete] = useState<number | null>(null);
+  const [certificateToDelete, setCertificateToDelete] = useState<number | null>(
+    null,
+  );
+  const [selectedSupplier, setSelectedSupplier] = useState<string | null>(null);
   const [showSupplierLookup, setShowSupplierLookup] = useState(false);
 
   useEffect(() => {
@@ -78,38 +83,48 @@ const CertificateForm: React.FC = () => {
     }
   }, [id, certificates]);
 
-  const handleInputChange = 
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const { name, value } = e.target;
-      dispatch({ type: 'UPDATE_FIELD', field: name, value });
-    };
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+    dispatch({ type: 'UPDATE_FIELD', field: name, value });
+  };
 
-  const handleFileChange =
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files ? e.target.files[0] : null;
-      dispatch({ type: 'UPDATE_FIELD', field: 'pdf', value: file });
-    };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    dispatch({ type: 'UPDATE_FIELD', field: 'pdf', value: file });
+  };
 
-  const handleSubmit = 
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      const { isValid, errors } = validateForm(formData);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { isValid, errors } = validateForm(formData);
 
-      if (isValid) {
-        if (id) {
-          updateCertificate(formData);
-          notify('Certificate updated successfully', 'success');
-        } else {
-          addCertificate(formData);
-          notify('Certificate created successfully', 'success');
-        }
-
-        navigate('/certificates');
+    if (!selectedSupplier && formData.supplier) {
         
-      } else {
-        setErrors(errors);
+        const newSupplier: Supplier = {
+          id: Date.now(),
+          supplierName: formData.supplier,
+          supplierIndex: (getSuppliers.length + 1).toString(),
+          city: 'Kigali',
+        };
+        await addSupplier(newSupplier);
+        notify(`New supplier "${newSupplier.supplierName}" created`, 'success');
       }
-    };
+
+    if (isValid) {
+      if (id) {
+        updateCertificate(formData);
+        notify('Certificate updated successfully', 'success');
+      } else {
+        addCertificate(formData);
+        notify('Certificate created successfully', 'success');
+      }
+
+      navigate('/certificates');
+    } else {
+      setErrors(errors);
+    }
+  };
 
   const handleResetConfirm = () => {
     dispatch({ type: 'RESET' });
@@ -132,7 +147,11 @@ const CertificateForm: React.FC = () => {
   };
 
   const handleSupplierSelect = (supplier: { supplierName: string }) => {
-    dispatch({ type: 'UPDATE_FIELD', field: 'supplier', value: supplier.supplierName });
+    dispatch({
+      type: 'UPDATE_FIELD',
+      field: 'supplier',
+      value: supplier.supplierName,
+    });
     setShowSupplierLookup(false);
   };
 
@@ -147,10 +166,18 @@ const CertificateForm: React.FC = () => {
               value={formData.supplier}
               onChange={handleInputChange}
             />
-            <span className="form-btn" onClick={() => setShowSupplierLookup(true)}>
+            <span
+              className="form-btn"
+              onClick={() => setShowSupplierLookup(true)}
+            >
               <SearchIcon />
             </span>
-            <span className="form-btn" onClick={() => dispatch({ type: 'UPDATE_FIELD', field: 'supplier', value: '' })}>
+            <span
+              className="form-btn"
+              onClick={() =>
+                dispatch({ type: 'UPDATE_FIELD', field: 'supplier', value: '' })
+              }
+            >
               <RemoveIcon />
             </span>
           </div>
@@ -185,27 +212,32 @@ const CertificateForm: React.FC = () => {
           />
         </div>
         <div className="form-right">
-          <div className='upload-actions'>
-            <FileUpload onFileChange={handleFileChange} resetFile={resetFile} onFileRemove={handleFileRemove} file={formData.pdf} />
-          
+          <div className="upload-actions">
+            <FileUpload
+              onFileChange={handleFileChange}
+              resetFile={resetFile}
+              onFileRemove={handleFileRemove}
+              file={formData.pdf}
+            />
           </div>
-          
+
           <PDFPreview file={formData.pdf} />
           <div className="form-action-buttons">
             <Button type="submit" variation="contained" size="medium">
-              {id ? "Update" : "Save"}
+              {id ? 'Update' : 'Save'}
             </Button>
-            {
-              !id ? <Button
-              type="button"
-              variation="transparent"
-              size="medium"
-              onClick={handleReset}
-            >
-              Reset
-            </Button> : ''
-            }
-            
+            {!id ? (
+              <Button
+                type="button"
+                variation="transparent"
+                size="medium"
+                onClick={handleReset}
+              >
+                Reset
+              </Button>
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </form>

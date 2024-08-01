@@ -18,7 +18,7 @@ const Modal: FC<ModalProps> = ({
   onConfirm,
   onCancel,
   confirmLabel = 'Confirm',
-  cancelLabel = 'Cancel'
+  cancelLabel = 'Cancel',
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -30,7 +30,10 @@ const Modal: FC<ModalProps> = ({
     };
 
     const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
         onCancel();
       }
     };
@@ -55,7 +58,7 @@ const Modal: FC<ModalProps> = ({
   useEffect(() => {
     if (show && modalRef.current) {
       const focusableElements = modalRef.current.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
       ) as NodeListOf<HTMLElement>;
       const firstElement = focusableElements[0];
       const lastElement = focusableElements[focusableElements.length - 1];

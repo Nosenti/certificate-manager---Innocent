@@ -8,7 +8,11 @@ interface NotificationProps {
   onClose: () => void;
 }
 
-const Notification: React.FC<NotificationProps> = ({ message, type, onClose }) => {
+const Notification: React.FC<NotificationProps> = ({
+  message,
+  type,
+  onClose,
+}) => {
   useEffect(() => {
     const timer = setTimeout(onClose, 3000);
     return () => clearTimeout(timer);
@@ -17,7 +21,9 @@ const Notification: React.FC<NotificationProps> = ({ message, type, onClose }) =
   return (
     <div className={`notification ${type}`}>
       <p>{message}</p>
-      <button className="close-button" onClick={onClose}><RemoveIcon/></button>
+      <button className="close-button" onClick={onClose}>
+        <RemoveIcon />
+      </button>
     </div>
   );
 };

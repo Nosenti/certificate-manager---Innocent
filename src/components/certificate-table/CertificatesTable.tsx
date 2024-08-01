@@ -25,7 +25,9 @@ const CertificatesTable: React.FC = () => {
   const [dropdownVisible, setDropdownVisible] = useState<number | null>(null);
   const { notify } = useNotification();
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-  const [certificateToDelete, setCertificateToDelete] = useState<number | null>(null);
+  const [certificateToDelete, setCertificateToDelete] = useState<number | null>(
+    null,
+  );
 
   const handleEdit = (id: number) => {
     id && navigate(`/certificates/edit/${id}`);
@@ -59,12 +61,15 @@ const CertificatesTable: React.FC = () => {
   };
   const dropdownRef = useClickOutside<HTMLDivElement>(handleClickOutside);
 
-  const columns: Column[] = useMemo(() => [
-    { header: 'Supplier', accessor: 'supplier' },
-    { header: 'Certificate type', accessor: 'certificateType' },
-    { header: 'Valid from', accessor: 'validFrom' },
-    { header: 'Valid to', accessor: 'validTo' },
-  ], []);
+  const columns: Column[] = useMemo(
+    () => [
+      { header: 'Supplier', accessor: 'supplier' },
+      { header: 'Certificate type', accessor: 'certificateType' },
+      { header: 'Valid from', accessor: 'validFrom' },
+      { header: 'Valid to', accessor: 'validTo' },
+    ],
+    [],
+  );
 
   const dataWithActions: Certificate[] = certificates.map((cert) => ({
     ...cert,
@@ -93,7 +98,7 @@ const CertificatesTable: React.FC = () => {
         columns={columns}
         data={dataWithActions}
         render={(id?: number) => {
-          const row = certificates.find(cert => cert.id === id);
+          const row = certificates.find((cert) => cert.id === id);
           return row ? (
             <ActionMenu
               row={row}

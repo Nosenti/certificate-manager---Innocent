@@ -10,7 +10,7 @@ import {
   getCertificates,
   addCertificate as addCertificateToDB,
   updateCertificate as updateCertificateInDB,
-  deleteCertificate as deleteCertificateFromDB
+  deleteCertificate as deleteCertificateFromDB,
 } from '../data/db';
 import { Certificate } from '../../types/types';
 
@@ -46,10 +46,10 @@ function CertificateProvider({ children }: Props) {
           }));
           setCertificates(storedCertificates);
         } else {
-          console.log('Error: DB not initialized');
+          throw new Error('Error: DB not initialized');
         }
       } catch (error) {
-        console.error('DB initialization failed', error);
+        throw new Error('DB initialization failed');
       }
     };
 
@@ -66,7 +66,7 @@ function CertificateProvider({ children }: Props) {
       const storedCertificates = await getCertificates();
       setCertificates(storedCertificates);
     } catch (error) {
-      console.error('Error adding certificate', error);
+      throw new Error('Error adding certificate');
     }
   };
 
@@ -76,7 +76,7 @@ function CertificateProvider({ children }: Props) {
       const storedCertificates = await getCertificates();
       setCertificates(storedCertificates);
     } catch (error) {
-      console.log('Error editing a certificate', error);
+      throw new Error('Error editing a certificate');
     }
   };
 
@@ -92,7 +92,7 @@ function CertificateProvider({ children }: Props) {
         certificates,
         addCertificate,
         updateCertificate,
-        deleteCertificate
+        deleteCertificate,
       }}
     >
       {children}

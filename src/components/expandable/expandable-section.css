@@ -1,4 +1,3 @@
-
 .expandable-section {
   display: flex;
   flex-direction: column;
@@ -10,7 +9,7 @@
   align-items: center;
   cursor: pointer;
   padding: 10px;
-  border-left: .7rem solid transparent;
+  border-left: 0.7rem solid transparent;
 }
 
 .expandable-section.active .expandable-header {

@@ -32,10 +32,10 @@
   cursor: pointer;
 }
 
-.confirm{
-	background-color: var(--color-danger);
+.confirm {
+  background-color: var(--color-danger);
 }
 
-.cancel{
-	background-color: var(--color-primary);
+.cancel {
+  background-color: var(--color-primary);
 }

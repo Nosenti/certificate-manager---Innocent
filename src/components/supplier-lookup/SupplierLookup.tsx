@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getSuppliers } from '../../data/db';
 import { Supplier } from '../../../types/types';
 import './supplier-lookup.css';
@@ -26,7 +26,20 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
     city: '',
   });
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
-  const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
+  const [filteredSuppliers, setFilteredSuppliers] = useState<Supplier[]>([]);
+  const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      const results = await getSuppliers();
+      setSuppliers(results);
+      setFilteredSuppliers(results);
+    };
+
+    fetchSuppliers();
+  }, [filters]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -34,10 +47,24 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
   };
 
   const handleSearch = async () => {
-    const { supplierName, supplierIndex, city } = filters;
-    const results = await getSuppliers(supplierName, supplierIndex, city);
-    setSuppliers(results);
-  };
+  const { supplierName, supplierIndex, city } = filters;
+  let results = suppliers;
+
+  if (supplierName)
+    results = results.filter((supplier) =>
+      supplier.supplierName.toLowerCase().includes(supplierName.toLowerCase())
+    );
+  if (supplierIndex)
+    results = results.filter((supplier) =>
+      supplier.supplierIndex.toLowerCase().includes(supplierIndex.toLowerCase())
+    );
+  if (city)
+    results = results.filter((supplier) =>
+      supplier.city.toLowerCase().includes(city.toLowerCase())
+    );
+
+  setFilteredSuppliers(results);
+};
 
   const handleReset = () => {
     setFilters({ supplierName: '', supplierIndex: '', city: '' });
@@ -66,7 +93,9 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
       <div className="supplier-lookup">
         <div className="search-criteria">
           <div className="search-criteria-title">
-            <span><CaretDown/></span>
+            <span className='search-criteria-title-caret'>
+              <CaretDown />
+            </span>
             Search Criteria
           </div>
           <div className="search-inputs">
@@ -94,27 +123,25 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
             <Button size="medium" onClick={handleSearch}>
               Search
             </Button>
-            <Button
-              size="medium"
-              variation="transparent"
-              onClick={handleReset}
-            >
+            <Button size="medium" variation="transparent" onClick={handleReset}>
               Reset
             </Button>
           </div>
         </div>
         <div className="supplier-list">
           <div className="search-criteria-title">
-            <span><CaretDown/></span>
+            <span className='search-criteria-title-caret'>
+              <CaretDown />
+            </span>
             Supplier list
           </div>
-          {suppliers.length > 0 ? (
+          {filteredSuppliers.length > 0 ? (
             <Table<Supplier>
               columns={columns}
-              data={suppliers}
+              data={filteredSuppliers}
               render={(id?: number) => (
                 <SupplierRowSelect
-                  suppliers={suppliers}
+                  suppliers={filteredSuppliers}
                   selectedSupplier={selectedSupplier}
                   onRowSelect={handleRowSelect}
                   id={id}
@@ -134,11 +161,7 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
           >
             Select
           </Button>
-          <Button
-            size="medium"
-            variation="transparent"
-            onClick={onClose}
-          >
+          <Button size="medium" variation="transparent" onClick={onClose}>
             Cancel
           </Button>
         </div>

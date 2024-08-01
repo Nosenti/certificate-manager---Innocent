@@ -57,17 +57,16 @@ form {
 
 .upload-actions {
   display: flex;
-
 }
 
-.supplier-form-input{
+.supplier-form-input {
   display: flex;
 }
 
-.remove-button{
+.remove-button {
   background-color: var(--color-danger);
   border: none;
-  padding: .5rem 1rem ;
+  padding: 0.5rem 1rem;
   margin-left: 1rem;
   color: var(--color-white);
   font-size: 1rem;

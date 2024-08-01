@@ -27,14 +27,15 @@
   color: var(--color-primary);
 }
 
-.modal-header h2{
+.modal-header h2 {
   font-size: 1.2rem;
   padding-left: 1rem;
 }
-.modal-header button{
-  margin: .5rem 1rem;
+.modal-header button {
+  margin: 0.5rem 1rem;
   color: var(--color-primary);
   border: 1px solid var(--color-primary);
+  padding: 0 .5rem;
 }
 
 .modal-content {

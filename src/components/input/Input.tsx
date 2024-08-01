@@ -1,7 +1,5 @@
 const Input = () => {
-  return (
-	<input type="text" className='' />
-  )
-}
+  return <input type="text" className="" />;
+};
 
-export default Input
+export default Input;
