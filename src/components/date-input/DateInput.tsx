@@ -12,7 +12,7 @@ const DateInput: FC<DateInputProps> = ({
   name,
   value,
   error,
-  onChange
+  onChange,
 }) => {
   return (
     <>

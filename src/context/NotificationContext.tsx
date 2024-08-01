@@ -6,12 +6,16 @@ interface NotificationContextProps {
   notify: (message: string, type: 'success' | 'error') => void;
 }
 
-const NotificationContext = createContext<NotificationContextProps | undefined>(undefined);
+const NotificationContext = createContext<NotificationContextProps | undefined>(
+  undefined,
+);
 
 export const useNotification = (): NotificationContextProps => {
   const context = useContext(NotificationContext);
   if (!context) {
-    throw new Error('useNotification must be used within a NotificationProvider');
+    throw new Error(
+      'useNotification must be used within a NotificationProvider',
+    );
   }
   return context;
 };
@@ -20,8 +24,12 @@ interface NotificationProviderProps {
   children: ReactNode;
 }
 
-export const NotificationProvider: React.FC<NotificationProviderProps> = ({ children }) => {
-  const [notifications, setNotifications] = useState<{ message: string, type: 'success' | 'error', id: number }[]>([]);
+export const NotificationProvider: React.FC<NotificationProviderProps> = ({
+  children,
+}) => {
+  const [notifications, setNotifications] = useState<
+    { message: string; type: 'success' | 'error'; id: number }[]
+  >([]);
 
   const notify = (message: string, type: 'success' | 'error') => {
     const id = Date.now();
@@ -29,7 +37,9 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
   };
 
   const removeNotification = (id: number) => {
-    setNotifications((prev) => prev.filter((notification) => notification.id !== id));
+    setNotifications((prev) =>
+      prev.filter((notification) => notification.id !== id),
+    );
   };
 
   return (

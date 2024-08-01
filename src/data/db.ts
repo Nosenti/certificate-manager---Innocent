@@ -1,58 +1,88 @@
-import { Certificate } from '../../types/types';
+import { Certificate, Supplier } from '../../types/types';
+
 let db: IDBDatabase | null = null;
 const version = 1;
 
 export enum Stores {
   Certificates = 'certificates',
+  Suppliers = 'suppliers',
 }
 
 export const initDB = async (): Promise<boolean> => {
   try {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(Stores.Certificates, version);
+      const request = indexedDB.open('CertificatesManagerDB', version);
 
       request.onupgradeneeded = () => {
         db = request.result;
-        console.log('Upgrading or initializing database', db);
 
         if (!db.objectStoreNames.contains(Stores.Certificates)) {
-          console.log('Creating certificates store');
           db.createObjectStore(Stores.Certificates, {
             keyPath: 'id',
             autoIncrement: true,
           });
         }
+
+        if (!db.objectStoreNames.contains(Stores.Suppliers)) {
+          const supplierStore = db.createObjectStore(Stores.Suppliers, {
+            keyPath: 'id',
+            autoIncrement: true,
+          });
+
+          supplierStore.transaction.oncomplete = () => {
+            const supplierTransaction = db!.transaction(
+              [Stores.Suppliers],
+              'readwrite',
+            );
+            const supplierStoreTransaction = supplierTransaction.objectStore(
+              Stores.Suppliers,
+            );
+
+            const suppliers: Supplier[] = [
+              {
+                id: 1,
+                supplierName: 'ANDEMIS GmbH',
+                supplierIndex: '1',
+                city: 'Stuttgart',
+              },
+              {
+                id: 2,
+                supplierName: 'IMLER AG',
+                supplierIndex: '2',
+                city: 'Berlin',
+              },
+            ];
+            suppliers.forEach((supplier) => {
+              supplierStoreTransaction.add(supplier);
+            });
+          };
+        }
       };
-      console.log('request: ', request);
+
       request.onsuccess = () => {
         db = request.result;
-        console.log('request.onsuccess - initDB', db.version);
         resolve(true);
       };
 
       request.onerror = () => {
-        console.error('Error opening IndexedDB', request.error);
         reject(false);
       };
     });
   } catch (error) {
-    console.error('Error during initDB', error);
-    return false;
+    throw new Error('Error during initDB');
   }
 };
 
 export const getCertificates = async (): Promise<Certificate[]> => {
-  if (!db) {
-    throw new Error('DB is not initialized');
-  }
-
   return new Promise((resolve, reject) => {
-    const transaction = db?.transaction([Stores.Certificates], 'readonly');
-    const store = transaction?.objectStore(Stores.Certificates);
-    const request = store?.getAll();
+    if (!db) {
+      throw new Error('DB is not initialized');
+    }
+    const transaction = db.transaction([Stores.Certificates], 'readonly');
+    const store = transaction.objectStore(Stores.Certificates);
+    const request = store.getAll();
     if (!request) {
-      console.log('Request error');
-      return;
+      throw new Error('Request error');
     }
     request.onsuccess = () => {
       resolve(request.result);
@@ -67,13 +97,9 @@ export const getCertificates = async (): Promise<Certificate[]> => {
 export const addCertificate = async (
   certificate: Certificate,
 ): Promise<void> => {
-  if (!db) {
-    throw new Error('DB is not initialized');
-  }
   return new Promise((resolve, reject) => {
     if (!db) {
-      console.log('database not properly initialized');
-      return;
+      throw new Error('DB is not initialized');
     }
     const transaction = db.transaction([Stores.Certificates], 'readwrite');
     const store = transaction.objectStore(Stores.Certificates);
@@ -120,6 +146,47 @@ export const deleteCertificate = async (id: number): Promise<void> => {
     const transaction = db.transaction([Stores.Certificates], 'readwrite');
     const store = transaction.objectStore(Stores.Certificates);
     const request = store.delete(id);
+
+    request.onsuccess = () => {
+      resolve();
+    };
+
+    request.onerror = () => {
+      reject(request.error);
+    };
+  });
+};
+
+export const getSuppliers = async (): Promise<Supplier[]> => {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      throw new Error('DB is not initialized');
+    }
+    const transaction = db.transaction([Stores.Suppliers], 'readonly');
+    const store = transaction.objectStore(Stores.Suppliers);
+    const request = store.getAll();
+    if (!request) {
+      throw new Error('Request error');
+    }
+    request.onsuccess = () => {
+      resolve(request.result);
+    };
+
+    request.onerror = () => {
+      reject(request.error);
+    };
+  });
+};
+
+export const addSupplier = async (supplier: Supplier): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject('DB is not initialized');
+      return;
+    }
+    const transaction = db.transaction([Stores.Suppliers], 'readwrite');
+    const store = transaction.objectStore(Stores.Suppliers);
+    const request = store.add(supplier);
 
     request.onsuccess = () => {
       resolve();

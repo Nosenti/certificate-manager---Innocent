@@ -9,21 +9,21 @@ interface ActionMenuProps {
   onEdit: (id: number) => void;
 }
 
-const ActionMenu: React.FC<ActionMenuProps> = ({ row, onDelete,onEdit }) => {
+const ActionMenu: React.FC<ActionMenuProps> = ({ row, onDelete, onEdit }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
   return (
-    <div className="cog-container" onClick={() => setIsOpen(!isOpen)} ref={dropdownRef}>
+    <div
+      className="cog-container"
+      onClick={() => setIsOpen(!isOpen)}
+      ref={dropdownRef}
+    >
       <CogIcon />
       {isOpen && (
         <div className="dropdown-menu">
-          <button
-            onClick={() => onEdit(row.id)}
-          >Edit</button>
-          <button
-            onClick={() => onDelete(row.id)}
-          >Delete</button>
+          <button onClick={() => onEdit(row.id)}>Edit</button>
+          <button onClick={() => onDelete(row.id)}>Delete</button>
         </div>
       )}
     </div>

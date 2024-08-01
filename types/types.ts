@@ -6,3 +6,10 @@ export interface Certificate {
   validTo: string;
   pdf: File | null
 }
+
+export interface Supplier {
+  id: number;
+  supplierName: string;
+  supplierIndex: string;
+  city: string
+}
