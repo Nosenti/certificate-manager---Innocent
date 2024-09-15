@@ -2,6 +2,7 @@ import React, { useState, useReducer, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './FormPage.css';
 import Button from '../button/Button';
+import { Participant } from '../../../types/types';
 import { useCertificates } from '../../context/CertificateContext';
 import TextInput from '../text-input/TextInput';
 import DateInput from '../date-input/DateInput';

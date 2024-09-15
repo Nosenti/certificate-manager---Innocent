@@ -68,4 +68,5 @@ function Table<T extends { id?: number }>({
   );
 }
 
+
 export default Table;
