@@ -2,6 +2,7 @@ import React, { useState, useReducer, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './FormPage.css';
 import Button from '../button/Button';
+import { Participant } from '../../../types/types';
 import { useCertificates } from '../../context/CertificateContext';
 import TextInput from '../text-input/TextInput';
 import DateInput from '../date-input/DateInput';
@@ -18,6 +19,9 @@ import { useNotification } from '../../context/NotificationContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { addSupplier, getSuppliers } from '../../data/db';
 import { Supplier } from '../../../types/types';
+import Table, { Column } from '../table/Table';
+
+const locales: Locales = { en, de };
 
 interface FormData {
   id: number;
@@ -165,7 +169,7 @@ const CertificateForm: React.FC = () => {
 
   const handleParticipantSelect = (participants: { name: string; department: string; email: string }[]) => {
     dispatch({ type: 'ADD_ASSIGNED_USERS', users: participants });
-    setShowParticipantLookup(false); // Hide the modal after selection
+    setShowParticipantLookup(false);
   };
 
   const handleRemoveAssignedUser = (index: number) => {
@@ -221,29 +225,36 @@ const CertificateForm: React.FC = () => {
           />
           <div className='assigned-users'>
             <label>Assigned users</label>
-            <Button variation='contained' size='medium' onClick={()=> setShowParticipantLookup(true)}>Add participant</Button>
+            <div className="btn-wrapper">
+              <Button type='button' variation='contained' size='medium' onClick={()=> setShowParticipantLookup(true)}>Add participant</Button>
+            </div>
             <table>
               <thead>
                 <tr>
+                  <th></th>
                   <th>Name</th>
                   <th>Department</th>
                   <th>E-mail</th>
-                  <th>Remove</th>
+                  
                 </tr>
               </thead>
               <tbody>
-                {formData?.assignedUsers?.map((user, index) => (
+                {
+                  formData.assignedUsers.length == 0 ? <p>No assigned participants</p> : (formData?.assignedUsers?.map((user, index) => (
                   <tr key={index}>
+                    <td>
+                      <button type="button" onClick={() => handleRemoveAssignedUser(index)}>
+                        <RemoveIcon/>
+                      </button>
+                    </td>
                     <td>{user.name}</td>
                     <td>{user.department}</td>
                     <td>{user.email}</td>
-                    <td>
-                      <button type="button" onClick={() => handleRemoveAssignedUser(index)}>
-                        Remove
-                      </button>
-                    </td>
+                    
                   </tr>
-                ))}
+                )))
+                }
+                {}
               </tbody>
             </table>
           </div>

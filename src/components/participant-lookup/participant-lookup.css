@@ -1,0 +1,14 @@
+.search-inputs{
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 10px;
+}
+.participants-btns {
+	display: flex;
+	gap: 10px;
+}
+.participant-list-actions {
+	margin-top: 1rem;
+	display: flex;
+	gap: 10px;
+}

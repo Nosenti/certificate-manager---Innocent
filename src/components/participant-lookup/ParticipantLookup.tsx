@@ -62,9 +62,9 @@ const ParticipantLookup: React.FC<ParticipantLookupProps> = ({
 
   const columns = [
     {
-      Header: '',
+      header: '',
       accessor: 'select' as keyof Participant,
-      render: (row: Participant) => (
+      render: (_:any,row: Participant) => (
         <input
           type="checkbox"
           checked={!!selectedParticipants.find((p) => p.id === row.id)}
@@ -72,12 +72,12 @@ const ParticipantLookup: React.FC<ParticipantLookupProps> = ({
         />
       ),
     },
-    { Header: 'Name', accessor: 'name' as keyof Participant },
-    { Header: 'First Name', accessor: 'firstName' as keyof Participant },
-    { Header: 'User ID', accessor: 'userID' as keyof Participant },
-    { Header: 'Department', accessor: 'department' as keyof Participant },
-    { Header: 'Plant', accessor: 'plant' as keyof Participant },
-    { Header: 'E-mail', accessor: 'email' as keyof Participant },
+    { header: 'Name', accessor: 'name' as keyof Participant },
+    { header: 'First Name', accessor: 'firstName' as keyof Participant },
+    { header: 'User ID', accessor: 'userID' as keyof Participant },
+    { header: 'Department', accessor: 'department' as keyof Participant },
+    { header: 'Plant', accessor: 'plant' as keyof Participant },
+    { header: 'E-mail', accessor: 'email' as keyof Participant },
   ];
 
   return (

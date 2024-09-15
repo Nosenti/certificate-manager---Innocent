@@ -5,7 +5,6 @@
 }
 
 label {
-  margin-bottom: 0.5rem;
   font-style: italic;
   font-size: 1rem;
 }
@@ -29,12 +28,12 @@ button {
   color: var(--color-grey-dark);
 }
 
-.form-input span {
-  margin-bottom: 0.5rem;
+.form-input label span {
+  text-align: left;
 }
 
-.form-input input,
-.form-input select {
+.form-input label input,
+.form-input  label select {
   padding: 0.5rem;
   font-size: 1rem;
   border: 10px solid var(--color-grey-dark);

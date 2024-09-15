@@ -72,6 +72,14 @@ form {
   font-size: 1rem;
   font-weight: 600;
 }
+.assigned-users {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.assign-btn{
+  width: 20%;
+}
 
 /* Tablet Landscape: from 600 to 900px */
 @media only screen and (max-width: 900px) {
