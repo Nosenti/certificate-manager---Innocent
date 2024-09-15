@@ -1,11 +1,5 @@
 import { FC } from 'react';
 import './header.css';
-import { useLanguage } from '../../context/LanguageContext';
-import en from '../../locales/en.json';
-import de from '../../locales/de.json';
-import { Locales } from '../../../types/types';
-
-const locales: Locales = { en, de };
 import { useLocation } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import en from '../../locales/en.json';
