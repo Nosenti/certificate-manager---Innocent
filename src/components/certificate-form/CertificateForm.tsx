@@ -336,7 +336,7 @@ const CertificateForm: React.FC = () => {
         onClose={() => setShowParticipantLookup(false)}
         onSelect={handleParticipantSelect}
       />
-      <CommentSection/>
+     
     </section>
   );
 };
