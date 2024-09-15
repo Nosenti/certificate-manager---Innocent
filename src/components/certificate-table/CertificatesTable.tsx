@@ -45,12 +45,13 @@ const CertificatesTable: React.FC = () => {
     setDropdownVisible(dropdownVisible === index ? null : index);
   };
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node)
-    ) {
-      setDropdownVisible(null);
+  // const handleClickOutside = (event: MouseEvent) => {
+  //   if (
+  //     dropdownRef.current &&
+  //     !dropdownRef.current.contains(event.target as Node)
+  //   ) {
+  //     setDropdownVisible(null);
+  //   }
   const handleDeleteConfirm = () => {
     if (certificateToDelete !== null) {
       deleteCertificate(certificateToDelete);
@@ -101,7 +102,6 @@ const CertificatesTable: React.FC = () => {
             to="/new-certificate"
             style={{ color: 'inherit', textDecoration: 'none' }}
           >
-            {t.addNewCertificate}
             {t.newCertificate}
           </Link>
         </Button>

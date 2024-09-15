@@ -45,9 +45,7 @@ const Header: FC<HeaderProps> = ({ user = 'John Doe' }) => {
         <h2>{routeTitle}</h2>
       </div>
       <div className="header-right">
-        <div className="user-info">
-          {user && <span className="user">{user}</span>}
-        </div>
+          <UserSwitch/>
         <div className="language-info">
           <p>Language:</p>
           <span className="language-info-dropdown">
