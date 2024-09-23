@@ -5,7 +5,7 @@ import React from 'react';
 export interface Column<T> {
   header: string;
   accessor: keyof T;
-  render?: (value: T[keyof T], row: T) => React.ReactNode;
+  render?: (value: T[keyof T], row: T, index: number) => React.ReactNode;
 }
 
 interface TableProps<T> {
@@ -49,13 +49,13 @@ function Table<T extends { id?: number }>({
               </td>
             </tr>
           ) : (
-            data.map((row) => (
+            data.map((row, index) => (
               <tr key={row.id}>
                 <td>{render ? render(row.id) : null}</td>
                 {columns.map((column) => (
                   <td key={`${row.id}-${String(column.accessor)}`}>
                     {column.render
-                      ? column.render(row[column.accessor], row)
+                      ? column.render(row[column.accessor], row, index)
                       : String(row[column.accessor])}
                   </td>
                 ))}
@@ -67,6 +67,5 @@ function Table<T extends { id?: number }>({
     </div>
   );
 }
-
 
 export default Table;

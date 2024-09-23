@@ -1,4 +1,5 @@
 export interface AssignedUser {
+  id: number,
   name: string;
   department: string;
   email: string;
