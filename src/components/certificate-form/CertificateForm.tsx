@@ -14,14 +14,9 @@ import SearchIcon from '../../../public/assets/search.svg';
 import RemoveIcon from '../../../public/assets/close-small.svg';
 import { validateForm } from '../../utils/validation';
 import { useNotification } from '../../context/NotificationContext';
-import en from '../../locales/en.json';
-import de from '../../locales/de.json';
-import { Locales } from '../../../types/types';
 import { useLanguage } from '../../context/LanguageContext';
 import { addSupplier, getSuppliers } from '../../data/db';
 import { Supplier } from '../../../types/types';
-
-const locales: Locales = { en, de };
 
 interface FormData {
   id: number;
@@ -75,7 +70,7 @@ const CertificateForm: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState<string | null>(null);
   const [showSupplierLookup, setShowSupplierLookup] = useState(false);
-  const { language } = useLanguage();
+  const {  t } = useLanguage();
 
   useEffect(() => {
     if (id) {
@@ -86,7 +81,7 @@ const CertificateForm: React.FC = () => {
     }
   }, [id, certificates]);
 
-  const t = locales[language as keyof Locales];
+
 
   const handleInputChange = 
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

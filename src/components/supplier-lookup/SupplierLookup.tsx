@@ -9,11 +9,7 @@ import TextInput from '../text-input/TextInput';
 import SupplierRowSelect from '../supplier-row-select/SupplierRowSelect';
 import CaretDown from '../../../public/assets/caret-down.svg';
 import { useLanguage } from '../../context/LanguageContext';
-import en from '../../locales/en.json';
-import de from '../../locales/de.json';
-import { Locales } from '../../../types/types';
 
-const locales: Locales = { en, de };
 
 interface SupplierLookupProps {
   show: boolean;
@@ -36,7 +32,7 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(
     null,
   );
-  const { language } = useLanguage();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchSuppliers = async () => {
@@ -48,7 +44,6 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
     fetchSuppliers();
   }, [filters]);
 
-  const t = locales[language as keyof Locales];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

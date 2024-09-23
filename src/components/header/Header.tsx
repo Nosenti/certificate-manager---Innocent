@@ -2,11 +2,6 @@ import { FC } from 'react';
 import './header.css';
 import { useLocation } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
-import en from '../../locales/en.json';
-import de from '../../locales/de.json';
-import { Locales } from '../../../types/types';
-
-const locales: Locales = { en, de };
 
 interface HeaderProps {
   user?: string;
@@ -19,8 +14,8 @@ interface HeaderProps {
  */
 const Header: FC<HeaderProps> = ({ user = 'John Doe' }) => {
   const location = useLocation(); // Use the useLocation hook here
-  const { language, setLanguage } = useLanguage();
-  const t = locales[language as keyof Locales];
+  const { language, setLanguage, t } = useLanguage();
+  
   let routeTitle = '';
 
   if (location.pathname === '/new-certificate') {

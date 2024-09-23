@@ -7,11 +7,7 @@ import HomeIcon from '../../../public/assets/homeicon.svg';
 import { useLocation } from 'react-router-dom';
 import { FC, useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
-import en from '../../locales/en.json';
-import de from '../../locales/de.json';
-import { Locales } from '../../../types/types';
 
-const locales: Locales = { en, de };
 
 interface SidebarProps {
   closeSidebar: () => void;
@@ -31,8 +27,7 @@ interface NavItemType {
 const Sidebar: FC<SidebarProps> = ({ closeSidebar }) => {
   const location = useLocation();
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const { language } = useLanguage();
-  const t = locales[language as keyof Locales];
+  const { t } = useLanguage();
 
   const handleSectionToggle = (section: string) => {
     setActiveSection((prev) => (prev === section ? null : section));

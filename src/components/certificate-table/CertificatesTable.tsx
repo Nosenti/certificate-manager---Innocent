@@ -10,11 +10,8 @@ import ActionMenu from '../action-menu/ActionMenu';
 import { useNotification } from '../../context/NotificationContext';
 import Modal from '../confirm-modal/ConfirmModal';
 import { useLanguage } from '../../context/LanguageContext';
-import en from '../../locales/en.json';
-import de from '../../locales/de.json';
-import { Locales } from '../../../types/types';
 
-const locales: Locales = { en, de };
+
 
 interface Column {
   header: string;
@@ -32,9 +29,8 @@ const CertificatesTable: React.FC = () => {
   const { notify } = useNotification();
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
   const [certificateToDelete, setCertificateToDelete] = useState<number | null>(null);
-  const { language } = useLanguage();
+  const { t } = useLanguage();
 
-  const t = locales[language as keyof Locales];
 
   const handleEdit = (id: number) => {
     id && navigate(`/certificates/edit/${id}`);
