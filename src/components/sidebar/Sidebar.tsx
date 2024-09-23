@@ -1,4 +1,3 @@
-// src/components/sidebar/Sidebar.tsx
 import './sidebar.css';
 import SidebarHeader from '../sidebar-header/SidebarHeader';
 import NavItem from '../nav-item/NavItem';
@@ -7,6 +6,8 @@ import MLIcon from '../../../public/assets/mlicon.svg';
 import HomeIcon from '../../../public/assets/homeicon.svg';
 import { useLocation } from 'react-router-dom';
 import { FC, useState } from 'react';
+import { useLanguage } from '../../context/LanguageContext';
+
 
 interface SidebarProps {
   closeSidebar: () => void;
@@ -26,6 +27,7 @@ interface NavItemType {
 const Sidebar: FC<SidebarProps> = ({ closeSidebar }) => {
   const location = useLocation();
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   const handleSectionToggle = (section: string) => {
     setActiveSection((prev) => (prev === section ? null : section));
@@ -34,11 +36,11 @@ const Sidebar: FC<SidebarProps> = ({ closeSidebar }) => {
   const navItems: NavItemType[] = [
     {
       path: '/certificates',
-      name: 'All Certificates',
+      name: t.certificates,
     },
     {
       path: '/new-certificate',
-      name: 'New Certificate',
+      name: t.newCertificate,
     },
   ];
 
@@ -56,10 +58,10 @@ const Sidebar: FC<SidebarProps> = ({ closeSidebar }) => {
             }}
             isActive={location.pathname === '/'}
           >
-            Home
+            {t.home}
           </NavItem>
           <ExpandableSection
-            title="Certificates Action"
+            title={t.certificateAction}
             icon={<MLIcon />}
             initialSelected="/certificates"
             isActive={activeSection === 'certificates'}

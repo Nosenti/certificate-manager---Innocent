@@ -8,6 +8,8 @@ import Table from '../table/Table';
 import TextInput from '../text-input/TextInput';
 import SupplierRowSelect from '../supplier-row-select/SupplierRowSelect';
 import CaretDown from '../../../public/assets/caret-down.svg';
+import { useLanguage } from '../../context/LanguageContext';
+
 
 interface SupplierLookupProps {
   show: boolean;
@@ -30,6 +32,7 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(
     null,
   );
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchSuppliers = async () => {
@@ -40,6 +43,7 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
 
     fetchSuppliers();
   }, [filters]);
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -83,36 +87,36 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
   };
 
   const columns = [
-    { header: 'Supplier name', accessor: 'supplierName' as keyof Supplier },
-    { header: 'Supplier index', accessor: 'supplierIndex' as keyof Supplier },
-    { header: 'City', accessor: 'city' as keyof Supplier },
+    { header: t.supplierName, accessor: 'supplierName' as keyof Supplier },
+    { header: t.supplierIndex, accessor: 'supplierIndex' as keyof Supplier },
+    { header: t.city, accessor: 'city' as keyof Supplier },
   ];
 
   return (
-    <Modal show={show} title="Search for suppliers" onClose={onClose}>
+    <Modal show={show} title={t.searchForSuppliers} onClose={onClose}>
       <div className="supplier-lookup">
         <div className="search-criteria">
           <div className="search-criteria-title">
             <span className='search-criteria-title-caret'>
               <CaretDown />
             </span>
-            Search Criteria
+            {t.searchCriteria}
           </div>
           <div className="search-inputs">
             <TextInput
-              label="Supplier name"
+              label={t.supplierName}
               name="supplierName"
               value={filters.supplierName}
               onChange={handleInputChange}
             />
             <TextInput
-              label="Supplier index"
+              label={t.supplierIndex}
               name="supplierIndex"
               value={filters.supplierIndex}
               onChange={handleInputChange}
             />
             <TextInput
-              label="City"
+              label={t.city}
               name="city"
               value={filters.city}
               onChange={handleInputChange}
@@ -121,10 +125,10 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
 
           <div className="supplier-btns">
             <Button size="medium" onClick={handleSearch}>
-              Search
+              {t.search}
             </Button>
             <Button size="medium" variation="transparent" onClick={handleReset}>
-              Reset
+              {t.reset}
             </Button>
           </div>
         </div>
@@ -133,7 +137,7 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
             <span className='search-criteria-title-caret'>
               <CaretDown />
             </span>
-            Supplier list
+            {t.supplierList}
           </div>
           {filteredSuppliers.length > 0 ? (
             <Table<Supplier>
@@ -159,10 +163,10 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
             onClick={handleSelectClick}
             disabled={!selectedSupplier}
           >
-            Select
+            {t.select}
           </Button>
           <Button size="medium" variation="transparent" onClick={onClose}>
-            Cancel
+            {t.cancel}
           </Button>
         </div>
       </div>

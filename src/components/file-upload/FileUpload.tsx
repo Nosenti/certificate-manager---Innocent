@@ -1,6 +1,8 @@
 import { ChangeEvent, FC, memo, useEffect, useState } from 'react';
 import Button from '../button/Button';
 import './file-upload.css';
+import { useLanguage } from '../../context/LanguageContext';
+
 
 interface FileUploadProps {
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -9,10 +11,10 @@ interface FileUploadProps {
   file: File | null;
 }
 
-const FileUpload: FC<FileUploadProps> = memo(
-  ({ onFileChange, resetFile, onFileRemove, file }) => {
-    const [fileName, setFileName] = useState<string | null>(null);
-    const [error, setError] = useState<string | null>(null);
+const FileUpload: FC<FileUploadProps> = memo(({ onFileChange, resetFile, onFileRemove, file }) => {
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { t } = useLanguage();
 
     useEffect(() => {
       if (resetFile) {
@@ -64,7 +66,7 @@ const FileUpload: FC<FileUploadProps> = memo(
             onClick={() => document.getElementById('fileInput')?.click()}
             aria-label="Upload"
           >
-            Upload
+            {t.upload}
           </Button>
           {file && (
             <Button
@@ -74,7 +76,7 @@ const FileUpload: FC<FileUploadProps> = memo(
               onClick={handleRemoveFile}
               aria-label="Remove"
             >
-              Remove
+              {t.remove}
             </Button>
           )}
         </label>

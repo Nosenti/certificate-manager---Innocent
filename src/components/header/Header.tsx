@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import './header.css';
 import { useLocation } from 'react-router-dom';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface HeaderProps {
   user?: string;
@@ -12,18 +13,26 @@ interface HeaderProps {
  *
  */
 const Header: FC<HeaderProps> = ({ user = 'John Doe' }) => {
-  const location = useLocation();
+  const location = useLocation(); // Use the useLocation hook here
+  const { language, setLanguage, t } = useLanguage();
+  
   let routeTitle = '';
 
   if (location.pathname === '/new-certificate') {
-    routeTitle = 'New Certificate';
+    routeTitle = t.newCertificate;
   } else if (location.pathname.includes('/certificates/edit')) {
-    routeTitle = 'Edit Certificate';
+    routeTitle = t.editCertificate;
   } else if (location.pathname.includes('/certificates')) {
-    routeTitle = 'All Certificates';
-  } else if (location.pathname.includes('/')) {
-    routeTitle = 'Home';
+    routeTitle = t.allCertificates;
+  } else if (location.pathname === '/') {
+    // Match exact root path
+    routeTitle = t.home;
   }
+
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLanguage(e.target.value);
+  };
+
   return (
     <header className="header">
       <div className="header-left">
@@ -32,6 +41,15 @@ const Header: FC<HeaderProps> = ({ user = 'John Doe' }) => {
       <div className="header-right">
         <div className="user-info">
           {user && <span className="user">{user}</span>}
+        </div>
+        <div className="language-info">
+          <p>Language:</p>
+          <span className="language-info-dropdown">
+            <select value={language} onChange={handleLanguageChange}>
+              <option value="en">{t.english}</option>
+              <option value="de">{t.german}</option>
+            </select>
+          </span>
         </div>
       </div>
     </header>

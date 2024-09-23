@@ -9,6 +9,9 @@ import { useMemo, useState } from 'react';
 import ActionMenu from '../action-menu/ActionMenu';
 import { useNotification } from '../../context/NotificationContext';
 import Modal from '../confirm-modal/ConfirmModal';
+import { useLanguage } from '../../context/LanguageContext';
+
+
 
 interface Column {
   header: string;
@@ -25,9 +28,9 @@ const CertificatesTable: React.FC = () => {
   const [dropdownVisible, setDropdownVisible] = useState<number | null>(null);
   const { notify } = useNotification();
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-  const [certificateToDelete, setCertificateToDelete] = useState<number | null>(
-    null,
-  );
+  const [certificateToDelete, setCertificateToDelete] = useState<number | null>(null);
+  const { t } = useLanguage();
+
 
   const handleEdit = (id: number) => {
     id && navigate(`/certificates/edit/${id}`);
@@ -61,15 +64,12 @@ const CertificatesTable: React.FC = () => {
   };
   const dropdownRef = useClickOutside<HTMLDivElement>(handleClickOutside);
 
-  const columns: Column[] = useMemo(
-    () => [
-      { header: 'Supplier', accessor: 'supplier' },
-      { header: 'Certificate type', accessor: 'certificateType' },
-      { header: 'Valid from', accessor: 'validFrom' },
-      { header: 'Valid to', accessor: 'validTo' },
-    ],
-    [],
-  );
+  const columns: Column[] = useMemo(() => [
+    { header: t.supplier, accessor: 'supplier' },
+    { header: t.certificateType, accessor: 'certificateType' },
+    { header: t.validFrom, accessor: 'validFrom' },
+    { header: t.validTo, accessor: 'validTo' },
+  ], [t]);
 
   const dataWithActions: Certificate[] = certificates.map((cert) => ({
     ...cert,
@@ -90,7 +90,7 @@ const CertificatesTable: React.FC = () => {
             to="/new-certificate"
             style={{ color: 'inherit', textDecoration: 'none' }}
           >
-            Add New Certificate
+            {t.newCertificate}
           </Link>
         </Button>
       </span>

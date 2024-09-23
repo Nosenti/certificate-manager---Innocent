@@ -18,6 +18,7 @@
     "strictNullChecks": true,
     "baseUrl": "src",
     "isolatedModules": true,
+    "resolveJsonModule": true,
     "noEmit": true,
     "paths": {
       "@/*": ["*"]
