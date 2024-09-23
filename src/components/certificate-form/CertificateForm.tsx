@@ -21,7 +21,6 @@ import { addSupplier, getSuppliers } from '../../data/db';
 import { Supplier } from '../../../types/types';
 import Table, { Column } from '../table/Table';
 
-const locales: Locales = { en, de };
 
 interface FormData {
   id: number;
@@ -85,7 +84,7 @@ const CertificateForm: React.FC = () => {
   const [selectedSupplier, setSelectedSupplier] = useState<string | null>(null);
   const [showSupplierLookup, setShowSupplierLookup] = useState(false);
   const [showParticipantLookup, setShowParticipantLookup] = useState(false);
-  const { language } = useLanguage();
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (id) {
@@ -226,15 +225,15 @@ const CertificateForm: React.FC = () => {
           <div className='assigned-users'>
             <label>Assigned users</label>
             <div className="btn-wrapper">
-              <Button type='button' variation='contained' size='medium' onClick={()=> setShowParticipantLookup(true)}>Add participant</Button>
+              <Button type='button' variation='contained' size='medium' onClick={() => setShowParticipantLookup(true)}>{ t.addParticipant}</Button>
             </div>
             <table>
               <thead>
                 <tr>
                   <th></th>
-                  <th>Name</th>
-                  <th>Department</th>
-                  <th>E-mail</th>
+                  <th>{ t.name}</th>
+                  <th>{ t.department}</th>
+                  <th>{ t.email}</th>
                   
                 </tr>
               </thead>

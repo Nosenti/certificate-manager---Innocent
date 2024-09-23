@@ -6,6 +6,7 @@ import Modal from '../modal/Modal';
 import Button from '../button/Button';
 import Table from '../table/Table';
 import TextInput from '../text-input/TextInput';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface ParticipantLookupProps {
   show: boolean;
@@ -27,6 +28,7 @@ const ParticipantLookup: React.FC<ParticipantLookupProps> = ({
   });
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [selectedParticipants, setSelectedParticipants] = useState<Participant[]>([]);
+  const { t } = useLanguage();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -72,46 +74,46 @@ const ParticipantLookup: React.FC<ParticipantLookupProps> = ({
         />
       ),
     },
-    { header: 'Name', accessor: 'name' as keyof Participant },
-    { header: 'First Name', accessor: 'firstName' as keyof Participant },
-    { header: 'User ID', accessor: 'userID' as keyof Participant },
-    { header: 'Department', accessor: 'department' as keyof Participant },
-    { header: 'Plant', accessor: 'plant' as keyof Participant },
-    { header: 'E-mail', accessor: 'email' as keyof Participant },
+    { header: t.name, accessor: 'name' as keyof Participant },
+    { header: t.firstName, accessor: 'firstName' as keyof Participant },
+    { header: t.userId, accessor: 'userID' as keyof Participant },
+    { header: t.department, accessor: 'department' as keyof Participant },
+    { header: t.plant, accessor: 'plant' as keyof Participant },
+    { header: t.email, accessor: 'email' as keyof Participant },
   ];
 
   return (
     <Modal show={show} title="Search for persons" onClose={onClose}>
       <div className="participant-lookup">
         <div className="search-criteria">
-          <div className="search-criteria-title">Search Criteria</div>
+          <div className="search-criteria-title">{ t.searchCriteria}</div>
           <div className="search-inputs">
             <TextInput
-              label="Name"
+              label={t.name}
               name="name"
               value={filters.name}
               onChange={handleInputChange}
             />
             <TextInput
-              label="First name"
+              label={t.firstName}
               name="firstName"
               value={filters.firstName}
               onChange={handleInputChange}
             />
             <TextInput
-              label="User ID"
+              label={t.userId}
               name="userID"
               value={filters.userID}
               onChange={handleInputChange}
             />
             <TextInput
-              label="Department"
+              label={t.department}
               name="department"
               value={filters.department}
               onChange={handleInputChange}
             />
             <TextInput
-              label="Plant"
+              label={t.plant}
               name="plant"
               value={filters.plant}
               onChange={handleInputChange}
@@ -120,14 +122,14 @@ const ParticipantLookup: React.FC<ParticipantLookupProps> = ({
 
           <div className="participant-btns">
             <Button size="medium" onClick={handleSearch}>
-              Search
+              {t.search}
             </Button>
             <Button
               size="medium"
               variation="transparent"
               onClick={handleReset}
             >
-              Reset
+              {t.reset}
             </Button>
           </div>
         </div>
@@ -149,14 +151,14 @@ const ParticipantLookup: React.FC<ParticipantLookupProps> = ({
             onClick={handleSelectClick}
             disabled={selectedParticipants.length === 0}
           >
-            Select
+            {t.select}
           </Button>
           <Button
             size="medium"
             variation="transparent"
             onClick={onClose}
           >
-            Cancel
+            {t.cancel}
           </Button>
         </div>
       </div>

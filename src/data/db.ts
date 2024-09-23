@@ -1,7 +1,7 @@
 import { Certificate, Supplier, Participant } from '../../types/types';
 
 let db: IDBDatabase | null = null;
-const version = 2; 
+const version = 1;
 
 export enum Stores {
   Certificates = 'certificates',
@@ -16,8 +16,10 @@ export const initDB = async (): Promise<boolean> => {
 
       request.onupgradeneeded = () => {
         db = request.result;
+        console.log('Upgrading or initializing database', db);
 
         if (!db.objectStoreNames.contains(Stores.Certificates)) {
+          console.log('Creating certificates store');
           db.createObjectStore(Stores.Certificates, {
             keyPath: 'id',
             autoIncrement: true,
@@ -25,6 +27,7 @@ export const initDB = async (): Promise<boolean> => {
         }
 
         if (!db.objectStoreNames.contains(Stores.Suppliers)) {
+          console.log('Creating suppliers store');
           const supplierStore = db.createObjectStore(Stores.Suppliers, {
             keyPath: 'id',
             autoIncrement: true,
@@ -130,15 +133,18 @@ export const initDB = async (): Promise<boolean> => {
 
       request.onsuccess = () => {
         db = request.result;
+        console.log('request.onsuccess - initDB', db.version);
         resolve(true);
       };
 
       request.onerror = () => {
+        console.error('Error opening IndexedDB', request.error);
         reject(false);
       };
     });
   } catch (error) {
-    throw new Error('Error during initDB');
+    console.error('Error during initDB', error);
+    return false;
   }
 };
 
@@ -151,7 +157,8 @@ export const getCertificates = async (): Promise<Certificate[]> => {
     const store = transaction.objectStore(Stores.Certificates);
     const request = store.getAll();
     if (!request) {
-      throw new Error('Request error');
+      console.log('Request error');
+      return;
     }
     request.onsuccess = () => {
       resolve(request.result);
@@ -226,41 +233,18 @@ export const deleteCertificate = async (id: number): Promise<void> => {
   });
 };
 
-export const getSuppliers = async (): Promise<Supplier[]> => {
-  return new Promise((resolve, reject) => {
-    if (!db) {
-      throw new Error('DB is not initialized');
-    }
-    const transaction = db.transaction([Stores.Suppliers], 'readonly');
-    const store = transaction.objectStore(Stores.Suppliers);
-    const request = store.getAll();
-    if (!request) {
-      throw new Error('Request error');
-    }
-    request.onsuccess = () => {
-      resolve(request.result);
-    };
-
-    request.onerror = () => {
-      reject(request.error);
-    };
-  });
-};
-
-export const getParticipants = async (
-  name?: string,
-  firstName?: string,
-  userID?: string,
-  department?: string,
-  plant?: string,
-): Promise<Participant[]> => {
+export const getSuppliers = async (
+  supplierName?: string,
+  supplierIndex?: string,
+  city?: string,
+): Promise<Supplier[]> => {
   return new Promise((resolve, reject) => {
     if (!db) {
       reject('DB is not initialized');
       return;
     }
-    const transaction = db.transaction([Stores.Participants], 'readonly');
-    const store = transaction.objectStore(Stores.Participants);
+    const transaction = db.transaction([Stores.Suppliers], 'readonly');
+    const store = transaction.objectStore(Stores.Suppliers);
     const request = store.getAll();
     if (!request) {
       console.log('Request error');
@@ -336,6 +320,26 @@ export const getParticipants = async (
           participant.plant.includes(plant),
         );
       resolve(participants);
+    };
+
+    request.onerror = () => {
+      reject(request.error);
+    };
+  });
+};
+
+export const addSupplier = async (supplier: Supplier): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject('DB is not initialized');
+      return;
+    }
+    const transaction = db.transaction([Stores.Suppliers], 'readwrite');
+    const store = transaction.objectStore(Stores.Suppliers);
+    const request = store.add(supplier);
+
+    request.onsuccess = () => {
+      resolve();
     };
 
     request.onerror = () => {

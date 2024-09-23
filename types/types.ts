@@ -59,11 +59,17 @@ export interface Locale {
   supplierIndex: string;
   city: string;
   searchForSuppliers: string;
-<<<<<<< HEAD
   update: string;
   remove: string;
-=======
->>>>>>> 18c6991 (task7-KAN-38 rebase 3/6)
+  addParticipant: string;
+  name: string;
+  department: string;
+  email: string;
+  searchPersons: string;
+  firstName: string;
+  lastName: string;
+  plant: string;
+  userId: string;
 }
 
 export interface Locales {
