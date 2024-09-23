@@ -1,0 +1,35 @@
+.header {
+  height: 10%;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  display: flex;
+  justify-content: space-between;
+  align-self: center;
+  padding-right: 1rem;
+}
+
+.header-left {
+  color: var(--color-primary);
+  font-size: 1rem;
+  margin-left: 4rem;
+  display: flex;
+  align-items: center;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.user {
+  color: var(--color-grey-dark);
+}
+.user-info {
+  align-content: center;
+  margin-right: 3rem;
+  color: var(--color-grey-dark);
+}
+
+.user:hover {
+  cursor: pointer;
+}
