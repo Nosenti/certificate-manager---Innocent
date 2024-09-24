@@ -5,6 +5,7 @@ interface FormData {
   validFrom: string;
   validTo: string;
   pdf: File | null;
+  assignedUsers?: { name: string; department: string; email: string }[];
 }
 
 export const validateForm = (formData: FormData) => {

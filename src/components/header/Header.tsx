@@ -2,6 +2,12 @@ import { FC } from 'react';
 import './header.css';
 import { useLocation } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
+import en from '../../locales/en.json';
+import de from '../../locales/de.json';
+import { Locales } from '../../../types/types';
+import UserSwitch from '../user-switch/UserSwitch';
+
+const locales: Locales = { en, de };
 
 interface HeaderProps {
   user?: string;

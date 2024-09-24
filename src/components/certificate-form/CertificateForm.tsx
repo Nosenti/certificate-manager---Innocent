@@ -10,6 +10,7 @@ import FileUpload from '../file-upload/FileUpload';
 import PDFPreview from '../pdf-preview/PDFPreview';
 import ResetModal from '../confirm-modal/ConfirmModal';
 import SupplierLookup from '../supplier-lookup/SupplierLookup';
+import ParticipantLookup from '../participant-lookup/ParticipantLookup';
 import SearchIcon from '../../../public/assets/search.svg';
 import RemoveIcon from '../../../public/assets/close-small.svg';
 import { validateForm } from '../../utils/validation';
@@ -17,6 +18,7 @@ import { useNotification } from '../../context/NotificationContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { addSupplier, getSuppliers } from '../../data/db';
 import { Supplier } from '../../../types/types';
+import Table, { Column } from '../table/Table';
 
 interface FormData {
   id: number;
@@ -25,6 +27,12 @@ interface FormData {
   validFrom: string;
   validTo: string;
   pdf: File | null;
+  assignedUsers: {
+    id: number;
+    name: string;
+    department: string;
+    email: string;
+  }[];
 }
 
 const initialState: FormData = {
@@ -34,12 +42,18 @@ const initialState: FormData = {
   validFrom: '',
   validTo: '',
   pdf: null,
+  assignedUsers: [],
 };
 
 type FormAction =
   | { type: 'UPDATE_FIELD'; field: string; value: string | File | null }
   | { type: 'RESET' }
-  | { type: 'SET_INITIAL_STATE'; payload: FormData };
+  | { type: 'SET_INITIAL_STATE'; payload: FormData }
+  | {
+      type: 'ADD_ASSIGNED_USERS';
+      users: { name: string; department: string; email: string }[];
+    }
+  | { type: 'REMOVE_ASSIGNED_USER'; index: number };
 
 const formReducer = (state: FormData, action: FormAction): FormData => {
   switch (action.type) {
@@ -49,6 +63,20 @@ const formReducer = (state: FormData, action: FormAction): FormData => {
       return initialState;
     case 'SET_INITIAL_STATE':
       return action.payload;
+    case 'ADD_ASSIGNED_USERS':
+      const usersWithId = action.users.map((user, index) => ({
+        ...user,
+        id: Date.now() + index, // Assign a unique id
+      }));
+      return {
+        ...state,
+        assignedUsers: [...state.assignedUsers, ...usersWithId],
+      };
+    case 'REMOVE_ASSIGNED_USER':
+      const assignedUsers = state.assignedUsers.filter(
+        (_, i) => i !== action.index,
+      );
+      return { ...state, assignedUsers };
     default:
       return state;
   }
@@ -70,7 +98,8 @@ const CertificateForm: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState<string | null>(null);
   const [showSupplierLookup, setShowSupplierLookup] = useState(false);
-  const {  t } = useLanguage();
+  const [showParticipantLookup, setShowParticipantLookup] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (id) {
@@ -81,35 +110,32 @@ const CertificateForm: React.FC = () => {
     }
   }, [id, certificates]);
 
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+    dispatch({ type: 'UPDATE_FIELD', field: name, value });
+  };
 
-
-  const handleInputChange = 
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const { name, value } = e.target;
-      dispatch({ type: 'UPDATE_FIELD', field: name, value });
-    };
-
-  const handleFileChange =
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files ? e.target.files[0] : null;
-      dispatch({ type: 'UPDATE_FIELD', field: 'pdf', value: file });
-    };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    dispatch({ type: 'UPDATE_FIELD', field: 'pdf', value: file });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { isValid, errors } = validateForm(formData);
 
     if (!selectedSupplier && formData.supplier) {
-        
-        const newSupplier: Supplier = {
-          id: Date.now(),
-          supplierName: formData.supplier,
-          supplierIndex: (getSuppliers.length + 1).toString(),
-          city: 'Kigali',
-        };
-        await addSupplier(newSupplier);
-        notify(`New supplier "${newSupplier.supplierName}" created`, 'success');
-      }
+      const newSupplier: Supplier = {
+        id: Date.now(),
+        supplierName: formData.supplier,
+        supplierIndex: (getSuppliers.length + 1).toString(),
+        city: 'Kigali',
+      };
+      await addSupplier(newSupplier);
+      notify(`New supplier "${newSupplier.supplierName}" created`, 'success');
+    }
 
     if (isValid) {
       if (id) {
@@ -120,12 +146,11 @@ const CertificateForm: React.FC = () => {
         notify('Certificate created successfully', 'success');
       }
 
-        navigate('/certificates');
-        
-      } else {
-        setErrors(errors);
-      }
-    };
+      navigate('/certificates');
+    } else {
+      setErrors(errors);
+    }
+  };
 
   const handleResetConfirm = () => {
     dispatch({ type: 'RESET' });
@@ -148,9 +173,48 @@ const CertificateForm: React.FC = () => {
   };
 
   const handleSupplierSelect = (supplier: { supplierName: string }) => {
-    dispatch({ type: 'UPDATE_FIELD', field: 'supplier', value: supplier.supplierName });
+    dispatch({
+      type: 'UPDATE_FIELD',
+      field: 'supplier',
+      value: supplier.supplierName,
+    });
     setShowSupplierLookup(false);
   };
+
+  const handleParticipantSelect = (
+    participants: { name: string; department: string; email: string }[],
+  ) => {
+    dispatch({ type: 'ADD_ASSIGNED_USERS', users: participants });
+    setShowParticipantLookup(false);
+  };
+
+  const handleRemoveAssignedUser = (index: number) => {
+    dispatch({ type: 'REMOVE_ASSIGNED_USER', index });
+  };
+
+  const assignedUsersColumns: Column<{
+    id: number;
+    name: string;
+    department: string;
+    email: string;
+  }>[] = [
+    {
+      header: '',
+      accessor: '' as keyof { name: string; department: string; email: string },
+      render: (
+        _value: string | number,
+        row: { id: number; name: string; department: string; email: string },
+        _index: number,
+      ) => (
+        <button type="button" onClick={() => handleRemoveAssignedUser(row.id)}>
+          <RemoveIcon />
+        </button>
+      ),
+    },
+    { header: t.name, accessor: 'name' },
+    { header: t.department, accessor: 'department' },
+    { header: t.email, accessor: 'email' },
+  ];
 
   return (
     <section className="form-page">
@@ -163,10 +227,18 @@ const CertificateForm: React.FC = () => {
               value={formData.supplier}
               onChange={handleInputChange}
             />
-            <span className="form-btn" onClick={() => setShowSupplierLookup(true)}>
+            <span
+              className="form-btn"
+              onClick={() => setShowSupplierLookup(true)}
+            >
               <SearchIcon />
             </span>
-            <span className="form-btn" onClick={() => dispatch({ type: 'UPDATE_FIELD', field: 'supplier', value: '' })}>
+            <span
+              className="form-btn"
+              onClick={() =>
+                dispatch({ type: 'UPDATE_FIELD', field: 'supplier', value: '' })
+              }
+            >
               <RemoveIcon />
             </span>
           </div>
@@ -186,7 +258,7 @@ const CertificateForm: React.FC = () => {
             ]}
           />
           <DateInput
-            label={ t.validFrom}
+            label={t.validFrom}
             name="validFrom"
             value={formData.validFrom}
             onChange={handleInputChange}
@@ -199,6 +271,23 @@ const CertificateForm: React.FC = () => {
             onChange={handleInputChange}
             error={errors.validTo}
           />
+          <div className="assigned-users">
+            <label>Assigned Users</label>
+            <div className="btn-wrapper">
+              <Button
+                type="button"
+                variation="contained"
+                size="medium"
+                onClick={() => setShowParticipantLookup(true)}
+              >
+                {t.addParticipant}
+              </Button>
+            </div>
+            <Table
+              columns={assignedUsersColumns}
+              data={formData.assignedUsers}
+            />
+          </div>
         </div>
         <div className="form-right">
           <div className="upload-actions">
@@ -215,17 +304,16 @@ const CertificateForm: React.FC = () => {
             <Button type="submit" variation="contained" size="medium">
               {id ? t.update : t.save}
             </Button>
-            {
-              !id ? <Button
-              type="button"
-              variation="transparent"
-              size="medium"
-              onClick={handleReset}
-            >
-              {t.reset}
-            </Button> : ''
-            }
-            
+            {!id ? (
+              <Button
+                type="button"
+                variation="transparent"
+                size="medium"
+                onClick={handleReset}
+              >
+                {t.reset}
+              </Button>
+            ) : null}
           </div>
         </div>
       </form>
@@ -240,6 +328,11 @@ const CertificateForm: React.FC = () => {
         show={showSupplierLookup}
         onClose={() => setShowSupplierLookup(false)}
         onSelect={handleSupplierSelect}
+      />
+      <ParticipantLookup
+        show={showParticipantLookup}
+        onClose={() => setShowParticipantLookup(false)}
+        onSelect={handleParticipantSelect}
       />
     </section>
   );

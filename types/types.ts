@@ -1,10 +1,17 @@
+export interface AssignedUser {
+  id: number,
+  name: string;
+  department: string;
+  email: string;
+}
 export interface Certificate {
   id: number;
   supplier: string;
   certificateType: string;
   validFrom: string;
   validTo: string;
-  pdf: File | null
+  pdf: File | null;
+  assignedUsers: AssignedUser[];
 }
 
 export interface Supplier {
@@ -12,6 +19,16 @@ export interface Supplier {
   supplierName: string;
   supplierIndex: string;
   city: string
+}
+
+export interface Participant {
+  id: number;
+  name: string;
+  firstName: string;
+  userID: string;
+  department: string;
+  plant: string;
+  email: string;
 }
 
 export interface Locale {
@@ -45,6 +62,15 @@ export interface Locale {
   searchForSuppliers: string;
   update: string;
   remove: string;
+  addParticipant: string;
+  name: string;
+  department: string;
+  email: string;
+  searchPersons: string;
+  firstName: string;
+  lastName: string;
+  plant: string;
+  userId: string;
 }
 
 export interface Locales {

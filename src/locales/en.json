@@ -28,5 +28,14 @@
   "supplierIndex": "Supplier Index",
   "city": "City",
   "update": "Update",
-  "remove": "remove"
+  "remove": "remove",
+  "addParticipant": "Add Participant",
+  "name": "Name",
+  "department": "Department",
+  "email": "E-mail",
+  "searchPersons": "Search for persons",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "plant": "Plant",
+  "userId": "User ID"
 }

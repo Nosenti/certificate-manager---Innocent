@@ -1,4 +1,4 @@
-import { Certificate, Supplier } from '../../types/types';
+import { Certificate, Supplier, Participant } from '../../types/types';
 
 let db: IDBDatabase | null = null;
 const version = 1;
@@ -6,6 +6,7 @@ const version = 1;
 export enum Stores {
   Certificates = 'certificates',
   Suppliers = 'suppliers',
+  Participants = 'participants',
 }
 
 export const initDB = async (): Promise<boolean> => {
@@ -15,8 +16,10 @@ export const initDB = async (): Promise<boolean> => {
 
       request.onupgradeneeded = () => {
         db = request.result;
+        console.log('Upgrading or initializing database', db);
 
         if (!db.objectStoreNames.contains(Stores.Certificates)) {
+          console.log('Creating certificates store');
           db.createObjectStore(Stores.Certificates, {
             keyPath: 'id',
             autoIncrement: true,
@@ -24,6 +27,7 @@ export const initDB = async (): Promise<boolean> => {
         }
 
         if (!db.objectStoreNames.contains(Stores.Suppliers)) {
+          console.log('Creating suppliers store');
           const supplierStore = db.createObjectStore(Stores.Suppliers, {
             keyPath: 'id',
             autoIncrement: true,
@@ -57,19 +61,90 @@ export const initDB = async (): Promise<boolean> => {
             });
           };
         }
+
+        if (!db.objectStoreNames.contains(Stores.Participants)) {
+          console.log('Creating participants store');
+          const participantStore = db.createObjectStore(Stores.Participants, {
+            keyPath: 'id',
+            autoIncrement: true,
+          });
+
+          participantStore.transaction.oncomplete = () => {
+            const participantTransaction = db!.transaction(
+              [Stores.Participants],
+              'readwrite',
+            );
+            const participantStoreTransaction =
+              participantTransaction.objectStore(Stores.Participants);
+
+            const participants: Participant[] = [
+              {
+                id: 1,
+                name: 'Simon',
+                firstName: 'Zwölfer',
+                userID: 'ZWOELF',
+                department: 'ITM/FP',
+                plant: '096',
+                email: 'simon@example.com',
+              },
+              {
+                id: 2,
+                name: 'Wolfgang',
+                firstName: 'Stork',
+                userID: 'WOLFST',
+                department: 'ITM/FP',
+                plant: '094',
+                email: 'wolfgang@example.com',
+              },
+              {
+                id: 3,
+                name: 'Hans',
+                firstName: 'Müller',
+                userID: 'MULLH',
+                department: 'ITM/SD',
+                plant: '098',
+                email: 'hans@example.com',
+              },
+              {
+                id: 4,
+                name: 'Franz',
+                firstName: 'Bauer',
+                userID: 'BAUERF',
+                department: 'ITM/SD',
+                plant: '102',
+                email: 'franz@example.com',
+              },
+              {
+                id: 5,
+                name: 'Klaus',
+                firstName: 'Schmidt',
+                userID: 'SCHMKL',
+                department: 'ITM/FP',
+                plant: '112',
+                email: 'klaus@example.com',
+              },
+            ];
+            participants.forEach((participant) => {
+              participantStoreTransaction.add(participant);
+            });
+          };
+        }
       };
 
       request.onsuccess = () => {
         db = request.result;
+        console.log('request.onsuccess - initDB', db.version);
         resolve(true);
       };
 
       request.onerror = () => {
+        console.error('Error opening IndexedDB', request.error);
         reject(false);
       };
     });
   } catch (error) {
-    throw new Error('Error during initDB');
+    console.error('Error during initDB', error);
+    return false;
   }
 };
 
@@ -82,7 +157,8 @@ export const getCertificates = async (): Promise<Certificate[]> => {
     const store = transaction.objectStore(Stores.Certificates);
     const request = store.getAll();
     if (!request) {
-      throw new Error('Request error');
+      console.log('Request error');
+      return;
     }
     request.onsuccess = () => {
       resolve(request.result);
@@ -157,19 +233,93 @@ export const deleteCertificate = async (id: number): Promise<void> => {
   });
 };
 
-export const getSuppliers = async (): Promise<Supplier[]> => {
+export const getSuppliers = async (
+  supplierName?: string,
+  supplierIndex?: string,
+  city?: string,
+): Promise<Supplier[]> => {
   return new Promise((resolve, reject) => {
     if (!db) {
-      throw new Error('DB is not initialized');
+      reject('DB is not initialized');
+      return;
     }
     const transaction = db.transaction([Stores.Suppliers], 'readonly');
     const store = transaction.objectStore(Stores.Suppliers);
     const request = store.getAll();
     if (!request) {
-      throw new Error('Request error');
+      console.log('Request error');
+      return;
     }
     request.onsuccess = () => {
-      resolve(request.result);
+      let suppliers = request.result;
+
+      if (supplierName)
+        suppliers = suppliers.filter((supplier) =>
+          supplier.supplierName
+            .toLowerCase()
+            .includes(supplierName.toLowerCase()),
+        );
+      if (supplierIndex)
+        suppliers = suppliers.filter((supplier) =>
+          supplier.supplierIndex
+            .toLowerCase()
+            .includes(supplierIndex.toLowerCase()),
+        );
+      if (city)
+        suppliers = suppliers.filter((supplier) =>
+          supplier.city.toLowerCase().includes(city.toLowerCase()),
+        );
+      resolve(suppliers);
+    };
+
+    request.onerror = () => {
+      reject(request.error);
+    };
+  });
+};
+
+export const getParticipants = async (
+  name?: string,
+  firstName?: string,
+  userID?: string,
+  department?: string,
+  plant?: string,
+): Promise<Participant[]> => {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject('DB is not initialized');
+      return;
+    }
+    const transaction = db.transaction([Stores.Participants], 'readonly');
+    const store = transaction.objectStore(Stores.Participants);
+    const request = store.getAll();
+    if (!request) {
+      console.log('Request error');
+      return;
+    }
+    request.onsuccess = () => {
+      let participants = request.result;
+      if (name)
+        participants = participants.filter((participant) =>
+          participant.name.includes(name),
+        );
+      if (firstName)
+        participants = participants.filter((participant) =>
+          participant.firstName.includes(firstName),
+        );
+      if (userID)
+        participants = participants.filter((participant) =>
+          participant.userID.includes(userID),
+        );
+      if (department)
+        participants = participants.filter((participant) =>
+          participant.department.includes(department),
+        );
+      if (plant)
+        participants = participants.filter((participant) =>
+          participant.plant.includes(plant),
+        );
+      resolve(participants);
     };
 
     request.onerror = () => {

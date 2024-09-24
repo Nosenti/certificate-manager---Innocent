@@ -28,5 +28,14 @@
   "supplierIndex": "Lieferantenindex",
   "city": "Stadt",
   "update": "Aktualisieren",
-  "remove": "Entfernen"
+  "remove": "Entfernen",
+  "addParticipant": "Teilnehmer hinzufügen",
+  "name": "Name",
+  "department": "Abteilung",
+  "email": "E-Mail",
+  "searchPersons": "Personen suchen",
+  "firstName": "Vorname",
+  "lastName": "Nachname",
+  "plant": "Werk",
+  "userId": "Benutzer-ID"
 }
