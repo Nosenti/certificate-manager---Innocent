@@ -2,7 +2,6 @@ import React, { useState, useReducer, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './FormPage.css';
 import Button from '../button/Button';
-import { Participant } from '../../../types/types';
 import { useCertificates } from '../../context/CertificateContext';
 import TextInput from '../text-input/TextInput';
 import DateInput from '../date-input/DateInput';
@@ -35,6 +34,7 @@ interface FormData {
     department: string;
     email: string;
   }[];
+  comments: { user: string; text: string }[];
 }
 
 const initialState: FormData = {
@@ -45,6 +45,7 @@ const initialState: FormData = {
   validTo: '',
   pdf: null,
   assignedUsers: [],
+  comments: [],
 };
 
 type FormAction =
@@ -55,7 +56,8 @@ type FormAction =
       type: 'ADD_ASSIGNED_USERS';
       users: { name: string; department: string; email: string }[];
     }
-  | { type: 'REMOVE_ASSIGNED_USER'; index: number };
+  | { type: 'REMOVE_ASSIGNED_USER'; index: number }
+  | { type: 'ADD_COMMENT'; comment: { user: string; text: string } };
 
 const formReducer = (state: FormData, action: FormAction): FormData => {
   switch (action.type) {
@@ -68,7 +70,7 @@ const formReducer = (state: FormData, action: FormAction): FormData => {
     case 'ADD_ASSIGNED_USERS':
       const usersWithId = action.users.map((user, index) => ({
         ...user,
-        id: Date.now() + index, // Assign a unique id
+        id: Date.now() + index, 
       }));
       return {
         ...state,
@@ -79,6 +81,11 @@ const formReducer = (state: FormData, action: FormAction): FormData => {
         (_, i) => i !== action.index,
       );
       return { ...state, assignedUsers };
+    case 'ADD_COMMENT':
+      return {
+        ...state,
+        comments: [...state.comments, action.comment],
+      };
     default:
       return state;
   }
@@ -111,6 +118,10 @@ const CertificateForm: React.FC = () => {
       }
     }
   }, [id, certificates]);
+
+  const handleAddComment = (comment: { user: string; text: string }) => {
+    dispatch({ type: 'ADD_COMMENT', comment });
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -290,6 +301,7 @@ const CertificateForm: React.FC = () => {
               data={formData.assignedUsers}
             />
           </div>
+          <CommentSection comments={formData.comments} onAddComment={ handleAddComment} />
         </div>
         <div className="form-right">
           <div className="upload-actions">

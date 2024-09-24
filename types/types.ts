@@ -12,6 +12,7 @@ export interface Certificate {
   validTo: string;
   pdf: File | null;
   assignedUsers: AssignedUser[];
+  comments: { user: string; text: string }[];
 }
 
 export interface Supplier {
@@ -71,6 +72,10 @@ export interface Locale {
   lastName: string;
   plant: string;
   userId: string;
+  newComment: string;
+  comment: string;
+  user: string;
+  send: string;
 }
 
 export interface Locales {

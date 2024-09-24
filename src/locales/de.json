@@ -37,5 +37,9 @@
   "firstName": "Vorname",
   "lastName": "Nachname",
   "plant": "Werk",
-  "userId": "Benutzer-ID"
+  "userId": "Benutzer-ID",
+  "newComment": "Neuer Kommentar",
+  "comment": "Kommentar",
+  "user": "Benutzer",
+  "send": "Schicken"
 }

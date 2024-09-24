@@ -46,15 +46,7 @@ const Header: FC<HeaderProps> = ({ user = 'John Doe' }) => {
       </div>
       <div className="header-right">
           <UserSwitch/>
-        <div className="language-info">
-          <p>Language:</p>
-          <span className="language-info-dropdown">
-            <select value={language} onChange={handleLanguageChange}>
-              <option value="en">{t.english}</option>
-              <option value="de">{t.german}</option>
-            </select>
-          </span>
-        </div>
+        
         <div className="language-info">
           <p>Language:</p>
           <span className="language-info-dropdown">
