@@ -1,8 +1,5 @@
 export interface AssignedUser {
-<<<<<<< HEAD
   id: number,
-=======
->>>>>>> 017e9be (task8-KAN-39 rebase 6/8)
   name: string;
   department: string;
   email: string;
