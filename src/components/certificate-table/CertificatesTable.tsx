@@ -41,6 +41,9 @@ const CertificatesTable: React.FC = () => {
     setDeleteModalVisible(true);
   };
 
+  const handleDropdownToggle = (index: number) => {
+    setDropdownVisible(dropdownVisible === index ? null : index);
+  };
   const handleDeleteConfirm = () => {
     if (certificateToDelete !== null) {
       deleteCertificate(certificateToDelete);
@@ -84,6 +87,7 @@ const CertificatesTable: React.FC = () => {
 
   return (
     <section className="certificates-table" aria-labelledby="certificatesTitle">
+      <h1>{t.certificates}</h1>
       <span className="new-certificate">
         <Button variation="contained" size="medium">
           <Link

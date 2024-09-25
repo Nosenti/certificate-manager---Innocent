@@ -1,9 +1,29 @@
-import { ChangeEvent, FC } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { useUser } from '../../context/UserContext';
+import { getUsers, initDB } from '../../data/db';
 import './user-switch.css';
 
 const UserSwitch: FC = () => {
   const { currentUser, switchUser } = useUser();
+  const [users, setUsers] = useState<{ id: number; name: string }[]>([]);
+
+  useEffect(() => {
+    const initializeDBAndFetchUsers = async () => {
+      try {
+        const isDBInitialized = await initDB();
+        if (isDBInitialized) {
+          const usersFromDB = await getUsers();
+          setUsers(usersFromDB);
+        } else {
+          console.error('Database initialization failed');
+        }
+      } catch (error) {
+        console.error('Error initializing database or fetching users:', error);
+      }
+    };
+
+    initializeDBAndFetchUsers();
+  }, []);
 
   const handleUserChange = (event: ChangeEvent<HTMLSelectElement>) => {
     switchUser(event.target.value);
@@ -13,10 +33,15 @@ const UserSwitch: FC = () => {
     <div className="user-switch">
       <label htmlFor="user-select">User:</label>
       <select id="user-select" value={currentUser} onChange={handleUserChange}>
-        <option value="User 1">User 1</option>
-        <option value="User 2">User 2</option>
-        <option value="User 3">User 3</option>
-        <option value="User 4">User 4</option>
+        {users.length > 0 ? (
+          users.map((user) => (
+            <option key={user.id} value={user.name}>
+              {user.name}
+            </option>
+          ))
+        ) : (
+          <option disabled>No users available</option>
+        )}
       </select>
     </div>
   );
