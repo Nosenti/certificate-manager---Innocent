@@ -44,14 +44,6 @@ const CertificatesTable: React.FC = () => {
   const handleDropdownToggle = (index: number) => {
     setDropdownVisible(dropdownVisible === index ? null : index);
   };
-
-  // const handleClickOutside = (event: MouseEvent) => {
-  //   if (
-  //     dropdownRef.current &&
-  //     !dropdownRef.current.contains(event.target as Node)
-  //   ) {
-  //     setDropdownVisible(null);
-  //   }
   const handleDeleteConfirm = () => {
     if (certificateToDelete !== null) {
       deleteCertificate(certificateToDelete);
