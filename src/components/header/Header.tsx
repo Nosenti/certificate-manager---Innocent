@@ -46,6 +46,7 @@ const Header: FC<HeaderProps> = ({ user = 'John Doe' }) => {
       </div>
       <div className="header-right">
           <UserSwitch/>
+        
         <div className="language-info">
           <p>Language:</p>
           <span className="language-info-dropdown">

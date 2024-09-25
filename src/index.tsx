@@ -16,9 +16,8 @@ if (container) {
       <LanguageProvider>
         <UserProvider>
           <App />
-          </UserProvider>
+        </UserProvider>
       </LanguageProvider>
-      
     </StrictMode>,
   );
 } else {
