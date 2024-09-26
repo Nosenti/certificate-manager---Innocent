@@ -1,5 +1,4 @@
 ﻿using Backend.Dtos;
-using Backend.Mappers;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +20,7 @@ namespace Backend.Controllers
         {
             var certificates = await _certificateService.GetAllCertificatesAsync();
 
-            var certificatesDto = certificates.ToCertificateDtoList();
+            var certificatesDto = certificates;
 
             return Ok(certificatesDto);
         }

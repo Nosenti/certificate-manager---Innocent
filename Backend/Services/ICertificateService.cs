@@ -1,9 +1,9 @@
-﻿using Backend.Entities;
+﻿using Backend.Dtos;
 
 namespace Backend.Services
 {
     public interface ICertificateService
     {
-        Task<IEnumerable<Certificate>> GetAllCertificatesAsync();
+        Task<IEnumerable<CertificateDto>> GetAllCertificatesAsync();
     }
 }

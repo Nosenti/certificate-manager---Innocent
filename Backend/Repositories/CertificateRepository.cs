@@ -1,5 +1,6 @@
 ﻿using Backend.Data;
-using Backend.Entities;
+using Backend.Dtos;
+using Backend.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories
@@ -13,9 +14,10 @@ namespace Backend.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Certificate>> GetAllCertificatesAsync()
+        public async Task<IEnumerable<CertificateDto>> GetAllCertificatesAsync()
         {
-            return await _context.Certificates.Include(c => c.CertificateParticipants).ToListAsync();
+            var certificates = await _context.Certificates.Include(c => c.CertificateParticipants).ToListAsync();
+            return certificates.ToDtoList();
         }
     }
 }

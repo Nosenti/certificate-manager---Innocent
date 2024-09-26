@@ -5,7 +5,7 @@ namespace Backend.Mappers
 {
     public static class CertificateMapper
     {
-        public static CertificateDto ToCertificateDto(this Certificate certificate)
+        public static CertificateDto ToDto(this Certificate certificate)
         {
             return new CertificateDto
             {
@@ -15,20 +15,13 @@ namespace Backend.Mappers
                 ValidTo = certificate.ValidTo,
                 SupplierName = certificate.Supplier?.SupplierName ?? "Unknown Supplier",
                 SupplierCity = certificate.Supplier?.City ?? "Unknown City",
-                Participants = certificate.CertificateParticipants?.Select(cp => new ParticipantDto
-                {
-                    ParticipantID = cp.Participant?.ParticipantId ?? 0,
-                    ParticipantName = cp.Participant?.ParticipantName ?? "Unknown",
-                    ParticipantEmail = cp.Participant?.ParticipantEmail ?? "Unknown",
-                    Department = "Unknown",
-                    Plant = "Unknown"
-                }).ToList() ?? new List<ParticipantDto>()
+                Participants = certificate.CertificateParticipants?.Select(cp => cp.Participant != null ? cp.Participant.ToDto() : new ParticipantDto()).ToList() ?? new List<ParticipantDto>()
             };
         }
 
-        public static List<CertificateDto> ToCertificateDtoList(this IEnumerable<Certificate> certificates)
+        public static List<CertificateDto> ToDtoList(this IEnumerable<Certificate> certificates)
         {
-            return certificates.Select(certificate => certificate.ToCertificateDto()).ToList();
+            return certificates.Select(certificate => certificate.ToDto()).ToList();
         }
     }
 }

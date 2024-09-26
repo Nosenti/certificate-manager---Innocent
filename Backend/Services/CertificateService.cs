@@ -1,4 +1,4 @@
-﻿using Backend.Entities;
+﻿using Backend.Dtos;
 using Backend.Repositories;
 
 namespace Backend.Services
@@ -11,7 +11,7 @@ namespace Backend.Services
             _certificateRepository = certificateRepository;
         }
 
-        public async Task<IEnumerable<Certificate>> GetAllCertificatesAsync()
+        public async Task<IEnumerable<CertificateDto>> GetAllCertificatesAsync()
         {
             return await _certificateRepository.GetAllCertificatesAsync();
         }
