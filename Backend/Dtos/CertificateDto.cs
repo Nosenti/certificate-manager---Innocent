@@ -4,7 +4,7 @@
     {
         public Guid Handle { get; set; }
 
-        public string CertificateType { get; set; }
+        public string Type { get; set; }
 
         public DateOnly ValidFrom { get; set; }
 

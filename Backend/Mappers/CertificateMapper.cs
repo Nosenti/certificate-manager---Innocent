@@ -10,7 +10,7 @@ namespace Backend.Mappers
             return new CertificateDto
             {
                 Handle = certificate.Handle,
-                CertificateType = certificate.CertificateType,
+                Type = certificate.Type,
                 ValidFrom = certificate.ValidFrom,
                 ValidTo = certificate.ValidTo,
                 Supplier = certificate.Supplier != null ? certificate.Supplier.ToDto() : null,

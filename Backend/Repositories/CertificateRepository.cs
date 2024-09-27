@@ -46,7 +46,7 @@ namespace Backend.Repositories
             var certificate = new Certificate
             {
                 Handle = Guid.NewGuid(),
-                CertificateType = certificateCreateDto.CertificateType,
+                Type = certificateCreateDto.Type,
                 ValidFrom = certificateCreateDto.ValidFrom,
                 ValidTo = certificateCreateDto.ValidTo,
                 Supplier = supplier,
@@ -65,7 +65,7 @@ namespace Backend.Repositories
 
             if (certificate == null) throw new KeyNotFoundException("Certificate not found");
 
-            certificate.CertificateType = certificateEditDto.CertificateType;
+            certificate.Type = certificateEditDto.Type;
             certificate.ValidFrom = certificateEditDto.ValidFrom;
             certificate.ValidTo = certificateEditDto.ValidTo;
             certificate.Supplier = supplier;

@@ -2,7 +2,7 @@
 {
     public class CertificateCreateDto
     {
-        public string CertificateType { get; set; }
+        public string Type { get; set; }
         public DateOnly ValidFrom { get; set; }
         public DateOnly ValidTo { get; set; }
         public Guid SupplierHandle { get; set; }

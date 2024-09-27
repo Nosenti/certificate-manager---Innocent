@@ -5,11 +5,13 @@ namespace Backend.Entities;
 
 public partial class Supplier
 {
-    public int SupplierId { get; set; }
+    public int Id { get; set; }
 
-    public string SupplierName { get; set; } = null!;
+    public Guid Handle { get; set; }
 
-    public string SupplierIndex { get; set; } = null!;
+    public string Name { get; set; } = null!;
+
+    public string Index { get; set; } = null!;
 
     public string? City { get; set; }
 
@@ -18,8 +20,6 @@ public partial class Supplier
     public DateTime? UpdatedAt { get; set; }
 
     public byte[] RowVersion { get; set; } = null!;
-
-    public Guid Handle { get; set; }
 
     public virtual ICollection<Certificate> Certificates { get; set; } = new List<Certificate>();
 }

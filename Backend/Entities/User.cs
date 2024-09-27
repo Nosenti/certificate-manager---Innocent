@@ -5,9 +5,11 @@ namespace Backend.Entities;
 
 public partial class User
 {
-    public int UserId { get; set; }
+    public int Id { get; set; }
 
-    public string UserName { get; set; } = null!;
+    public Guid Handle { get; set; }
+
+    public string Name { get; set; } = null!;
 
     public string Email { get; set; } = null!;
 
@@ -16,8 +18,6 @@ public partial class User
     public DateTime? UpdatedAt { get; set; }
 
     public byte[] RowVersion { get; set; } = null!;
-
-    public Guid Handle { get; set; }
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 }

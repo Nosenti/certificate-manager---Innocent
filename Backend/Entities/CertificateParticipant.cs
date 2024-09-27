@@ -5,7 +5,9 @@ namespace Backend.Entities;
 
 public partial class CertificateParticipant
 {
-    public int CertificateParticipantId { get; set; }
+    public int Id { get; set; }
+
+    public Guid Handle { get; set; }
 
     public int? CertificateId { get; set; }
 
