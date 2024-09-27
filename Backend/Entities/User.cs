@@ -5,9 +5,11 @@ namespace Backend.Entities;
 
 public partial class User
 {
-    public int UserId { get; set; }
+    public int Id { get; set; }
 
-    public string UserName { get; set; } = null!;
+    public Guid Handle { get; set; }
+
+    public string Name { get; set; } = null!;
 
     public string Email { get; set; } = null!;
 

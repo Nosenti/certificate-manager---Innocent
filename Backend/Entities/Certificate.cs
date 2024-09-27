@@ -5,11 +5,13 @@ namespace Backend.Entities;
 
 public partial class Certificate
 {
-    public int CertificateId { get; set; }
+    public int Id { get; set; }
+
+    public Guid Handle { get; set; }
 
     public int? SupplierId { get; set; }
 
-    public string CertificateType { get; set; } = null!;
+    public string Type { get; set; } = null!;
 
     public DateOnly ValidFrom { get; set; }
 

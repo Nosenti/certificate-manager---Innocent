@@ -2,11 +2,11 @@
 {
     public class ParticipantDto
     {
-        public int ParticipantID { get; set; }
+        public Guid Handle { get; set; }
 
-        public string ParticipantName { get; set; }
+        public string Name { get; set; }
 
-        public string ParticipantEmail { get; set; }
+        public string Email { get; set; }
 
         public string Department { get; set; }
 

@@ -1,20 +1,12 @@
 ﻿namespace Backend.Dtos
 {
-    public class CertificateDto
+    public class CertificateEditDto
     {
         public Guid Handle { get; set; }
-
         public string Type { get; set; }
-
         public DateOnly ValidFrom { get; set; }
-
         public DateOnly ValidTo { get; set; }
-
-        public SupplierDto Supplier { get; set; }
-
-        public byte[]? PdfDocument { get; set; }
-
-        public List<ParticipantDto> Participants { get; set; }
-
+        public Guid SupplierHandle { get; set; }
+        public IFormFile? PdfDocument { get; set; }
     }
 }
