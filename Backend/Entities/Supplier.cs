@@ -19,5 +19,7 @@ public partial class Supplier
 
     public byte[] RowVersion { get; set; } = null!;
 
+    public Guid Handle { get; set; }
+
     public virtual ICollection<Certificate> Certificates { get; set; } = new List<Certificate>();
 }

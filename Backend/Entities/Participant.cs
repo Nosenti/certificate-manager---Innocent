@@ -17,5 +17,7 @@ public partial class Participant
 
     public byte[] RowVersion { get; set; } = null!;
 
+    public Guid Handle { get; set; }
+
     public virtual ICollection<CertificateParticipant> CertificateParticipants { get; set; } = new List<CertificateParticipant>();
 }

@@ -19,6 +19,7 @@ builder.Services.AddProblemDetails();
 // Register IBookService and IAuthorService
 builder.Services.AddScoped<ICertificateService, CertificateService>();
 builder.Services.AddScoped<ICertificateRepository, CertificateRepository>();
+builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

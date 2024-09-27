@@ -2,7 +2,7 @@
 {
     public class CertificateDto
     {
-        public int CertificateID { get; set; }
+        public Guid Handle { get; set; }
 
         public string CertificateType { get; set; }
 
@@ -14,6 +14,9 @@
 
         public string SupplierCity { get; set; }
 
+        public byte[]? PdfDocument { get; set; }
+
         public List<ParticipantDto> Participants { get; set; }
+
     }
 }

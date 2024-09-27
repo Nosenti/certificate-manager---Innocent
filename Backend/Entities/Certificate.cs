@@ -23,6 +23,8 @@ public partial class Certificate
 
     public byte[] RowVersion { get; set; } = null!;
 
+    public Guid Handle { get; set; }
+
     public virtual ICollection<CertificateParticipant> CertificateParticipants { get; set; } = new List<CertificateParticipant>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();

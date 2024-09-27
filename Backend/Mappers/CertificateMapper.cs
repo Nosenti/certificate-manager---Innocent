@@ -9,12 +9,13 @@ namespace Backend.Mappers
         {
             return new CertificateDto
             {
-                CertificateID = certificate.CertificateId,
+                Handle = certificate.Handle,
                 CertificateType = certificate.CertificateType,
                 ValidFrom = certificate.ValidFrom,
                 ValidTo = certificate.ValidTo,
                 SupplierName = certificate.Supplier?.SupplierName ?? "Unknown Supplier",
                 SupplierCity = certificate.Supplier?.City ?? "Unknown City",
+                PdfDocument = certificate.PdfDocument,
                 Participants = certificate.CertificateParticipants?.Select(cp => cp.Participant != null ? cp.Participant.ToDto() : new ParticipantDto()).ToList() ?? new List<ParticipantDto>()
             };
         }

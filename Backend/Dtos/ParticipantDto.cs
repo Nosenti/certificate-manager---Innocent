@@ -2,7 +2,7 @@
 {
     public class ParticipantDto
     {
-        public int ParticipantID { get; set; }
+        public Guid Handle { get; set; }
 
         public string ParticipantName { get; set; }
 

@@ -1,4 +1,6 @@
-﻿using Backend.Entities;
+﻿using System;
+using System.Collections.Generic;
+using Backend.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Data;
@@ -26,6 +28,9 @@ public partial class CertificatesDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DefaultConnection");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Certificate>(entity =>
@@ -37,6 +42,7 @@ public partial class CertificatesDbContext : DbContext
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+            entity.Property(e => e.Handle).HasDefaultValueSql("(newid())");
             entity.Property(e => e.RowVersion)
                 .IsRowVersion()
                 .IsConcurrencyToken();
@@ -110,6 +116,7 @@ public partial class CertificatesDbContext : DbContext
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+            entity.Property(e => e.Handle).HasDefaultValueSql("(newid())");
             entity.Property(e => e.ParticipantEmail).HasMaxLength(255);
             entity.Property(e => e.ParticipantName).HasMaxLength(255);
             entity.Property(e => e.RowVersion)
@@ -129,6 +136,7 @@ public partial class CertificatesDbContext : DbContext
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+            entity.Property(e => e.Handle).HasDefaultValueSql("(newid())");
             entity.Property(e => e.RowVersion)
                 .IsRowVersion()
                 .IsConcurrencyToken();
@@ -148,6 +156,7 @@ public partial class CertificatesDbContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.Email).HasMaxLength(255);
+            entity.Property(e => e.Handle).HasDefaultValueSql("(newid())");
             entity.Property(e => e.RowVersion)
                 .IsRowVersion()
                 .IsConcurrencyToken();

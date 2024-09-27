@@ -17,5 +17,7 @@ public partial class User
 
     public byte[] RowVersion { get; set; } = null!;
 
+    public Guid Handle { get; set; }
+
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 }
