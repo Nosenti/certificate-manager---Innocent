@@ -55,5 +55,18 @@ namespace Backend.Controllers
             return CreatedAtAction(nameof(GetCertificateByHandle), new { handle = newCertificate.Handle }, newCertificate);
         }
 
+        [HttpPatch("{handle}")]
+        public async Task<ActionResult<CertificateDto>> UpdateCertificate(Guid handle, [FromForm] CertificateEditDto certificateEditDto)
+        {
+            if (handle != certificateEditDto.Handle)
+            {
+                return BadRequest("Handle mismatch.");
+            }
+
+            var updatedCertificate = await _certificateService.UpdateCertificateAsync(certificateEditDto);
+
+            return Ok(updatedCertificate);
+        }
+
     }
 }

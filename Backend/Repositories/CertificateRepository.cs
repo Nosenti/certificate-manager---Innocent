@@ -59,5 +59,25 @@ namespace Backend.Repositories
             return certificate;
         }
 
+        public async Task<Certificate> UpdateCertificateAsync(CertificateEditDto certificateEditDto, Supplier supplier, byte[]? pdfBytes)
+        {
+            var certificate = await _context.Certificates.FirstOrDefaultAsync(c => c.Handle == certificateEditDto.Handle);
+
+            if (certificate == null) throw new KeyNotFoundException("Certificate not found");
+
+            certificate.CertificateType = certificateEditDto.CertificateType;
+            certificate.ValidFrom = certificateEditDto.ValidFrom;
+            certificate.ValidTo = certificateEditDto.ValidTo;
+            certificate.Supplier = supplier;
+
+            if (pdfBytes != null)
+            {
+                certificate.PdfDocument = pdfBytes;
+            }
+            _context.Certificates.Update(certificate);
+            await _context.SaveChangesAsync();
+
+            return certificate;
+        }
     }
 }

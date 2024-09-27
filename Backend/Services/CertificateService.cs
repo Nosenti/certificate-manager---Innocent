@@ -49,5 +49,28 @@ namespace Backend.Services
             return certificate.ToDto();
         }
 
+        public async Task<CertificateDto> UpdateCertificateAsync(CertificateEditDto certificateEditDto)
+        {
+            var supplier = await _supplierRepository.GetSupplierByHandleAsync(certificateEditDto.SupplierHandle);
+            if (supplier == null)
+            {
+                throw new KeyNotFoundException("Supplier not found.");
+            }
+            byte[]? pdfBytes = null;
+
+            if (certificateEditDto.PdfDocument != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await certificateEditDto.PdfDocument.CopyToAsync(memoryStream);
+                    pdfBytes = memoryStream.ToArray();
+                }
+            }
+            var certificate = await _certificateRepository.UpdateCertificateAsync(certificateEditDto, supplier, pdfBytes);
+
+            return certificate.ToDto();
+
+        }
+
     }
 }

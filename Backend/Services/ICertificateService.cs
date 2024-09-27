@@ -8,5 +8,6 @@ namespace Backend.Services
         Task<CertificateDto> GetCertificateByHandleAsync(Guid handle);
         Task<bool> DeleteCertificateByHandleAsync(Guid handle);
         Task<CertificateDto> CreateCertificateAsync(CertificateCreateDto certificateCreateDto);
+        Task<CertificateDto> UpdateCertificateAsync(CertificateEditDto certificateEditDto);
     }
 }

@@ -9,5 +9,6 @@ namespace Backend.Repositories
         Task<CertificateDto> GetCertificateByHandleAsync(Guid handle);
         Task<bool> DeleteCertificateByHandleAsync(Guid handle);
         Task<Certificate> CreateCertificateAsync(CertificateCreateDto certificateCreateDto, Supplier supplier, byte[] pdfBytes);
+        Task<Certificate> UpdateCertificateAsync(CertificateEditDto certificateEditDto, Supplier supplier, byte[]? pdfBytes);
     }
 }
