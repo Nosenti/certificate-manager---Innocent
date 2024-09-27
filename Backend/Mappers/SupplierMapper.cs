@@ -10,8 +10,8 @@ namespace Backend.Mappers
             return new SupplierDto
             {
                 Handle = supplier.Handle,
-                SupplierIndex = supplier.SupplierIndex,
-                SupplierName = supplier.SupplierName,
+                Index = supplier.SupplierIndex,
+                Name = supplier.SupplierName,
                 City = supplier.City
             };
         }

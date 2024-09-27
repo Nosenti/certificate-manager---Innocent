@@ -13,8 +13,7 @@ namespace Backend.Mappers
                 CertificateType = certificate.CertificateType,
                 ValidFrom = certificate.ValidFrom,
                 ValidTo = certificate.ValidTo,
-                SupplierName = certificate.Supplier?.SupplierName ?? "Unknown Supplier",
-                SupplierCity = certificate.Supplier?.City ?? "Unknown City",
+                Supplier = certificate.Supplier != null ? certificate.Supplier.ToDto() : null,
                 PdfDocument = certificate.PdfDocument,
                 Participants = certificate.CertificateParticipants?.Select(cp => cp.Participant != null ? cp.Participant.ToDto() : new ParticipantDto()).ToList() ?? new List<ParticipantDto>()
             };

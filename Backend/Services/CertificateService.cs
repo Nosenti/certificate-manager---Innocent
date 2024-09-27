@@ -1,4 +1,5 @@
 ﻿using Backend.Dtos;
+using Backend.Helpers;
 using Backend.Mappers;
 using Backend.Repositories;
 
@@ -37,13 +38,7 @@ namespace Backend.Services
                 throw new KeyNotFoundException("Supplier not found.");
             }
 
-            // Convert PDF document to byte array
-            byte[] pdfBytes;
-            using (var memoryStream = new MemoryStream())
-            {
-                await certificateCreateDto.PdfDocument.CopyToAsync(memoryStream);
-                pdfBytes = memoryStream.ToArray();
-            }
+            byte[]? pdfBytes = await FileHelper.ConvertToByteArrayAsync(certificateCreateDto.PdfDocument);
             var certificate = await _certificateRepository.CreateCertificateAsync(certificateCreateDto, supplier, pdfBytes);
 
             return certificate.ToDto();
@@ -56,16 +51,7 @@ namespace Backend.Services
             {
                 throw new KeyNotFoundException("Supplier not found.");
             }
-            byte[]? pdfBytes = null;
-
-            if (certificateEditDto.PdfDocument != null)
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await certificateEditDto.PdfDocument.CopyToAsync(memoryStream);
-                    pdfBytes = memoryStream.ToArray();
-                }
-            }
+            byte[]? pdfBytes = await FileHelper.ConvertToByteArrayAsync(certificateEditDto.PdfDocument);
             var certificate = await _certificateRepository.UpdateCertificateAsync(certificateEditDto, supplier, pdfBytes);
 
             return certificate.ToDto();

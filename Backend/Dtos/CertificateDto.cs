@@ -10,9 +10,7 @@
 
         public DateOnly ValidTo { get; set; }
 
-        public string SupplierName { get; set; }
-
-        public string SupplierCity { get; set; }
+        public SupplierDto Supplier { get; set; }
 
         public byte[]? PdfDocument { get; set; }
 

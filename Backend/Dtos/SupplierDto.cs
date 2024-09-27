@@ -3,9 +3,9 @@
     public class SupplierDto
     {
 
-        public string SupplierName { get; set; } = null!;
+        public string Name { get; set; } = null!;
 
-        public string SupplierIndex { get; set; } = null!;
+        public string Index { get; set; } = null!;
 
         public string? City { get; set; }
 
