@@ -1,5 +1,6 @@
 ﻿using Backend.Data;
-using Backend.Entities;
+using Backend.Dtos;
+using Backend.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories
@@ -12,15 +13,15 @@ namespace Backend.Repositories
         {
             _context = context;
         }
-        public async Task<Supplier> GetSupplierByHandleAsync(Guid handle)
+        public async Task<SupplierDto> GetSupplierByHandleAsync(Guid handle)
         {
             var supplier = await _context.Suppliers.FirstOrDefaultAsync(c => c.Handle == handle);
 
             if (supplier == null) return null;
 
-            return supplier;
+            return supplier.ToDto();
         }
-        public async Task<IEnumerable<Supplier>> SearchSuppliersAsync(string? name, string? index, string? city)
+        public async Task<IEnumerable<SupplierDto>> SearchSuppliersAsync(string? name, string? index, string? city)
         {
             var query = _context.Suppliers.AsQueryable();
 
@@ -39,7 +40,9 @@ namespace Backend.Repositories
                 query = query.Where(s => s.City.Contains(city));
             }
 
-            return await query.ToListAsync();
+            var suppliers = await query.ToListAsync();
+
+            return suppliers.ToDtoList();
         }
     }
 }

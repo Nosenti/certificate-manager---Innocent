@@ -39,6 +39,7 @@ namespace Backend.Services
             {
                 throw new KeyNotFoundException("Supplier not found.");
             }
+
             var participants = await _participantRepository.GetParticipantsByHandlesAsync(certificateCreateDto.ParticipantHandles);
 
             byte[]? pdfBytes = await FileHelper.ConvertToByteArrayAsync(certificateCreateDto.PdfDocument);
@@ -62,6 +63,7 @@ namespace Backend.Services
             return certificate.ToDto();
 
         }
+
 
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Backend.Dtos;
-using Backend.Mappers;
 using Backend.Repositories;
 
 namespace Backend.Services
@@ -15,7 +14,7 @@ namespace Backend.Services
         public async Task<IEnumerable<ParticipantDto>> SearchParticipantsAsync(string? name, string? userId, string? department, string? plant)
         {
             var participants = await _participantRepository.SearchParticipantsAsync(name, userId, department, plant);
-            return participants.ToDtoList();
+            return participants;
         }
     }
 }

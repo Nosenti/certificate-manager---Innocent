@@ -1,10 +1,10 @@
-﻿using Backend.Entities;
+﻿using Backend.Dtos;
 
 namespace Backend.Repositories
 {
     public interface IParticipantRepository
     {
-        Task<IEnumerable<Participant>> SearchParticipantsAsync(string? name, string? userId, string? department, string? plant);
-        Task<List<Participant>> GetParticipantsByHandlesAsync(List<Guid> participantHandles);
+        Task<IEnumerable<ParticipantDto>> SearchParticipantsAsync(string? name, string? userId, string? department, string? plant);
+        Task<List<ParticipantDto>> GetParticipantsByHandlesAsync(List<Guid> participantHandles);
     }
 }

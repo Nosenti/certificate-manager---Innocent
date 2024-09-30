@@ -43,8 +43,16 @@ namespace Backend.Repositories
             return true;
         }
 
-        public async Task<Certificate> CreateCertificateAsync(CertificateCreateDto certificateCreateDto, Supplier supplier, List<Participant> participants, byte[] pdfBytes)
+        public async Task<Certificate> CreateCertificateAsync(CertificateCreateDto certificateCreateDto, SupplierDto supplierDto, List<ParticipantDto> participantDtos, byte[] pdfBytes)
         {
+            var supplier = new Supplier
+            {
+                Id = supplierDto.Id,
+                Handle = supplierDto.Handle,
+                Name = supplierDto.Name,
+                Index = supplierDto.Index,
+                City = supplierDto.City
+            };
             var certificate = new Certificate
             {
                 Handle = Guid.NewGuid(),
@@ -55,9 +63,15 @@ namespace Backend.Repositories
                 PdfDocument = pdfBytes,
             };
 
-            certificate.CertificateParticipants = participants.Select(p => new CertificateParticipant
+            certificate.CertificateParticipants = participantDtos.Select(p => new CertificateParticipant
             {
-                Participant = p,
+                Participant = new Participant
+                {
+                    Id = p.Id,
+                    Handle = p.Handle,
+                    Name = p.Name,
+                    // Include other necessary properties from ParticipantDto
+                },
                 AssignedDate = DateOnly.FromDateTime(DateTime.UtcNow),
             }).ToList();
 
@@ -67,15 +81,26 @@ namespace Backend.Repositories
             return certificate;
         }
 
-        public async Task<Certificate> UpdateCertificateAsync(CertificateEditDto certificateEditDto, Supplier supplier, List<Participant> participants, byte[]? pdfBytes)
+        public async Task<Certificate> UpdateCertificateAsync(CertificateEditDto certificateEditDto, SupplierDto supplierDto, List<ParticipantDto> participantDtos, byte[]? pdfBytes)
         {
-            var certificate = await _context.Certificates.Include(c => c.CertificateParticipants).FirstOrDefaultAsync(c => c.Handle == certificateEditDto.Handle);
+            var certificate = await _context.Certificates
+                .Include(c => c.CertificateParticipants)
+                .FirstOrDefaultAsync(c => c.Handle == certificateEditDto.Handle);
 
             if (certificate == null) throw new KeyNotFoundException("Certificate not found");
 
             certificate.Type = certificateEditDto.Type;
             certificate.ValidFrom = certificateEditDto.ValidFrom;
             certificate.ValidTo = certificateEditDto.ValidTo;
+
+            var supplier = new Supplier
+            {
+                Id = supplierDto.Id,
+                Handle = supplierDto.Handle,
+                Name = supplierDto.Name,
+                Index = supplierDto.Index,
+                City = supplierDto.City
+            };
             certificate.Supplier = supplier;
 
             if (pdfBytes != null)
@@ -84,9 +109,15 @@ namespace Backend.Repositories
             }
 
             certificate.CertificateParticipants.Clear();
-            certificate.CertificateParticipants = participants.Select(p => new CertificateParticipant
+            certificate.CertificateParticipants = participantDtos.Select(p => new CertificateParticipant
             {
-                Participant = p,
+                Participant = new Participant
+                {
+                    Id = p.Id,
+                    Handle = p.Handle,
+                    Name = p.Name,
+                    // Include other necessary properties from ParticipantDto
+                },
                 AssignedDate = DateOnly.FromDateTime(DateTime.UtcNow)
             }).ToList();
 

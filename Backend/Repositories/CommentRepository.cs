@@ -16,6 +16,15 @@ namespace Backend.Repositories
 
         public async Task<Comment> AddCommentAsync(Comment comment)
         {
+            //var comment = new Comment
+            //{
+            //    CertificateId = (await _context.Certificates.FirstOrDefaultAsync(c => c.Handle == commentDto.CertificateHandle))?.Id ?? 0,
+            //    UserId = (await _context.Users.FirstOrDefaultAsync(u => u.Handle == commentDto.UserHandle))?.Id ?? 0,
+            //    Text = commentDto.Text,
+            //    CreatedAt = DateTime.UtcNow,
+            //    UpdatedAt = DateTime.UtcNow
+            //};
+
             _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
             return comment;

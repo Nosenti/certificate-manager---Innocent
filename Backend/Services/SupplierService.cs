@@ -1,5 +1,4 @@
 ﻿using Backend.Dtos;
-using Backend.Mappers;
 using Backend.Repositories;
 
 namespace Backend.Services
@@ -16,7 +15,7 @@ namespace Backend.Services
         public async Task<IEnumerable<SupplierDto>> SearchSuppliersAsync(string? name, string? index, string? city)
         {
             var suppliers = await _supplierRepository.SearchSuppliersAsync(name, index, city);
-            return suppliers.ToDtoList();
+            return suppliers;
         }
     }
 }

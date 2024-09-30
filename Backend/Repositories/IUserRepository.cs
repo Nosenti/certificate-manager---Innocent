@@ -1,9 +1,9 @@
-﻿using Backend.Entities;
+﻿using Backend.Dtos;
 
 namespace Backend.Repositories
 {
     public interface IUserRepository
     {
-        Task<User> GetUserByHandleAsync(Guid handle);
+        Task<UserDto> GetUserByHandleAsync(Guid handle);
     }
 }

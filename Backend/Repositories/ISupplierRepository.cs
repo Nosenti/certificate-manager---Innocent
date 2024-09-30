@@ -1,10 +1,10 @@
-﻿using Backend.Entities;
+﻿using Backend.Dtos;
 
 namespace Backend.Repositories
 {
     public interface ISupplierRepository
     {
-        Task<Supplier> GetSupplierByHandleAsync(Guid handle);
-        Task<IEnumerable<Supplier>> SearchSuppliersAsync(string? name, string? index, string? city);
+        Task<SupplierDto> GetSupplierByHandleAsync(Guid handle);
+        Task<IEnumerable<SupplierDto>> SearchSuppliersAsync(string? name, string? index, string? city);
     }
 }

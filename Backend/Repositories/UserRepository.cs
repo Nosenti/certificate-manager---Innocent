@@ -1,5 +1,6 @@
 ﻿using Backend.Data;
-using Backend.Entities;
+using Backend.Dtos;
+using Backend.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories
@@ -13,9 +14,11 @@ namespace Backend.Repositories
             _context = context;
         }
 
-        public async Task<User> GetUserByHandleAsync(Guid handle)
+        public async Task<UserDto> GetUserByHandleAsync(Guid handle)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Handle == handle);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Handle == handle);
+            if (user == null) return null;
+            return user.ToDto();
         }
     }
 }

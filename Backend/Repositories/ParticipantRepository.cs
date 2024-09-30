@@ -1,5 +1,6 @@
 ﻿using Backend.Data;
-using Backend.Entities;
+using Backend.Dtos;
+using Backend.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories
@@ -11,7 +12,7 @@ namespace Backend.Repositories
         {
             _context = context;
         }
-        public async Task<IEnumerable<Participant>> SearchParticipantsAsync(string? name, string? userId, string? department, string? plant)
+        public async Task<IEnumerable<ParticipantDto>> SearchParticipantsAsync(string? name, string? userId, string? department, string? plant)
         {
             var query = _context.Participants.AsQueryable();
 
@@ -27,19 +28,21 @@ namespace Backend.Repositories
             if (!string.IsNullOrWhiteSpace(plant))
                 query = query.Where(p => p.Plant.Contains(plant));
 
-            return await query.ToListAsync();
+            var participants = await query.ToListAsync();
+            return participants.ToDtoList();
         }
 
-        public async Task<List<Participant>> GetParticipantsByHandlesAsync(List<Guid> participantHandles)
+        public async Task<List<ParticipantDto>> GetParticipantsByHandlesAsync(List<Guid> participantHandles)
         {
             if (participantHandles == null || participantHandles.Count == 0)
             {
-                return new List<Participant>();
+                return new List<ParticipantDto>();
             }
 
-            return await _context.Participants
+            var particpants = await _context.Participants
                 .Where(p => participantHandles.Contains(p.Handle))
                 .ToListAsync();
+            return particpants.ToDtoList();
         }
     }
 }
