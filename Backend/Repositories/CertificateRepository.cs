@@ -17,7 +17,7 @@ namespace Backend.Repositories
 
         public async Task<IEnumerable<CertificateDto>> GetAllCertificatesAsync()
         {
-            var certificates = await _context.Certificates.Include(c => c.CertificateParticipants).ToListAsync();
+            var certificates = await _context.Certificates.Include(c => c.Supplier).Include(c => c.CertificateParticipants).ToListAsync();
             return certificates.ToDtoList();
         }
 
@@ -26,6 +26,8 @@ namespace Backend.Repositories
             var certificate = await _context.Certificates.Include(c => c.Supplier).Include(c => c.CertificateParticipants).ThenInclude(cp => cp.Participant).FirstOrDefaultAsync(c => c.Handle == handle);
 
             if (certificate == null) return null;
+
+            Console.WriteLine($"Retrieved Certificate: Id = {certificate.Id}, Handle = {certificate.Handle}");
 
             return certificate.ToDto();
         }
@@ -41,7 +43,7 @@ namespace Backend.Repositories
             return true;
         }
 
-        public async Task<Certificate> CreateCertificateAsync(CertificateCreateDto certificateCreateDto, Supplier supplier, byte[] pdfBytes)
+        public async Task<Certificate> CreateCertificateAsync(CertificateCreateDto certificateCreateDto, Supplier supplier, List<Participant> participants, byte[] pdfBytes)
         {
             var certificate = new Certificate
             {
@@ -53,15 +55,21 @@ namespace Backend.Repositories
                 PdfDocument = pdfBytes,
             };
 
+            certificate.CertificateParticipants = participants.Select(p => new CertificateParticipant
+            {
+                Participant = p,
+                AssignedDate = DateOnly.FromDateTime(DateTime.UtcNow),
+            }).ToList();
+
             _context.Certificates.Add(certificate);
             await _context.SaveChangesAsync();
 
             return certificate;
         }
 
-        public async Task<Certificate> UpdateCertificateAsync(CertificateEditDto certificateEditDto, Supplier supplier, byte[]? pdfBytes)
+        public async Task<Certificate> UpdateCertificateAsync(CertificateEditDto certificateEditDto, Supplier supplier, List<Participant> participants, byte[]? pdfBytes)
         {
-            var certificate = await _context.Certificates.FirstOrDefaultAsync(c => c.Handle == certificateEditDto.Handle);
+            var certificate = await _context.Certificates.Include(c => c.CertificateParticipants).FirstOrDefaultAsync(c => c.Handle == certificateEditDto.Handle);
 
             if (certificate == null) throw new KeyNotFoundException("Certificate not found");
 
@@ -74,6 +82,14 @@ namespace Backend.Repositories
             {
                 certificate.PdfDocument = pdfBytes;
             }
+
+            certificate.CertificateParticipants.Clear();
+            certificate.CertificateParticipants = participants.Select(p => new CertificateParticipant
+            {
+                Participant = p,
+                AssignedDate = DateOnly.FromDateTime(DateTime.UtcNow)
+            }).ToList();
+
             _context.Certificates.Update(certificate);
             await _context.SaveChangesAsync();
 

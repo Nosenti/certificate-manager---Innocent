@@ -10,10 +10,10 @@ namespace Backend.Mappers
             return new ParticipantDto
             {
                 Handle = participant.Handle,
-                Name = participant.Name ?? "Unknown",
-                Email = participant.Email ?? "Unknown",
-                Department = "Unknown",
-                Plant = "Unknown"
+                Name = participant.Name,
+                Department = participant.Department,
+                Plant = participant.Plant,
+                UserId = participant.UserId
             };
         }
 

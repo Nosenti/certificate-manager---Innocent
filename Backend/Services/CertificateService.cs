@@ -9,10 +9,12 @@ namespace Backend.Services
     {
         private readonly ICertificateRepository _certificateRepository;
         private readonly ISupplierRepository _supplierRepository;
-        public CertificateService(ICertificateRepository certificateRepository, ISupplierRepository supplierRepository)
+        private readonly IParticipantRepository _participantRepository;
+        public CertificateService(ICertificateRepository certificateRepository, ISupplierRepository supplierRepository, IParticipantRepository participantRepository)
         {
             _certificateRepository = certificateRepository;
             _supplierRepository = supplierRepository;
+            _participantRepository = participantRepository;
         }
 
         public async Task<IEnumerable<CertificateDto>> GetAllCertificatesAsync()
@@ -37,9 +39,10 @@ namespace Backend.Services
             {
                 throw new KeyNotFoundException("Supplier not found.");
             }
+            var participants = await _participantRepository.GetParticipantsByHandlesAsync(certificateCreateDto.ParticipantHandles);
 
             byte[]? pdfBytes = await FileHelper.ConvertToByteArrayAsync(certificateCreateDto.PdfDocument);
-            var certificate = await _certificateRepository.CreateCertificateAsync(certificateCreateDto, supplier, pdfBytes);
+            var certificate = await _certificateRepository.CreateCertificateAsync(certificateCreateDto, supplier, participants, pdfBytes);
 
             return certificate.ToDto();
         }
@@ -51,8 +54,10 @@ namespace Backend.Services
             {
                 throw new KeyNotFoundException("Supplier not found.");
             }
+            var participants = await _participantRepository.GetParticipantsByHandlesAsync(certificateEditDto.ParticipantHandles);
+
             byte[]? pdfBytes = await FileHelper.ConvertToByteArrayAsync(certificateEditDto.PdfDocument);
-            var certificate = await _certificateRepository.UpdateCertificateAsync(certificateEditDto, supplier, pdfBytes);
+            var certificate = await _certificateRepository.UpdateCertificateAsync(certificateEditDto, supplier, participants, pdfBytes);
 
             return certificate.ToDto();
 

@@ -20,5 +20,26 @@ namespace Backend.Repositories
 
             return supplier;
         }
+        public async Task<IEnumerable<Supplier>> SearchSuppliersAsync(string? name, string? index, string? city)
+        {
+            var query = _context.Suppliers.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                query = query.Where(s => s.Name.Contains(name));
+            }
+
+            if (!string.IsNullOrWhiteSpace(index))
+            {
+                query = query.Where(s => s.Index.Contains(index));
+            }
+
+            if (!string.IsNullOrWhiteSpace(city))
+            {
+                query = query.Where(s => s.City.Contains(city));
+            }
+
+            return await query.ToListAsync();
+        }
     }
 }

@@ -19,5 +19,11 @@ public partial class Participant
 
     public byte[] RowVersion { get; set; } = null!;
 
+    public string? Plant { get; set; }
+
+    public string? Department { get; set; }
+
+    public string? UserId { get; set; }
+
     public virtual ICollection<CertificateParticipant> CertificateParticipants { get; set; } = new List<CertificateParticipant>();
 }

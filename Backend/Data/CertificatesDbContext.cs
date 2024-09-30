@@ -1,4 +1,6 @@
-﻿using Backend.Entities;
+﻿using System;
+using System.Collections.Generic;
+using Backend.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Data;
@@ -25,6 +27,9 @@ public partial class CertificatesDbContext : DbContext
     public virtual DbSet<Supplier> Suppliers { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DefaultConnection");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -76,7 +81,7 @@ public partial class CertificatesDbContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Comments__3214EC07C13C55CB");
+            entity.HasKey(e => e.Id).HasName("PK__Comments__3214EC07E6AE7C24");
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -91,11 +96,13 @@ public partial class CertificatesDbContext : DbContext
 
             entity.HasOne(d => d.Certificate).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.CertificateId)
-                .HasConstraintName("FK__Comments__Certif__5812160E");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CertificateId");
 
             entity.HasOne(d => d.User).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Comments__UserId__59063A47");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserId");
         });
 
         modelBuilder.Entity<Participant>(entity =>
@@ -105,15 +112,18 @@ public partial class CertificatesDbContext : DbContext
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+            entity.Property(e => e.Department).HasMaxLength(100);
             entity.Property(e => e.Email).HasMaxLength(255);
             entity.Property(e => e.Handle).HasDefaultValueSql("(newid())");
             entity.Property(e => e.Name).HasMaxLength(255);
+            entity.Property(e => e.Plant).HasMaxLength(50);
             entity.Property(e => e.RowVersion)
                 .IsRowVersion()
                 .IsConcurrencyToken();
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+            entity.Property(e => e.UserId).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Supplier>(entity =>
