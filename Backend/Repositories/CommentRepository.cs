@@ -16,15 +16,16 @@ namespace Backend.Repositories
 
         public async Task<Comment> AddCommentAsync(Comment comment)
         {
-            //var comment = new Comment
-            //{
-            //    CertificateId = (await _context.Certificates.FirstOrDefaultAsync(c => c.Handle == commentDto.CertificateHandle))?.Id ?? 0,
-            //    UserId = (await _context.Users.FirstOrDefaultAsync(u => u.Handle == commentDto.UserHandle))?.Id ?? 0,
-            //    Text = commentDto.Text,
-            //    CreatedAt = DateTime.UtcNow,
-            //    UpdatedAt = DateTime.UtcNow
-            //};
-
+            var userExists = await _context.Users.AnyAsync(u => u.Id == comment.UserId);
+            if (!userExists)
+            {
+                throw new InvalidOperationException($"User with ID {comment.UserId} does not exist.");
+            }
+            var certificateExists = await _context.Certificates.AnyAsync(c => c.Id == comment.CertificateId);
+            if (!certificateExists)
+            {
+                throw new InvalidOperationException($"Certificate with ID {comment.CertificateId} does not exist.");
+            }
             _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
             return comment;

@@ -45,34 +45,39 @@ namespace Backend.Repositories
 
         public async Task<Certificate> CreateCertificateAsync(CertificateCreateDto certificateCreateDto, SupplierDto supplierDto, List<ParticipantDto> participantDtos, byte[] pdfBytes)
         {
-            var supplier = new Supplier
+            var existingSupplier = await _context.Suppliers.FirstOrDefaultAsync(s => s.Handle == supplierDto.Handle);
+            if (existingSupplier == null)
             {
-                Id = supplierDto.Id,
-                Handle = supplierDto.Handle,
-                Name = supplierDto.Name,
-                Index = supplierDto.Index,
-                City = supplierDto.City
-            };
+                throw new KeyNotFoundException("Supplier not found.");
+            }
             var certificate = new Certificate
             {
                 Handle = Guid.NewGuid(),
                 Type = certificateCreateDto.Type,
                 ValidFrom = certificateCreateDto.ValidFrom,
                 ValidTo = certificateCreateDto.ValidTo,
-                Supplier = supplier,
+                Supplier = existingSupplier,
                 PdfDocument = pdfBytes,
             };
 
-            certificate.CertificateParticipants = participantDtos.Select(p => new CertificateParticipant
+            var existingParticipants = new List<Participant>();
+            foreach (var participantDto in participantDtos)
             {
-                Participant = new Participant
+                var existingParticipant = await _context.Participants.FirstOrDefaultAsync(p => p.Handle == participantDto.Handle);
+                if (existingParticipant != null)
                 {
-                    Id = p.Id,
-                    Handle = p.Handle,
-                    Name = p.Name,
-                    // Include other necessary properties from ParticipantDto
-                },
-                AssignedDate = DateOnly.FromDateTime(DateTime.UtcNow),
+                    existingParticipants.Add(existingParticipant);
+                }
+                else
+                {
+                    throw new KeyNotFoundException($"Participant with ID {participantDto.Id} not found.");
+                }
+            }
+
+            certificate.CertificateParticipants = existingParticipants.Select(p => new CertificateParticipant
+            {
+                Participant = p,
+                AssignedDate = DateOnly.FromDateTime(DateTime.UtcNow)
             }).ToList();
 
             _context.Certificates.Add(certificate);
@@ -93,15 +98,12 @@ namespace Backend.Repositories
             certificate.ValidFrom = certificateEditDto.ValidFrom;
             certificate.ValidTo = certificateEditDto.ValidTo;
 
-            var supplier = new Supplier
+            var existingSupplier = await _context.Suppliers.FirstOrDefaultAsync(s => s.Handle == supplierDto.Handle);
+            if (existingSupplier == null)
             {
-                Id = supplierDto.Id,
-                Handle = supplierDto.Handle,
-                Name = supplierDto.Name,
-                Index = supplierDto.Index,
-                City = supplierDto.City
-            };
-            certificate.Supplier = supplier;
+                throw new KeyNotFoundException("Supplier not found.");
+            }
+            certificate.Supplier = existingSupplier;
 
             if (pdfBytes != null)
             {
@@ -109,15 +111,23 @@ namespace Backend.Repositories
             }
 
             certificate.CertificateParticipants.Clear();
-            certificate.CertificateParticipants = participantDtos.Select(p => new CertificateParticipant
+            var existingParticipants = new List<Participant>();
+            foreach (var participantDto in participantDtos)
             {
-                Participant = new Participant
+                var existingParticipant = await _context.Participants.FirstOrDefaultAsync(p => p.Handle == participantDto.Handle);
+                if (existingParticipant != null)
                 {
-                    Id = p.Id,
-                    Handle = p.Handle,
-                    Name = p.Name,
-                    // Include other necessary properties from ParticipantDto
-                },
+                    existingParticipants.Add(existingParticipant);
+                }
+                else
+                {
+                    throw new KeyNotFoundException($"Participant with ID {participantDto.Id} not found.");
+                }
+            }
+
+            certificate.CertificateParticipants = existingParticipants.Select(p => new CertificateParticipant
+            {
+                Participant = p,
                 AssignedDate = DateOnly.FromDateTime(DateTime.UtcNow)
             }).ToList();
 
