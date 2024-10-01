@@ -22,18 +22,14 @@ namespace Backend.Services
         {
             try
             {
-                var certificateDto = await _certificateRepository.GetCertificateByHandleAsync(commentCreateDto.CertificateHandle);
-                if (certificateDto == null)
-                    throw new KeyNotFoundException("Certificate not found");
+                int certificateId = await _commentRepository.GetCertificateIdByHandleAsync(commentCreateDto.CertificateHandle);
 
-                var userDto = await _userRepository.GetUserByHandleAsync(commentCreateDto.UserHandle);
-                if (userDto == null)
-                    throw new KeyNotFoundException("User not found");
+                int userId = await _commentRepository.GetUserIdByHandleAsync(commentCreateDto.UserHandle);
 
                 var comment = new Comment
                 {
-                    CertificateId = certificateDto.Id,
-                    UserId = userDto.Id,
+                    CertificateId = certificateId,
+                    UserId = userId,
                     Text = commentCreateDto.Text,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow

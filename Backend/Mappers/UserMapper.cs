@@ -9,7 +9,6 @@ namespace Backend.Mappers
         {
             return new UserDto
             {
-                Id = user.Id,
                 Handle = user.Handle,
                 Name = user.Name,
                 Email = user.Email

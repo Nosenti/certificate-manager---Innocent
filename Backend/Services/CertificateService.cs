@@ -1,6 +1,5 @@
 ﻿using Backend.Dtos;
 using Backend.Helpers;
-using Backend.Mappers;
 using Backend.Repositories;
 
 namespace Backend.Services
@@ -45,7 +44,7 @@ namespace Backend.Services
             byte[]? pdfBytes = await FileHelper.ConvertToByteArrayAsync(certificateCreateDto.PdfDocument);
             var certificate = await _certificateRepository.CreateCertificateAsync(certificateCreateDto, supplier, participants, pdfBytes);
 
-            return certificate.ToDto();
+            return certificate;
         }
 
         public async Task<CertificateDto> UpdateCertificateAsync(CertificateEditDto certificateEditDto)
@@ -60,7 +59,7 @@ namespace Backend.Services
             byte[]? pdfBytes = await FileHelper.ConvertToByteArrayAsync(certificateEditDto.PdfDocument);
             var certificate = await _certificateRepository.UpdateCertificateAsync(certificateEditDto, supplier, participants, pdfBytes);
 
-            return certificate.ToDto();
+            return certificate;
 
         }
 

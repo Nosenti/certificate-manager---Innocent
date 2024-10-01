@@ -43,7 +43,7 @@ namespace Backend.Repositories
             return true;
         }
 
-        public async Task<Certificate> CreateCertificateAsync(CertificateCreateDto certificateCreateDto, SupplierDto supplierDto, List<ParticipantDto> participantDtos, byte[] pdfBytes)
+        public async Task<CertificateDto> CreateCertificateAsync(CertificateCreateDto certificateCreateDto, SupplierDto supplierDto, List<ParticipantDto> participantDtos, byte[] pdfBytes)
         {
             var existingSupplier = await _context.Suppliers.FirstOrDefaultAsync(s => s.Handle == supplierDto.Handle);
             if (existingSupplier == null)
@@ -70,7 +70,7 @@ namespace Backend.Repositories
                 }
                 else
                 {
-                    throw new KeyNotFoundException($"Participant with ID {participantDto.Id} not found.");
+                    throw new KeyNotFoundException($"Participant with Handle {participantDto.Handle} not found.");
                 }
             }
 
@@ -83,10 +83,10 @@ namespace Backend.Repositories
             _context.Certificates.Add(certificate);
             await _context.SaveChangesAsync();
 
-            return certificate;
+            return certificate.ToDto();
         }
 
-        public async Task<Certificate> UpdateCertificateAsync(CertificateEditDto certificateEditDto, SupplierDto supplierDto, List<ParticipantDto> participantDtos, byte[]? pdfBytes)
+        public async Task<CertificateDto> UpdateCertificateAsync(CertificateEditDto certificateEditDto, SupplierDto supplierDto, List<ParticipantDto> participantDtos, byte[]? pdfBytes)
         {
             var certificate = await _context.Certificates
                 .Include(c => c.CertificateParticipants)
@@ -121,7 +121,7 @@ namespace Backend.Repositories
                 }
                 else
                 {
-                    throw new KeyNotFoundException($"Participant with ID {participantDto.Id} not found.");
+                    throw new KeyNotFoundException($"Participant with handle {participantDto.Handle} not found.");
                 }
             }
 
@@ -134,7 +134,7 @@ namespace Backend.Repositories
             _context.Certificates.Update(certificate);
             await _context.SaveChangesAsync();
 
-            return certificate;
+            return certificate.ToDto();
         }
     }
 }

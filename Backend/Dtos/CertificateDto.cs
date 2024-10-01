@@ -2,7 +2,6 @@
 {
     public class CertificateDto
     {
-        public int Id { get; set; }
         public Guid Handle { get; set; }
 
         public string Type { get; set; }

@@ -1,5 +1,4 @@
 ﻿using Backend.Dtos;
-using Backend.Entities;
 
 namespace Backend.Repositories
 {
@@ -8,7 +7,7 @@ namespace Backend.Repositories
         Task<IEnumerable<CertificateDto>> GetAllCertificatesAsync();
         Task<CertificateDto> GetCertificateByHandleAsync(Guid handle);
         Task<bool> DeleteCertificateByHandleAsync(Guid handle);
-        Task<Certificate> CreateCertificateAsync(CertificateCreateDto certificateCreateDto, SupplierDto supplier, List<ParticipantDto> participants, byte[] pdfBytes);
-        Task<Certificate> UpdateCertificateAsync(CertificateEditDto certificateEditDto, SupplierDto supplier, List<ParticipantDto> participants, byte[]? pdfBytes);
+        Task<CertificateDto> CreateCertificateAsync(CertificateCreateDto certificateCreateDto, SupplierDto supplier, List<ParticipantDto> participants, byte[] pdfBytes);
+        Task<CertificateDto> UpdateCertificateAsync(CertificateEditDto certificateEditDto, SupplierDto supplier, List<ParticipantDto> participants, byte[]? pdfBytes);
     }
 }

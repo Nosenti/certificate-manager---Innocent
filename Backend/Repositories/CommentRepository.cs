@@ -1,6 +1,7 @@
 ﻿using Backend.Data;
 using Backend.Dtos;
 using Backend.Entities;
+using Backend.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories
@@ -14,7 +15,7 @@ namespace Backend.Repositories
             _context = context;
         }
 
-        public async Task<Comment> AddCommentAsync(Comment comment)
+        public async Task<CommentDto> AddCommentAsync(Comment comment)
         {
             var userExists = await _context.Users.AnyAsync(u => u.Id == comment.UserId);
             if (!userExists)
@@ -26,9 +27,10 @@ namespace Backend.Repositories
             {
                 throw new InvalidOperationException($"Certificate with ID {comment.CertificateId} does not exist.");
             }
+            //var user = await _context.Users.AnyAsync(u => u.Handle, );
             _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
-            return comment;
+            return comment.ToDto();
         }
 
         public async Task<IEnumerable<CommentDto>> GetCommentsByCertificateHandleAsync(Guid certificateHandle)
@@ -44,6 +46,19 @@ namespace Backend.Repositories
                     UserHandle = c.User.Handle,
                     Text = c.Text
                 }).ToListAsync();
+        }
+        public async Task<int> GetCertificateIdByHandleAsync(Guid certificateHandle)
+        {
+            var certificate = await _context.Certificates
+                .FirstOrDefaultAsync(c => c.Handle == certificateHandle);
+            return certificate?.Id ?? throw new KeyNotFoundException("Certificate not found");
+        }
+
+        public async Task<int> GetUserIdByHandleAsync(Guid userHandle)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Handle == userHandle);
+            return user?.Id ?? throw new KeyNotFoundException("User not found");
         }
     }
 }
