@@ -16,5 +16,7 @@
 
         public List<ParticipantDto> Participants { get; set; }
 
+        public List<CommentDto> Comments { get; set; }
+
     }
 }

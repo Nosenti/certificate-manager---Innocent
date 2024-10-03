@@ -16,35 +16,28 @@ import RemoveIcon from '../../../public/assets/close-small.svg';
 import { validateForm } from '../../utils/validation';
 import { useNotification } from '../../context/NotificationContext';
 import { useLanguage } from '../../context/LanguageContext';
-import { addSupplier, getSuppliers } from '../../data/db';
-import { Supplier } from '../../../types/types';
+import { AssignedUser, Supplier } from '../../../types/types';
 import Table, { Column } from '../table/Table';
 import CommentSection from '../comment-section/CommentSection';
+import { UUID } from 'crypto';
 
 interface FormData {
-  id: number;
   supplier: string;
-  certificateType: string;
+  type?: string;
   validFrom: string;
   validTo: string;
-  pdf: File | null;
-  assignedUsers: {
-    id: number;
-    name: string;
-    department: string;
-    email: string;
-  }[];
-  comments: { user: string; text: string }[];
+  pdfDocument: string | null;
+  participants: AssignedUser[];
+  comments: { userHandle: UUID;  certificateHandle: UUID, text: string }[];
 }
 
 const initialState: FormData = {
-  id: Date.now(),
   supplier: '',
-  certificateType: '',
+  type: '',
   validFrom: '',
   validTo: '',
-  pdf: null,
-  assignedUsers: [],
+  pdfDocument: null,
+  participants: [],
   comments: [],
 };
 
@@ -54,10 +47,10 @@ type FormAction =
   | { type: 'SET_INITIAL_STATE'; payload: FormData }
   | {
       type: 'ADD_ASSIGNED_USERS';
-      users: { name: string; department: string; email: string }[];
+      users: AssignedUser[];
     }
   | { type: 'REMOVE_ASSIGNED_USER'; index: number }
-  | { type: 'ADD_COMMENT'; comment: { user: string; text: string } };
+  | { type: 'ADD_COMMENT'; comment: { userHandle: UUID; certificateHandle: UUID;  text: string } };
 
 const formReducer = (state: FormData, action: FormAction): FormData => {
   switch (action.type) {
@@ -74,13 +67,13 @@ const formReducer = (state: FormData, action: FormAction): FormData => {
       }));
       return {
         ...state,
-        assignedUsers: [...state.assignedUsers, ...usersWithId],
+        participants: [...state.participants, ...usersWithId],
       };
     case 'REMOVE_ASSIGNED_USER':
-      const assignedUsers = state.assignedUsers.filter(
+      const participants = state.participants.filter(
         (_, i) => i !== action.index,
       );
-      return { ...state, assignedUsers };
+      return { ...state, participants };
     case 'ADD_COMMENT':
       return {
         ...state,
@@ -98,7 +91,7 @@ enum Options {
 
 const CertificateForm: React.FC = () => {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { handle } = useParams<{ handle: UUID }>();
   const { addCertificate, certificates, updateCertificate } = useCertificates();
   const { notify } = useNotification();
   const [formData, dispatch] = useReducer(formReducer, initialState);
@@ -111,15 +104,19 @@ const CertificateForm: React.FC = () => {
   const { t } = useLanguage();
 
   useEffect(() => {
-    if (id) {
-      const certificate = certificates.find((cert) => cert.id === parseInt(id));
+    if (handle) {
+      const certificate = certificates.find((cert) => cert.handle === handle);
+      console.log('retrieved cert: ', certificate);
       if (certificate) {
-        dispatch({ type: 'SET_INITIAL_STATE', payload: certificate });
+        const pdfBase64 = certificate.pdfDocument 
+          ? `data:application/pdf;base64,${Buffer.from(certificate.pdfDocument).toString('base64')}` 
+          : null;
+        dispatch({ type: 'SET_INITIAL_STATE', payload: { ...certificate, pdfDocument: pdfBase64 } });
       }
     }
-  }, [id, certificates]);
+  }, [handle, certificates]);
 
-  const handleAddComment = (comment: { user: string; text: string }) => {
+  const handleAddComment = (comment: { userHandle: UUID, certificateHandle: UUID, text: string}) => {
     dispatch({ type: 'ADD_COMMENT', comment });
   };
 
@@ -132,26 +129,25 @@ const CertificateForm: React.FC = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
-    dispatch({ type: 'UPDATE_FIELD', field: 'pdf', value: file });
+    dispatch({ type: 'UPDATE_FIELD', field: 'pdfDocument', value: file });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { isValid, errors } = validateForm(formData);
 
-    if (!selectedSupplier && formData.supplier) {
-      const newSupplier: Supplier = {
-        id: Date.now(),
-        supplierName: formData.supplier,
-        supplierIndex: (getSuppliers.length + 1).toString(),
-        city: 'Kigali',
-      };
-      await addSupplier(newSupplier);
-      notify(`New supplier "${newSupplier.supplierName}" created`, 'success');
-    }
+    // if (!selectedSupplier && formData.supplier) {
+    //   const newSupplier: Supplier = {
+    //     name: formData.supplier.name,
+    //     index: (getSuppliers.length + 1).toString(),
+    //     city: 'Kigali',
+    //   };
+    //   await addSupplier(newSupplier);
+    //   notify(`New supplier "${newSupplier.name}" created`, 'success');
+    // }
 
     if (isValid) {
-      if (id) {
+      if (handle) {
         updateCertificate(formData);
         notify('Certificate updated successfully', 'success');
       } else {
@@ -237,7 +233,7 @@ const CertificateForm: React.FC = () => {
             <TextInput
               label={t.supplier}
               name="supplier"
-              value={formData.supplier}
+              value={formData.supplier?.name}
               onChange={handleInputChange}
             />
             <span
@@ -258,8 +254,8 @@ const CertificateForm: React.FC = () => {
 
           <FormSelect
             label={t.certificateType}
-            name="certificateType"
-            value={formData.certificateType}
+            name="type"
+            value={formData.type}
             error={errors.certificateType}
             onChange={handleInputChange}
             options={[
@@ -298,7 +294,7 @@ const CertificateForm: React.FC = () => {
             </div>
             <Table
               columns={assignedUsersColumns}
-              data={formData.assignedUsers}
+              data={formData.participants}
             />
           </div>
           <CommentSection comments={formData.comments} onAddComment={ handleAddComment} />
@@ -309,16 +305,16 @@ const CertificateForm: React.FC = () => {
               onFileChange={handleFileChange}
               resetFile={resetFile}
               onFileRemove={handleFileRemove}
-              file={formData.pdf}
+              file={formData.pdfDocument}
             />
           </div>
 
-          <PDFPreview file={formData.pdf} />
+          <PDFPreview file={formData.pdfDocument} />
           <div className="form-action-buttons">
             <Button type="submit" variation="contained" size="medium">
-              {id ? t.update : t.save}
+              {handle ? t.update : t.save}
             </Button>
-            {!id ? (
+            {!handle ? (
               <Button
                 type="button"
                 variation="transparent"

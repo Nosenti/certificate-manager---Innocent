@@ -17,7 +17,7 @@ namespace Backend.Repositories
 
         public async Task<IEnumerable<CertificateDto>> GetAllCertificatesAsync()
         {
-            var certificates = await _context.Certificates.Include(c => c.Supplier).Include(c => c.CertificateParticipants).ToListAsync();
+            var certificates = await _context.Certificates.Include(c => c.Supplier).Include(c => c.CertificateParticipants).Include(c => c.Comments).ToListAsync();
             return certificates.ToDtoList();
         }
 
@@ -58,6 +58,7 @@ namespace Backend.Repositories
                 ValidTo = certificateCreateDto.ValidTo,
                 Supplier = existingSupplier,
                 PdfDocument = pdfBytes,
+
             };
 
             var existingParticipants = new List<Participant>();

@@ -1,32 +1,34 @@
+import { UUID } from "crypto";
+
 export interface AssignedUser {
-  id: number,
+  handle: UUID,
   name: string;
   department: string;
   email: string;
 }
 export interface Certificate {
-  id: number;
+  handle: UUID;
   supplier: string;
-  certificateType: string;
+  type: string;
   validFrom: string;
   validTo: string;
-  pdf: File | null;
-  assignedUsers: AssignedUser[];
-  comments: { user: string; text: string }[];
+  pdfDocument: string | null;
+  participants: AssignedUser[];
+  comments: { certificateHandle: UUID; userHandle: UUID;  text: string }[];
 }
 
 export interface Supplier {
-  id: number;
-  supplierName: string;
-  supplierIndex: string;
+  handle: UUID;
+  name: string;
+  index: string;
   city: string
 }
 
 export interface Participant {
-  id: number;
+  handle: UUID;
   name: string;
   firstName: string;
-  userID: string;
+  userId: string;
   department: string;
   plant: string;
   email: string;
@@ -84,14 +86,16 @@ export interface Locales {
 }
 
 export interface Supplier {
-  id: number;
+
+  handle: UUID;
   supplierName: string;
   supplierIndex: string;
   city: string
 }
 
 export interface Participant {
-  id: number;
+
+  handle: UUID;
   name: string;
   firstName: string;
   userID: string;

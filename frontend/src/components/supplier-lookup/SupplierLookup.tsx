@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getSuppliers } from '../../data/db';
+// import { getSuppliers } from '../../data/db';
 import { Supplier } from '../../../types/types';
 import './supplier-lookup.css';
 import Modal from '../modal/Modal';
@@ -9,6 +9,8 @@ import TextInput from '../text-input/TextInput';
 import SupplierRowSelect from '../supplier-row-select/SupplierRowSelect';
 import CaretDown from '../../../public/assets/caret-down.svg';
 import { useLanguage } from '../../context/LanguageContext';
+import { getSuppliers } from '../../services/CertificatesService';
+import { UUID } from 'crypto';
 
 
 interface SupplierLookupProps {
@@ -23,8 +25,8 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
   onSelect,
 }) => {
   const [filters, setFilters] = useState({
-    supplierName: '',
-    supplierIndex: '',
+    name: '',
+    index: '',
     city: '',
   });
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
@@ -36,9 +38,15 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
 
   useEffect(() => {
     const fetchSuppliers = async () => {
-      const results = await getSuppliers();
+      const { name, index, city } = filters;
+      try {
+        const results = await getSuppliers(name, index, city);
       setSuppliers(results);
       setFilteredSuppliers(results);
+      } catch (error) {
+        console.error("Error fetching suppliers: ", error);
+      }
+      
     };
 
     fetchSuppliers();
@@ -51,16 +59,16 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
   };
 
   const handleSearch = async () => {
-  const { supplierName, supplierIndex, city } = filters;
+  const { name, index, city } = filters;
   let results = suppliers;
 
-  if (supplierName)
+  if (name)
     results = results.filter((supplier) =>
-      supplier.supplierName.toLowerCase().includes(supplierName.toLowerCase())
+      supplier.supplierName.toLowerCase().includes(name.toLowerCase())
     );
-  if (supplierIndex)
+  if (index)
     results = results.filter((supplier) =>
-      supplier.supplierIndex.toLowerCase().includes(supplierIndex.toLowerCase())
+      supplier.index.toLowerCase().includes(index.toLowerCase())
     );
   if (city)
     results = results.filter((supplier) =>
@@ -71,13 +79,13 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
 };
 
   const handleReset = () => {
-    setFilters({ supplierName: '', supplierIndex: '', city: '' });
+    setFilters({ name: '', index: '', city: '' });
     setSuppliers([]);
     setSelectedSupplier(null);
   };
 
   const handleRowSelect = (supplier: Supplier) => {
-    setSelectedSupplier(selectedSupplier?.id === supplier.id ? null : supplier);
+    setSelectedSupplier(selectedSupplier?.handle === supplier.handle ? null : supplier);
   };
 
   const handleSelectClick = () => {
@@ -87,8 +95,8 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
   };
 
   const columns = [
-    { header: t.supplierName, accessor: 'supplierName' as keyof Supplier },
-    { header: t.supplierIndex, accessor: 'supplierIndex' as keyof Supplier },
+    { header: t.supplierName, accessor: 'name' as keyof Supplier },
+    { header: t.supplierIndex, accessor: 'index' as keyof Supplier },
     { header: t.city, accessor: 'city' as keyof Supplier },
   ];
 
@@ -105,14 +113,14 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
           <div className="search-inputs">
             <TextInput
               label={t.supplierName}
-              name="supplierName"
-              value={filters.supplierName}
+              name="name"
+              value={filters.name}
               onChange={handleInputChange}
             />
             <TextInput
               label={t.supplierIndex}
-              name="supplierIndex"
-              value={filters.supplierIndex}
+              name="index"
+              value={filters.index}
               onChange={handleInputChange}
             />
             <TextInput
@@ -143,12 +151,12 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
             <Table<Supplier>
               columns={columns}
               data={filteredSuppliers}
-              render={(id?: number) => (
+              render={(handle?: UUID) => (
                 <SupplierRowSelect
                   suppliers={filteredSuppliers}
                   selectedSupplier={selectedSupplier}
                   onRowSelect={handleRowSelect}
-                  id={id}
+                  handle={handle}
                 />
               )}
             />

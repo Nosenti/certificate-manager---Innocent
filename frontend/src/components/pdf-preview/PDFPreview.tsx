@@ -1,15 +1,16 @@
 import { FC, memo } from 'react';
 
 interface PDFPreviewProps {
-  file: File | null;
+  file: string | null;
 }
 
 const PDFPreview: FC<PDFPreviewProps> = memo(({ file }) => {
+  console.log('PDF_: ', file);
   return (
     <div className="prev">
       {file && (
         <iframe
-          src={URL.createObjectURL(file)}
+          src={file}
           width="100%"
           height="100%"
           title="PDF Preview"

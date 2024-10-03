@@ -1,11 +1,15 @@
+import { UUID } from "crypto";
+import { AssignedUser } from "../../types/types";
+
 interface FormData {
-  id?: number;
+  handle?: UUID;
   supplier: string;
-  certificateType: string;
+  type?: string;
   validFrom: string;
   validTo: string;
-  pdf: File | null;
-  assignedUsers?: { name: string; department: string; email: string }[];
+  pdfDocument: string | null;
+  participants: AssignedUser[];
+  comments: { userHandle: UUID; certificateHandle: UUID; text: string }[];
 }
 
 export const validateForm = (formData: FormData) => {
@@ -17,7 +21,7 @@ export const validateForm = (formData: FormData) => {
     errors.supplier = 'Supplier is required';
   }
 
-  if (!formData.certificateType) {
+  if (!formData.type) {
     isValid = false;
     errors.certificateType = 'Certificate type is required';
   }
@@ -37,7 +41,7 @@ export const validateForm = (formData: FormData) => {
     errors.validTo = 'End date should be after start date';
   }
 
-  if (!formData.pdf) {
+  if (!formData.pdfDocument) {
     isValid = false;
     errors.pdf = 'PDF is required';
   }

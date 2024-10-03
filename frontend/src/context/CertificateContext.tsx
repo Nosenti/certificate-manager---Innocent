@@ -1,3 +1,4 @@
+import { UUID } from 'crypto';
 import {
   createContext,
   ReactNode,
@@ -5,20 +6,20 @@ import {
   useEffect,
   useState,
 } from 'react';
-import {
-  initDB,
-  getCertificates,
-  addCertificate as addCertificateToDB,
-  updateCertificate as updateCertificateInDB,
-  deleteCertificate as deleteCertificateFromDB,
-} from '../data/db';
 import { Certificate } from '../../types/types';
+import {
+  getCertificates,
+  addCertificate,
+  updateCertificate,
+  deleteCertificate
+} from '../services/CertificatesService';
+
 
 interface CertificatesContextType {
   certificates: Certificate[];
-  addCertificate: (certificate: Certificate) => void;
-  updateCertificate: (certificate: Certificate) => void;
-  deleteCertificate: (id: number) => Promise<void>;
+  addCertificate: (certificate: Certificate) => Promise<void>;
+  updateCertificate: (certificate: Certificate) => Promise<void>;
+  deleteCertificate: (handle: UUID) => Promise<void>;
 }
 
 const CertificateContext = createContext<CertificatesContextType | undefined>(
@@ -31,68 +32,59 @@ interface Props {
 
 function CertificateProvider({ children }: Props) {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
-  const [isDBReady, setIsDBReady] = useState<boolean>(false);
 
   useEffect(() => {
-    const handleInitDB = async () => {
-      try {
-        const status = await initDB();
-        setIsDBReady(status);
-        if (status) {
-          const storedCertificates = await getCertificates();
-          const updatedCertificates = storedCertificates.map((cert, index) => ({
-            ...cert,
-            id: cert.id ?? Date.now(),
-          }));
-          setCertificates(storedCertificates);
-        } else {
-          throw new Error('Error: DB not initialized');
-        }
-      } catch (error) {
-        throw new Error('DB initialization failed');
-      }
-    };
+    const fetchCertificates = async () => {
+      const certificates = await getCertificates();
+      console.log("cert_: ", certificates);
+      setCertificates(certificates);
+    }
 
-    handleInitDB();
+    fetchCertificates();
+    
   }, []);
 
-  const addCertificate = async (certificate: Certificate) => {
-    if (!isDBReady) {
-      return;
-    }
+  const addCertificateHandler = async (certificate: Certificate) => {
     try {
-      certificate.id = Date.now();
-      await addCertificateToDB(certificate);
-      const storedCertificates = await getCertificates();
-      setCertificates(storedCertificates);
+      await addCertificate(certificate);
+      // Refetch certificates after adding
+      const fetchedCertificates = await getCertificates();
+      setCertificates(fetchedCertificates);
     } catch (error) {
+      console.error('Error adding certificate: ', error);
       throw new Error('Error adding certificate');
     }
   };
 
-  const updateCertificate = async (certificate: Certificate) => {
+  const updateCertificateHandler = async (certificate: Certificate) => {
     try {
-      await updateCertificateInDB(certificate);
-      const storedCertificates = await getCertificates();
-      setCertificates(storedCertificates);
+      await updateCertificate({ handle: certificate.handle, data: certificate });
+      const fetchedCertificates = await getCertificates();
+      setCertificates(fetchedCertificates);
     } catch (error) {
+      console.error('Error updating certificate: ', error);
       throw new Error('Error editing a certificate');
     }
   };
 
-  const deleteCertificate = async (id: number) => {
-    await deleteCertificateFromDB(id);
-    const storedCertificates = await getCertificates();
-    setCertificates(storedCertificates);
+  const deleteCertificateHandler = async (handle: UUID) => {
+    try {
+      await deleteCertificate(handle);
+      const fetchedCertificates = await getCertificates();
+      setCertificates(fetchedCertificates);
+    } catch (error) {
+      console.error('Error deleting certificate: ', error);
+      throw new Error('Error deleting certificate');
+    }
   };
 
   return (
     <CertificateContext.Provider
       value={{
         certificates,
-        addCertificate,
-        updateCertificate,
-        deleteCertificate,
+        addCertificate: addCertificateHandler,
+        updateCertificate: updateCertificateHandler,
+        deleteCertificate: deleteCertificateHandler,
       }}
     >
       {children}
@@ -111,3 +103,4 @@ function useCertificates() {
 }
 
 export { CertificateProvider, useCertificates };
+

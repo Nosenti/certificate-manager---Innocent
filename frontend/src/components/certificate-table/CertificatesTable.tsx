@@ -4,18 +4,20 @@ import useClickOutside from '../../hooks/useClickOutside';
 import Table from '../table/Table';
 import Button from '../button/Button';
 import { Link, useNavigate } from 'react-router-dom';
-import { Certificate as BaseCertificate } from '../../../types/types';
-import { useMemo, useState } from 'react';
+import { Certificate as BaseCertificate, Supplier } from '../../../types/types';
+import React, { useMemo, useState } from 'react';
 import ActionMenu from '../action-menu/ActionMenu';
 import { useNotification } from '../../context/NotificationContext';
 import Modal from '../confirm-modal/ConfirmModal';
 import { useLanguage } from '../../context/LanguageContext';
+import { UUID } from 'crypto';
 
 
 
 interface Column {
   header: string;
   accessor: keyof Certificate;
+  render?:(supplier:Supplier)=>React.ReactNode
 }
 
 interface Certificate extends BaseCertificate {
@@ -28,16 +30,15 @@ const CertificatesTable: React.FC = () => {
   const [dropdownVisible, setDropdownVisible] = useState<number | null>(null);
   const { notify } = useNotification();
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-  const [certificateToDelete, setCertificateToDelete] = useState<number | null>(null);
+  const [certificateToDelete, setCertificateToDelete] = useState<UUID | null>(null);
   const { t } = useLanguage();
 
-
-  const handleEdit = (id: number) => {
-    id && navigate(`/certificates/edit/${id}`);
+  const handleEdit = (handle: UUID) => {
+    handle && navigate(`/certificates/edit/${handle}`);
   };
 
-  const handleDeleteClick = (id: number) => {
-    setCertificateToDelete(id);
+  const handleDeleteClick = (handle: UUID) => {
+    setCertificateToDelete(handle);
     setDeleteModalVisible(true);
   };
 
@@ -57,8 +58,8 @@ const CertificatesTable: React.FC = () => {
     setDeleteModalVisible(false);
     setCertificateToDelete(null);
   };
-  const handleDelete = (id: number) => {
-    deleteCertificate(id);
+  const handleDelete = async (handle: UUID) => {
+    await deleteCertificate(handle);
     notify('Certificate deleted successfully', 'success');
   };
 
@@ -68,8 +69,8 @@ const CertificatesTable: React.FC = () => {
   const dropdownRef = useClickOutside<HTMLDivElement>(handleClickOutside);
 
   const columns: Column[] = useMemo(() => [
-    { header: t.supplier, accessor: 'supplier' },
-    { header: t.certificateType, accessor: 'certificateType' },
+    { header: t.supplier, accessor: 'supplier', render: (data) => <p>{data?.name }</p> },
+    { header: t.certificateType, accessor: 'type' },
     { header: t.validFrom, accessor: 'validFrom' },
     { header: t.validTo, accessor: 'validTo' },
   ], [t]);
@@ -79,8 +80,8 @@ const CertificatesTable: React.FC = () => {
     actions: (
       <ActionMenu
         row={cert}
-        onEdit={() => handleEdit(cert.id)}
-        onDelete={() => handleDelete(cert.id)}
+        onEdit={() => handleEdit(cert.handle)}
+        onDelete={() => handleDelete(cert.handle)}
       />
     ),
   }));
@@ -101,13 +102,13 @@ const CertificatesTable: React.FC = () => {
       <Table
         columns={columns}
         data={dataWithActions}
-        render={(id?: number) => {
-          const row = certificates.find((cert) => cert.id === id);
+        render={(handle?: UUID) => {
+          const row = certificates.find((cert) => cert.handle === handle);
           return row ? (
             <ActionMenu
               row={row}
-              onEdit={() => handleEdit(row.id)}
-              onDelete={() => handleDeleteClick(row.id)}
+              onEdit={() => handleEdit(row.handle)}
+              onDelete={() => handleDeleteClick(row.handle)}
             />
           ) : null;
         }}
