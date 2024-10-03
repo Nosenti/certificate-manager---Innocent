@@ -42,7 +42,7 @@ const initialState: FormData = {
 };
 
 type FormAction =
-  | { type: 'UPDATE_FIELD'; field: string; value: string | File | null }
+  | { type: 'UPDATE_FIELD'; field: string; value: string | null }
   | { type: 'RESET' }
   | { type: 'SET_INITIAL_STATE'; payload: FormData }
   | {
@@ -109,7 +109,7 @@ const CertificateForm: React.FC = () => {
       console.log('retrieved cert: ', certificate);
       if (certificate) {
         const pdfBase64 = certificate.pdfDocument 
-          ? `data:application/pdf;base64,${Buffer.from(certificate.pdfDocument).toString('base64')}` 
+          ? `data:application/pdf;base64,${certificate.pdfDocument}` 
           : null;
         dispatch({ type: 'SET_INITIAL_STATE', payload: { ...certificate, pdfDocument: pdfBase64 } });
       }
@@ -127,30 +127,42 @@ const CertificateForm: React.FC = () => {
     dispatch({ type: 'UPDATE_FIELD', field: name, value });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const getDataUrlFromFile = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      resolve(reader.result as string);
+    };
+
+    reader.onerror = () => {
+      reject(new Error('Failed to read file'));
+    };
+    
+    reader.readAsDataURL(file);
+  });
+};
+
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
-    dispatch({ type: 'UPDATE_FIELD', field: 'pdfDocument', value: file });
+    let formattedFile: string = '';
+    if (file) {
+      formattedFile = await getDataUrlFromFile(file)
+    };
+    dispatch({ type: 'UPDATE_FIELD', field: 'pdfDocument', value: formattedFile });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { isValid, errors } = validateForm(formData);
 
-    // if (!selectedSupplier && formData.supplier) {
-    //   const newSupplier: Supplier = {
-    //     name: formData.supplier.name,
-    //     index: (getSuppliers.length + 1).toString(),
-    //     city: 'Kigali',
-    //   };
-    //   await addSupplier(newSupplier);
-    //   notify(`New supplier "${newSupplier.name}" created`, 'success');
-    // }
-
     if (isValid) {
       if (handle) {
         updateCertificate(formData);
         notify('Certificate updated successfully', 'success');
       } else {
+
         addCertificate(formData);
         notify('Certificate created successfully', 'success');
       }
@@ -224,7 +236,7 @@ const CertificateForm: React.FC = () => {
     { header: t.department, accessor: 'department' },
     { header: t.email, accessor: 'email' },
   ];
-
+  console.log('formData: ', formData);
   return (
     <section className="form-page">
       <form onSubmit={handleSubmit} className="certificate-form">
@@ -305,7 +317,7 @@ const CertificateForm: React.FC = () => {
               onFileChange={handleFileChange}
               resetFile={resetFile}
               onFileRemove={handleFileRemove}
-              file={formData.pdfDocument}
+              file={formData?.pdfDocument}
             />
           </div>
 

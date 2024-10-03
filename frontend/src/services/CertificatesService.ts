@@ -1,6 +1,6 @@
-import { Certificate, UUID } from 'crypto';
+import {  UUID } from 'crypto';
 import api from '../utils/api';
-import { AssignedUser, Participant, Supplier } from '../../types/types';
+import { AssignedUser, Participant, Supplier, Certificate } from '../../types/types';
 
 export const getCertificates = async (): Promise<Certificate[]> => {
   try {
@@ -23,7 +23,7 @@ export const getCertificateByHandle = async (handle: UUID) => {
 
 export const updateCertificate = async (certificate: {
   handle: UUID;
-  data: any;
+  data: Certificate;
 }) => {
   try {
     const { handle, data } = certificate;
@@ -67,9 +67,6 @@ export const deleteCertificate = async (handle: UUID) => {
         'Content-Type': 'application/json',
       },
     });
-    if (!response.ok) {
-      throw new Error(`Error deleting certificate: ${response.statusText}`);
-    }
 
     return response;
   } catch (error) {

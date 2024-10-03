@@ -8,7 +8,7 @@ interface FileUploadProps {
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   resetFile: boolean;
   onFileRemove: () => void;
-  file: File | null;
+  file: string | null;
 }
 
 const FileUpload: FC<FileUploadProps> = memo(({ onFileChange, resetFile, onFileRemove, file }) => {
@@ -36,10 +36,10 @@ const FileUpload: FC<FileUploadProps> = memo(({ onFileChange, resetFile, onFileR
         } else {
           setError(null);
           setFileName(file.name);
-          onFileChange(e);
+          onFileChange(e);   
         }
       }
-    };
+  };
 
     const handleRemoveFile = () => {
       setFileName(null);

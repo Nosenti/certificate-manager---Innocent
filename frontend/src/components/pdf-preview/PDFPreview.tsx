@@ -1,11 +1,12 @@
 import { FC, memo } from 'react';
 
 interface PDFPreviewProps {
-  file: string | null;
+  file: string ;
 }
 
 const PDFPreview: FC<PDFPreviewProps> = memo(({ file }) => {
   console.log('PDF_: ', file);
+
   return (
     <div className="prev">
       {file && (
