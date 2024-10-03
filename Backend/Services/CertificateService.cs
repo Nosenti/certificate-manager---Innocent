@@ -1,6 +1,5 @@
 ﻿using Backend.Dtos;
 using Backend.Helpers;
-using Backend.Mappers;
 using Backend.Repositories;
 
 namespace Backend.Services
@@ -9,10 +8,12 @@ namespace Backend.Services
     {
         private readonly ICertificateRepository _certificateRepository;
         private readonly ISupplierRepository _supplierRepository;
-        public CertificateService(ICertificateRepository certificateRepository, ISupplierRepository supplierRepository)
+        private readonly IParticipantRepository _participantRepository;
+        public CertificateService(ICertificateRepository certificateRepository, ISupplierRepository supplierRepository, IParticipantRepository participantRepository)
         {
             _certificateRepository = certificateRepository;
             _supplierRepository = supplierRepository;
+            _participantRepository = participantRepository;
         }
 
         public async Task<IEnumerable<CertificateDto>> GetAllCertificatesAsync()
@@ -38,10 +39,12 @@ namespace Backend.Services
                 throw new KeyNotFoundException("Supplier not found.");
             }
 
-            byte[]? pdfBytes = await FileHelper.ConvertToByteArrayAsync(certificateCreateDto.PdfDocument);
-            var certificate = await _certificateRepository.CreateCertificateAsync(certificateCreateDto, supplier, pdfBytes);
+            var participants = await _participantRepository.GetParticipantsByHandlesAsync(certificateCreateDto.ParticipantHandles);
 
-            return certificate.ToDto();
+            byte[]? pdfBytes = await FileHelper.ConvertToByteArrayAsync(certificateCreateDto.PdfDocument);
+            var certificate = await _certificateRepository.CreateCertificateAsync(certificateCreateDto, supplier, participants, pdfBytes);
+
+            return certificate;
         }
 
         public async Task<CertificateDto> UpdateCertificateAsync(CertificateEditDto certificateEditDto)
@@ -51,12 +54,15 @@ namespace Backend.Services
             {
                 throw new KeyNotFoundException("Supplier not found.");
             }
-            byte[]? pdfBytes = await FileHelper.ConvertToByteArrayAsync(certificateEditDto.PdfDocument);
-            var certificate = await _certificateRepository.UpdateCertificateAsync(certificateEditDto, supplier, pdfBytes);
+            var participants = await _participantRepository.GetParticipantsByHandlesAsync(certificateEditDto.ParticipantHandles);
 
-            return certificate.ToDto();
+            byte[]? pdfBytes = await FileHelper.ConvertToByteArrayAsync(certificateEditDto.PdfDocument);
+            var certificate = await _certificateRepository.UpdateCertificateAsync(certificateEditDto, supplier, participants, pdfBytes);
+
+            return certificate;
 
         }
+
 
     }
 }

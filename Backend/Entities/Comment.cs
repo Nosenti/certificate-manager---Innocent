@@ -9,9 +9,9 @@ public partial class Comment
 
     public Guid Handle { get; set; }
 
-    public int? CertificateId { get; set; }
+    public int CertificateId { get; set; }
 
-    public int? UserId { get; set; }
+    public int UserId { get; set; }
 
     public string Text { get; set; } = null!;
 
@@ -21,7 +21,7 @@ public partial class Comment
 
     public byte[] RowVersion { get; set; } = null!;
 
-    public virtual Certificate? Certificate { get; set; }
+    public virtual Certificate Certificate { get; set; } = null!;
 
-    public virtual User? User { get; set; }
+    public virtual User User { get; set; } = null!;
 }

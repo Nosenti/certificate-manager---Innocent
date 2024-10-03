@@ -2,7 +2,6 @@
 {
     public class SupplierDto
     {
-
         public string Name { get; set; } = null!;
 
         public string Index { get; set; } = null!;

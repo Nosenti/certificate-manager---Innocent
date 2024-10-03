@@ -37,6 +37,9 @@ CREATE TABLE Participants (
     Handle uniqueidentifier DEFAULT NEWID() NOT NULL,
     Name NVARCHAR(255) NOT NULL,
     Email NVARCHAR(255) NOT NULL,
+    Plant NVARCHAR(50) NULL,
+    Department NVARCHAR(100) NULL,
+    UserId NVARCHAR(50) NULL,
     CreatedAt DATETIME DEFAULT GETDATE(),
     UpdatedAt DATETIME DEFAULT GETDATE(),
     RowVersion ROWVERSION
@@ -56,10 +59,13 @@ CREATE TABLE CertificateParticipants (
 CREATE TABLE Comments (
     Id INT PRIMARY KEY IDENTITY(1,1),
     Handle uniqueidentifier DEFAULT NEWID() NOT NULL,
-    CertificateId INT FOREIGN KEY REFERENCES Certificates(Id),
-    UserId INT FOREIGN KEY REFERENCES Users(Id),
+    CertificateId INT NOT NULL,
+    UserId INT NOT NULL,
     Text NVARCHAR(MAX) NOT NULL,
     CreatedAt DATETIME DEFAULT GETDATE(),
     UpdatedAt DATETIME DEFAULT GETDATE(),
-    RowVersion ROWVERSION
+    RowVersion ROWVERSION,
+
+    CONSTRAINT FK_CertificateId FOREIGN KEY (CertificateId) REFERENCES Certificates(Id),
+    CONSTRAINT FK_UserId FOREIGN KEY (UserId) REFERENCES Users(Id)  
 );
