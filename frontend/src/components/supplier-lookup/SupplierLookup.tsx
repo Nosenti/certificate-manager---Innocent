@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-// import { getSuppliers } from '../../data/db';
 import { Supplier } from '../../../types/types';
 import './supplier-lookup.css';
 import Modal from '../modal/Modal';
@@ -9,11 +8,10 @@ import TextInput from '../text-input/TextInput';
 import SupplierRowSelect from '../supplier-row-select/SupplierRowSelect';
 import CaretDown from '../../../public/assets/caret-down.svg';
 import { useLanguage } from '../../context/LanguageContext';
-// import { getSuppliers } from '../../services/CertificatesService';
 import { UUID } from 'crypto';
 import { ApiClient } from '../../services/ApiClient';
 
-const { CertificateDto, Client } = ApiClient;
+const { Client } = ApiClient;
 
 const client = new Client('https://localhost:7113');
 

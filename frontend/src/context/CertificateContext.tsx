@@ -8,7 +8,6 @@ import {
 } from 'react';
 import { Certificate } from '../../types/types';
 import { ApiClient } from '../services/ApiClient';
-import { useNotification } from './NotificationContext';
 
 
 const { CertificateDto, Client } = ApiClient;
@@ -188,19 +187,16 @@ function CertificateProvider({ children }: Props) {
   participantHandles: string[];
 }) => {
   try {
-    // Format dates to ensure they match the server's expected format
+
     const validFromDate = formatDateForServer(certificateData.validFrom);
     const validToDate = formatDateForServer(certificateData.validTo);
 
-    // Ensure participantHandles is valid
     if (
       !certificateData.participantHandles ||
       certificateData.participantHandles.length === 0
     ) {
       certificateData.participantHandles = [];
     }
-
-    // Use the wrapper function to handle potential status code issues
     await certificatesPATCHWrapper(
       certificateData.handle,
       certificateData.type,
@@ -210,8 +206,6 @@ function CertificateProvider({ children }: Props) {
       certificateData.pdfDocument,
       certificateData.participantHandles
     );
-
-    // Fetch updated certificates list
     try {
       const fetchedCertificates = await client.certificatesAll();
       setCertificates(fetchedCertificates);
@@ -265,3 +259,4 @@ function useCertificates() {
 }
 
 export { CertificateProvider, useCertificates };
+
