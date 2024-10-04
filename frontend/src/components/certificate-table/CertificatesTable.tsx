@@ -11,6 +11,7 @@ import { useNotification } from '../../context/NotificationContext';
 import Modal from '../confirm-modal/ConfirmModal';
 import { useLanguage } from '../../context/LanguageContext';
 import { UUID } from 'crypto';
+import { formatDateToDDMMYYYY } from '../../utils/formDateTransform';
 
 
 
@@ -70,9 +71,9 @@ const CertificatesTable: React.FC = () => {
 
   const columns: Column[] = useMemo(() => [
     { header: t.supplier, accessor: 'supplier', render: (data) => <p>{data?.name }</p> },
-    { header: t.certificateType, accessor: 'type' },
-    { header: t.validFrom, accessor: 'validFrom' },
-    { header: t.validTo, accessor: 'validTo' },
+    { header: t.certificateType, accessor: 'type'},
+    { header: t.validFrom, accessor: 'validFrom', render: (data) => <p>{ formatDateToDDMMYYYY(data)}</p>  },
+    { header: t.validTo, accessor: 'validTo', render: (data) => <p>{ formatDateToDDMMYYYY(data)}</p>  },
   ], [t]);
 
   const dataWithActions: Certificate[] = certificates.map((cert) => ({

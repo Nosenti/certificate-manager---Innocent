@@ -3,18 +3,18 @@ import Button from '../button/Button';
 import './file-upload.css';
 import { useLanguage } from '../../context/LanguageContext';
 
-
 interface FileUploadProps {
-  onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onFileChange: (file: File | null) => void;
   resetFile: boolean;
   onFileRemove: () => void;
   file: string | null;
 }
 
-const FileUpload: FC<FileUploadProps> = memo(({ onFileChange, resetFile, onFileRemove, file }) => {
-  const [fileName, setFileName] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const { t } = useLanguage();
+const FileUpload: FC<FileUploadProps> = memo(
+  ({ onFileChange, resetFile, onFileRemove, file }) => {
+    const [fileName, setFileName] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const { t } = useLanguage();
 
     useEffect(() => {
       if (resetFile) {
@@ -30,22 +30,29 @@ const FileUpload: FC<FileUploadProps> = memo(({ onFileChange, resetFile, onFileR
         if (file.type !== 'application/pdf') {
           setError('Only PDF files are allowed');
           setFileName(null);
+          onFileChange(null); 
         } else if (file.size > 5 * 1024 * 1024) {
           setError('File size should be less than 5MB');
           setFileName(null);
+          onFileChange(null); 
         } else {
           setError(null);
           setFileName(file.name);
-          onFileChange(e);   
+          onFileChange(file); 
         }
+      } else {
+        setFileName(null);
+        setError(null);
+        onFileChange(null); 
       }
-  };
+    };
 
     const handleRemoveFile = () => {
       setFileName(null);
       setError(null);
       (document.getElementById('fileInput') as HTMLInputElement).value = '';
       onFileRemove();
+      onFileChange(null);
     };
 
     return (

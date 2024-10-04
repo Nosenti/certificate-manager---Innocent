@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { getParticipants } from '../../services/CertificatesService';
 import { Participant } from '../../../types/types';
 import './participant-lookup.css';
 import Modal from '../modal/Modal';
@@ -7,6 +6,11 @@ import Button from '../button/Button';
 import Table from '../table/Table';
 import TextInput from '../text-input/TextInput';
 import { useLanguage } from '../../context/LanguageContext';
+import { ApiClient } from '../../services/ApiClient';
+
+const { CertificateDto, Client } = ApiClient;
+
+const client = new Client('https://localhost:7113');
 
 interface ParticipantLookupProps {
   show: boolean;
@@ -37,7 +41,7 @@ const ParticipantLookup: React.FC<ParticipantLookupProps> = ({
   const handleSearch = async () => {
     const { name,  userID, department, plant } = filters;
     try {
-      const results = await getParticipants(name, userID, department, plant);
+      const results = await client.participants(name, userID, department, plant);
       setParticipants(results);
     } catch (error) {
       console.error("Error fetching participants: ", error);

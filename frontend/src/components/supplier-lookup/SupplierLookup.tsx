@@ -9,9 +9,13 @@ import TextInput from '../text-input/TextInput';
 import SupplierRowSelect from '../supplier-row-select/SupplierRowSelect';
 import CaretDown from '../../../public/assets/caret-down.svg';
 import { useLanguage } from '../../context/LanguageContext';
-import { getSuppliers } from '../../services/CertificatesService';
+// import { getSuppliers } from '../../services/CertificatesService';
 import { UUID } from 'crypto';
+import { ApiClient } from '../../services/ApiClient';
 
+const { CertificateDto, Client } = ApiClient;
+
+const client = new Client('https://localhost:7113');
 
 interface SupplierLookupProps {
   show: boolean;
@@ -40,7 +44,7 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
     const fetchSuppliers = async () => {
       const { name, index, city } = filters;
       try {
-        const results = await getSuppliers(name, index, city);
+        const results = await client.suppliers(name, index, city);
       setSuppliers(results);
       setFilteredSuppliers(results);
       } catch (error) {

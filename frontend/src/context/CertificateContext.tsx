@@ -7,13 +7,11 @@ import {
   useState,
 } from 'react';
 import { Certificate } from '../../types/types';
-import {
-  getCertificates,
-  addCertificate,
-  updateCertificate,
-  deleteCertificate
-} from '../services/CertificatesService';
+import { ApiClient } from '../services/ApiClient';
+import { useNotification } from './NotificationContext';
 
+
+const { CertificateDto, Client } = ApiClient;
 
 interface CertificatesContextType {
   certificates: Certificate[];
@@ -29,48 +27,212 @@ const CertificateContext = createContext<CertificatesContextType | undefined>(
 interface Props {
   children?: ReactNode;
 }
+const client = new Client(process.env.REACT_APP_API_URL);
+
+
+function formatDate(d: Date): string {
+  return d.toISOString().split('T')[0];
+}
+
+function formatDateForServer(date: Date): Date {
+  const dateString = date.toISOString().split('T')[0];
+  const dateCopy = new Date(date.getTime());
+  dateCopy.toJSON = function() {
+    return dateString;
+  };
+
+  return dateCopy;
+}
+
 
 function CertificateProvider({ children }: Props) {
-  const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [certificates, setCertificates] = useState<(typeof CertificateDto)[]>(
+    [],
+  );
 
   useEffect(() => {
     const fetchCertificates = async () => {
-      const certificates = await getCertificates();
-      console.log("cert_: ", certificates);
+      const certificates = await client.certificatesAll();
+      console.log('cert_: ', certificates);
       setCertificates(certificates);
-    }
+    };
 
     fetchCertificates();
-    
   }, []);
 
-  const addCertificateHandler = async (certificate: Certificate) => {
+  const certificatesPOSTWrapper = (
+  type: string,
+  validFrom: Date,
+  validTo: Date,
+  supplierHandle: string,
+  pdfDocument: ApiClient.FileParameter,
+  participantHandles: string[]
+): Promise<typeof CertificateDto> => {
+  return new Promise<typeof CertificateDto>((resolve, reject) => {
+    client
+      .certificatesPOST(
+        type,
+        validFrom,
+        validTo,
+        supplierHandle,
+        pdfDocument,
+        participantHandles
+      )
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        if (
+          error instanceof ApiClient.ApiException &&
+          error.status === 201
+        ) {
+          // Treat 201 Created as success
+          const responseBody = JSON.parse(error.response);
+          resolve(responseBody as typeof CertificateDto);
+        } else {
+          reject(error);
+        }
+      });
+  });
+};
+
+
+  const addCertificateHandler = async (certificateData: {
+    type: string;
+    validFrom: Date;
+    validTo: Date;
+    supplierHandle: string;
+    pdfDocument: ApiClient.FileParameter;
+    participantHandles: string[];
+  }) => {
     try {
-      await addCertificate(certificate);
-      // Refetch certificates after adding
-      const fetchedCertificates = await getCertificates();
+      const validFromDate = formatDateForServer(certificateData.validFrom);
+    const validToDate = formatDateForServer(certificateData.validTo);
+
+    
+    if (
+      !certificateData.participantHandles ||
+      certificateData.participantHandles.length === 0
+    ) {
+      certificateData.participantHandles = []; 
+    }
+      const res = await certificatesPOSTWrapper(
+      certificateData.type,
+      validFromDate,
+      validToDate,
+      certificateData.supplierHandle,
+      certificateData.pdfDocument,
+      certificateData.participantHandles
+    );
+      try {
+      const fetchedCertificates = await client.certificatesAll();
       setCertificates(fetchedCertificates);
+    } catch (fetchError) {
+      console.error('Error fetching certificates after adding:', fetchError);
+    }
     } catch (error) {
-      console.error('Error adding certificate: ', error);
+      if (error instanceof ApiClient.ApiException) {
+        console.error('API Error:', error.status, error.response);
+      } else {
+        console.error('Error adding certificate:', error);
+      }
       throw new Error('Error adding certificate');
     }
   };
 
-  const updateCertificateHandler = async (certificate: Certificate) => {
-    try {
-      await updateCertificate({ handle: certificate.handle, data: certificate });
-      const fetchedCertificates = await getCertificates();
-      setCertificates(fetchedCertificates);
-    } catch (error) {
-      console.error('Error updating certificate: ', error);
-      throw new Error('Error editing a certificate');
+  const certificatesPATCHWrapper = (
+  handle: string,
+  type: string,
+  validFrom: Date,
+  validTo: Date,
+  supplierHandle: string,
+  pdfDocument: ApiClient.FileParameter,
+  participantHandles: string[]
+): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
+    client
+      .certificatesPATCH(
+        handle,
+        type,
+        validFrom,
+        validTo,
+        supplierHandle,
+        pdfDocument,
+        participantHandles
+      )
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        if (
+          error instanceof ApiClient.ApiException &&
+          (error.status === 200 || error.status === 204)
+        ) {
+          // Treat 200 OK and 204 No Content as success
+          resolve();
+        } else {
+          reject(error);
+        }
+      });
+  });
+};
+
+
+  const updateCertificateHandler = async (certificateData: {
+  handle: string;
+  type: string;
+  validFrom: Date;
+  validTo: Date;
+  supplierHandle: string;
+  pdfDocument: ApiClient.FileParameter;
+  participantHandles: string[];
+}) => {
+  try {
+    // Format dates to ensure they match the server's expected format
+    const validFromDate = formatDateForServer(certificateData.validFrom);
+    const validToDate = formatDateForServer(certificateData.validTo);
+
+    // Ensure participantHandles is valid
+    if (
+      !certificateData.participantHandles ||
+      certificateData.participantHandles.length === 0
+    ) {
+      certificateData.participantHandles = [];
     }
-  };
+
+    // Use the wrapper function to handle potential status code issues
+    await certificatesPATCHWrapper(
+      certificateData.handle,
+      certificateData.type,
+      validFromDate,
+      validToDate,
+      certificateData.supplierHandle,
+      certificateData.pdfDocument,
+      certificateData.participantHandles
+    );
+
+    // Fetch updated certificates list
+    try {
+      const fetchedCertificates = await client.certificatesAll();
+      setCertificates(fetchedCertificates);
+    } catch (fetchError) {
+      console.error('Error fetching certificates after updating:', fetchError);
+    }
+  } catch (error) {
+    if (error instanceof ApiClient.ApiException) {
+      console.error('API Error:', error.status, error.response);
+    } else {
+      console.error('Error updating certificate:', error);
+    }
+    throw new Error('Error updating certificate');
+  }
+};
+
 
   const deleteCertificateHandler = async (handle: UUID) => {
     try {
-      await deleteCertificate(handle);
-      const fetchedCertificates = await getCertificates();
+      await client.certificatesDELETE(handle);
+      const fetchedCertificates = await client.certificatesAll();
       setCertificates(fetchedCertificates);
     } catch (error) {
       console.error('Error deleting certificate: ', error);
@@ -103,4 +265,3 @@ function useCertificates() {
 }
 
 export { CertificateProvider, useCertificates };
-

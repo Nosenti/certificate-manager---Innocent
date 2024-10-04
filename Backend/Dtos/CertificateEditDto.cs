@@ -1,4 +1,6 @@
-﻿namespace Backend.Dtos
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace Backend.Dtos
 {
     public class CertificateEditDto
     {
@@ -8,6 +10,7 @@
         public DateOnly ValidTo { get; set; }
         public Guid SupplierHandle { get; set; }
         public IFormFile? PdfDocument { get; set; }
-        public List<Guid> ParticipantHandles { get; set; }
+        [FromForm]
+        public List<Guid>? ParticipantHandles { get; set; }
     }
 }
