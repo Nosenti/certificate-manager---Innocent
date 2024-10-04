@@ -20,9 +20,8 @@ import { AssignedUser, Supplier } from '../../types/types';
 import Table, { Column } from '../table/Table';
 import CommentSection from '../comment-section/CommentSection';
 import { UUID } from 'crypto';
-import { ApiClient } from '../../services/ApiClient'; 
-
-const client = new ApiClient.Client(process.env.REACT_APP_API_URL);
+import { useApi } from '../../context/ApiContext';
+import { ApiClient } from '../../services/ApiClient';
 
 interface FormData {
   handle?: string;
@@ -106,6 +105,7 @@ const CertificateForm: React.FC = () => {
   const { t } = useLanguage();
   const [loading, setLoading] = useState<boolean>(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
+  const { client } = useApi();
 
   useEffect(() => {
     if (handle) {
@@ -148,6 +148,10 @@ const CertificateForm: React.FC = () => {
       fetchCertificate();
     }
   }, [handle, certificates]);
+
+  if (loading) {
+  return <div>Loading...</div>;
+}
 
   const handleAddComment = (comment: {
     userHandle: UUID;

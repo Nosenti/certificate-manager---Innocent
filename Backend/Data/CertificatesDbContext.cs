@@ -53,15 +53,6 @@ public partial class CertificatesDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Certifica__Suppl__4222D4EF");
 
-            entity.HasMany(c => c.Comments)
-            .WithOne(c => c.Certificate)
-            .HasForeignKey(c => c.CertificateId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasMany(c => c.CertificateParticipants)
-                .WithOne(cp => cp.Certificate)
-                .HasForeignKey(cp => cp.CertificateId)
-                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<CertificateParticipant>(entity =>

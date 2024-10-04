@@ -6,11 +6,7 @@ import Button from '../button/Button';
 import Table from '../table/Table';
 import TextInput from '../text-input/TextInput';
 import { useLanguage } from '../../context/LanguageContext';
-import { ApiClient } from '../../services/ApiClient';
-
-const { CertificateDto, Client } = ApiClient;
-
-const client = new Client('https://localhost:7113');
+import { useApi } from '../../context/ApiContext';
 
 interface ParticipantLookupProps {
   show: boolean;
@@ -32,6 +28,7 @@ const ParticipantLookup: React.FC<ParticipantLookupProps> = ({
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [selectedParticipants, setSelectedParticipants] = useState<Participant[]>([]);
   const { t } = useLanguage();
+  const { client } = useApi();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

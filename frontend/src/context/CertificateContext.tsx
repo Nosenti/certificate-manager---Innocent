@@ -7,10 +7,9 @@ import {
   useState,
 } from 'react';
 import { Certificate } from '../../types/types';
+import { useApi } from './ApiContext';
 import { ApiClient } from '../services/ApiClient';
 
-
-const { CertificateDto, Client } = ApiClient;
 
 interface CertificatesContextType {
   certificates: Certificate[];
@@ -26,7 +25,6 @@ const CertificateContext = createContext<CertificatesContextType | undefined>(
 interface Props {
   children?: ReactNode;
 }
-const client = new Client(process.env.REACT_APP_API_URL);
 
 
 function formatDate(d: Date): string {
@@ -45,9 +43,11 @@ function formatDateForServer(date: Date): Date {
 
 
 function CertificateProvider({ children }: Props) {
-  const [certificates, setCertificates] = useState<(typeof CertificateDto)[]>(
+  const [certificates, setCertificates] = useState<(typeof ApiClient.CertificateDto)[]>(
     [],
   );
+
+  const { client } = useApi();
 
   useEffect(() => {
     const fetchCertificates = async () => {

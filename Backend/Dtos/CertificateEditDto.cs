@@ -4,7 +4,6 @@ namespace Backend.Dtos
 {
     public class CertificateEditDto
     {
-        public Guid Handle { get; set; }
         public string Type { get; set; }
         public DateOnly ValidFrom { get; set; }
         public DateOnly ValidTo { get; set; }

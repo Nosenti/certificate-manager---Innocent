@@ -211,7 +211,6 @@ export class Client {
     }
 
     /**
-     * @param handle (optional) 
      * @param type (optional) 
      * @param validFrom (optional) 
      * @param validTo (optional) 
@@ -220,7 +219,7 @@ export class Client {
      * @param participantHandles (optional) 
      * @return OK
      */
-    certificatesPATCH(handle: string | undefined, type: string | undefined, validFrom: Date | undefined, validTo: Date | undefined, supplierHandle: string | undefined, pdfDocument: FileParameter | undefined, participantHandles: string[] | undefined): Promise<CertificateDto> {
+    certificatesPATCH(handle: string, type: string | undefined, validFrom: Date | undefined, validTo: Date | undefined, supplierHandle: string | undefined, pdfDocument: FileParameter | undefined, participantHandles: string[] | undefined): Promise<CertificateDto> {
         let url_ = this.baseUrl + "/api/Certificates/{handle}";
         if (handle === undefined || handle === null)
             throw new Error("The parameter 'handle' must be defined.");
@@ -228,10 +227,6 @@ export class Client {
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = new FormData();
-        if (handle === null || handle === undefined)
-            throw new Error("The parameter 'handle' cannot be null.");
-        else
-            content_.append("Handle", handle.toString());
         if (type === null || type === undefined)
             throw new Error("The parameter 'type' cannot be null.");
         else
@@ -502,6 +497,50 @@ export class Client {
         }
         return Promise.resolve<SupplierDto[]>(null as any);
     }
+
+    /**
+     * @return OK
+     */
+    users(): Promise<UserDto[]> {
+        let url_ = this.baseUrl + "/api/Users";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUsers(_response);
+        });
+    }
+
+    protected processUsers(response: Response): Promise<UserDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(UserDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<UserDto[]>(null as any);
+    }
 }
 
 export class CertificateDto implements ICertificateDto {
@@ -587,6 +626,7 @@ export interface ICertificateDto {
 export class CommentDto implements ICommentDto {
     certificateHandle?: string;
     userHandle?: string;
+    userName?: string | undefined;
     text?: string | undefined;
 
     constructor(data?: ICommentDto) {
@@ -602,6 +642,7 @@ export class CommentDto implements ICommentDto {
         if (_data) {
             this.certificateHandle = _data["certificateHandle"];
             this.userHandle = _data["userHandle"];
+            this.userName = _data["userName"];
             this.text = _data["text"];
         }
     }
@@ -617,6 +658,7 @@ export class CommentDto implements ICommentDto {
         data = typeof data === 'object' ? data : {};
         data["certificateHandle"] = this.certificateHandle;
         data["userHandle"] = this.userHandle;
+        data["userName"] = this.userName;
         data["text"] = this.text;
         return data;
     }
@@ -625,6 +667,7 @@ export class CommentDto implements ICommentDto {
 export interface ICommentDto {
     certificateHandle?: string;
     userHandle?: string;
+    userName?: string | undefined;
     text?: string | undefined;
 }
 
@@ -730,6 +773,50 @@ export interface ISupplierDto {
     index?: string | undefined;
     city?: string | undefined;
     handle?: string;
+}
+
+export class UserDto implements IUserDto {
+    handle?: string;
+    name?: string | undefined;
+    email?: string | undefined;
+
+    constructor(data?: IUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.handle = _data["handle"];
+            this.name = _data["name"];
+            this.email = _data["email"];
+        }
+    }
+
+    static fromJS(data: any): UserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["handle"] = this.handle;
+        data["name"] = this.name;
+        data["email"] = this.email;
+        return data;
+    }
+}
+
+export interface IUserDto {
+    handle?: string;
+    name?: string | undefined;
+    email?: string | undefined;
 }
 
 function formatDate(d: Date) {

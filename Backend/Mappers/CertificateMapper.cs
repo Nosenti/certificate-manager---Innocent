@@ -20,6 +20,7 @@ namespace Backend.Mappers
                 {
                     CertificateHandle = c.Certificate.Handle,
                     UserHandle = c.User != null ? c.User.Handle : Guid.Empty,
+                    UserName = c.User != null ? c.User.Name : null,
                     Text = c.Text
                 }).ToList() ?? new List<CommentDto>()
             };
