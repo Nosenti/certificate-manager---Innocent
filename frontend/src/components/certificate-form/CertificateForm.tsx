@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import './FormPage.css';
 import Button from '../button/Button';
 import { useCertificates } from '../../context/CertificateContext';
+import { useUser } from '../../context/UserContext';
 import TextInput from '../text-input/TextInput';
 import DateInput from '../date-input/DateInput';
 import FormSelect from '../form-select/FormSelect';
@@ -106,6 +107,7 @@ const CertificateForm: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const { client } = useApi();
+  const { currentUser } = useUser();
 
   useEffect(() => {
     if (handle) {
@@ -153,12 +155,27 @@ const CertificateForm: React.FC = () => {
   return <div>Loading...</div>;
 }
 
-  const handleAddComment = (comment: {
+  const handleAddComment = async (comment: {
     userHandle: UUID;
-    certificateHandle: UUID;
     text: string;
   }) => {
-    dispatch({ type: 'ADD_COMMENT', comment });
+    if (!handle) {
+      console.error('Certificate handle is missing');
+      return
+    }
+    try {
+      const commentDto: ApiClient.CommentDto = {
+        userHandle: comment.userHandle,
+        text: comment.text,
+      };
+      const newComment = await client.comments(handle, commentDto);
+      newComment.userName = currentUser?.name;
+      newComment.text = comment.text; 
+      dispatch({ type: 'ADD_COMMENT', comment: newComment });
+    } catch (error) {
+      console.error('Error adding comment:', error);
+    }
+    
   };
 
   const dataURLtoBlob = (dataurl: string) => {
@@ -379,10 +396,13 @@ const CertificateForm: React.FC = () => {
               data={formData.participants}
             />
           </div>
-          <CommentSection
+          {
+            handle ? <CommentSection
             comments={formData.comments}
-            onAddComment={handleAddComment}
-          />
+            onAddComment={handleAddComment} 
+          /> : ''
+          }
+          
         </div>
         <div className="form-right">
           <div className="upload-actions">

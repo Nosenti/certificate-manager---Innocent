@@ -16,7 +16,14 @@ const CommentSection: React.FC<{
   const { t } = useLanguage();
 
   const handleAddComment = () => {
-    const comment = { userHandle: currentUser?.handle, text: newComment };
+    if (!currentUser || !currentUser.handle) {
+      console.error('No current user is set.');
+      return;
+    }
+    const comment = {
+      userHandle: currentUser.handle,
+      text: newComment,
+    };
     onAddComment(comment);
     setNewComment('');
     setShowInput(false);
@@ -24,31 +31,18 @@ const CommentSection: React.FC<{
 
   return (
     <div className="comment-section">
-      <Button
-        variation="contained"
+      <div className="button-container">
+        <Button
+        variation="primary"
         type="button"
         size="medium"
         onClick={() => setShowInput(true)}
       >
         {t.newComment}
       </Button>
-      {showInput && (
-        <div className="comment-input">
-          <p>{currentUser?.name}</p>
-          <textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Enter your comment"
-          />
-          <Button
-            variation="contained"
-            size="medium"
-            onClick={handleAddComment}
-          >
-            {t.send}
-          </Button>
-        </div>
-      )}
+      </div>
+      
+      
       <div className="comments">
         {comments.map((comment, index) => (
           <div key={index} className="comment">
@@ -61,6 +55,25 @@ const CommentSection: React.FC<{
           </div>
         ))}
       </div>
+      {showInput && (
+        <div className="comment-input">
+          <p>{currentUser?.name} *</p>
+          <textarea
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Enter your comment"
+          />
+          <Button
+            type='button'
+            className='send-button'
+            size="medium"
+            onClick={handleAddComment}
+            arian-label="Send"
+          >
+            {t.send}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
