@@ -4,11 +4,12 @@ import { useUser } from '../../context/UserContext';
 import Button from '../button/Button';
 import './comment-section.css';
 import { ApiClient } from '../../services/ApiClient';
+import { CommentInput } from '../../../types/types';
 
 
 const CommentSection: React.FC<{
   comments: ApiClient.CommentDto[];
-  onAddComment: (comment: ApiClient.CommentDto) => void;
+  onAddComment: (comment: CommentInput) => void;
 }> = ({comments, onAddComment}) => {
   const { currentUser } = useUser();
   const [newComment, setNewComment] = useState('');

@@ -1,7 +1,7 @@
 import { UUID } from "crypto";
 
 export interface AssignedUser {
-  handle: UUID,
+  handle: string,
   name: string;
   department: string;
   email: string;
@@ -12,7 +12,7 @@ export interface Certificate {
   type: string;
   validFrom: string;
   validTo: string;
-  pdfDocument: string | null;
+  pdfDocument: File | string | null;
   participants: AssignedUser[];
   comments: { certificateHandle: UUID; userHandle: UUID;  text: string }[];
 }
@@ -22,6 +22,11 @@ export interface Supplier {
   name: string;
   index: string;
   city: string
+}
+
+export interface CommentInput {
+  userHandle: string;
+  text: string;
 }
 
 export interface Participant {

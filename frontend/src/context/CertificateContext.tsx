@@ -66,8 +66,8 @@ function CertificateProvider({ children }: Props) {
   supplierHandle: string,
   pdfDocument: ApiClient.FileParameter,
   participantHandles: string[]
-): Promise<typeof CertificateDto> => {
-  return new Promise<typeof CertificateDto>((resolve, reject) => {
+): Promise<ApiClient.CertificateDto> => {
+  return new Promise<ApiClient.CertificateDto>((resolve, reject) => {
     client
       .certificatesPOST(
         type,
