@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect, lazy } from 'react';
+import React, { useState, useReducer, useEffect, lazy, Suspense } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './FormPage.css';
 import Button from '../button/Button';
@@ -439,16 +439,21 @@ const CertificateForm: React.FC = () => {
         onConfirm={handleResetConfirm}
         onCancel={handleCloseModal}
       />
-      <SupplierLookup
+      <Suspense fallback={ <div>Loading...</div> }>
+            <SupplierLookup
         show={showSupplierLookup}
         onClose={() => setShowSupplierLookup(false)}
         onSelect={handleSupplierSelect}
       />
-      <ParticipantLookup
+      </Suspense>
+      <Suspense fallback={ <div>Loading...</div>}>
+            <ParticipantLookup
         show={showParticipantLookup}
         onClose={() => setShowParticipantLookup(false)}
         onSelect={handleParticipantSelect}
       />
+      </Suspense>
+      
     </section>
   );
 };
