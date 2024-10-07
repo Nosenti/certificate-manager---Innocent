@@ -1,4 +1,4 @@
-// src/context/UserContext.tsx
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useApi } from './ApiContext';
 import { ApiClient } from '../services/ApiClient';
@@ -24,7 +24,6 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const fetchUsers = async () => {
       try {
         const usersFromApi = await client.users(); 
-        console.log("users before setting them: ", usersFromApi);
         setUsers(usersFromApi);
 
         if (usersFromApi.length > 0) {

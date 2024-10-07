@@ -119,7 +119,6 @@ const CertificateForm: React.FC = () => {
       const fetchCertificate = async () => {
         try {
           const certificate = await client.certificatesGET(handle);
-          console.log('certificate retrived: ', certificate);
           if (certificate) {
             const pdfBase64 = certificate.pdfDocument
               ? `data:application/pdf;base64,${certificate.pdfDocument}`
@@ -253,7 +252,6 @@ const CertificateForm: React.FC = () => {
 
         navigate('/certificates');
       } catch (error) {
-        console.log('Error submitting certificate:', error);
         notify('Error submitting certificate', 'error');
       }
     } else {

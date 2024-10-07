@@ -28,8 +28,6 @@ function Table<T extends { handle?: UUID }>({
     return <p>No data available</p>;
   }
 
-  console.log("Colomns::::: ", columns)
-
   return (
     <div className={`table-container ${className}`}>
       <table>

@@ -52,7 +52,6 @@ function CertificateProvider({ children }: Props) {
   useEffect(() => {
     const fetchCertificates = async () => {
       const certificates = await client.certificatesAll();
-      console.log('cert_: ', certificates);
       setCertificates(certificates);
     };
 

@@ -1,4 +1,3 @@
-// src/components/user-switch/UserSwitch.tsx
 import React, { ChangeEvent } from 'react';
 import { useUser } from '../../context/UserContext';
 import './user-switch.css';
