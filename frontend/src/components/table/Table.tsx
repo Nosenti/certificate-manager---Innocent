@@ -27,7 +27,7 @@ function Table<T extends { handle?: UUID }>({
   if (data.length === 0 && columns.length === 0) {
     return <p>No data available</p>;
   }
-
+  console.log('table data: ', data);
   return (
     <div className={`table-container ${className}`}>
       <table>

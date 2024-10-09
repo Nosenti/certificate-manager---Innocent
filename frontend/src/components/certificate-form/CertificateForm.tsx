@@ -34,7 +34,7 @@ interface FormData {
   validFrom: string;
   validTo: string;
   pdfDocument: File | string | null;
-  participants: AssignedUser[];
+  participants: ApiClient.ParticipantDto[];
   comments: ApiClient.CommentDto[];
 }
 
@@ -54,7 +54,7 @@ type FormAction =
   | { type: 'SET_INITIAL_STATE'; payload: FormData }
   | {
       type: 'ADD_ASSIGNED_USERS';
-      users: AssignedUser[];
+      users: ApiClient.ParticipantDto[];
     }
   | { type: 'REMOVE_ASSIGNED_USER'; index: number }
   | {
@@ -288,7 +288,7 @@ const CertificateForm: React.FC = () => {
     setShowSupplierLookup(false);
   };
 
-  const handleParticipantSelect = (participants: AssignedUser[]) => {
+  const handleParticipantSelect = (participants: ApiClient.ParticipantDto[]) => {
     dispatch({ type: 'ADD_ASSIGNED_USERS', users: participants });
     setShowParticipantLookup(false);
   };
@@ -297,11 +297,11 @@ const CertificateForm: React.FC = () => {
     dispatch({ type: 'REMOVE_ASSIGNED_USER', index });
   };
 
-  const assignedUsersColumns: Column<AssignedUser>[] = [
+  const assignedUsersColumns: Column<ApiClient.ParticipantDto>[] = [
     {
       header: '',
-      accessor: '' as keyof AssignedUser,
-      render: (_value: string | number, _row: AssignedUser, index: number) => (
+      accessor: '' as keyof ApiClient.ParticipantDto,
+      render: (_value: string | number, _row: ApiClient.ParticipantDto, index: number) => (
         <button type="button" onClick={() => handleRemoveAssignedUser(index)}>
           <RemoveIcon />
         </button>
