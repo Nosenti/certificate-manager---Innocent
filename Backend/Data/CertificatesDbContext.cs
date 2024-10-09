@@ -97,7 +97,7 @@ public partial class CertificatesDbContext : DbContext
 
             entity.HasOne(d => d.Certificate).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.CertificateId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_CertificateId");
 
             entity.HasOne(d => d.User).WithMany(p => p.Comments)

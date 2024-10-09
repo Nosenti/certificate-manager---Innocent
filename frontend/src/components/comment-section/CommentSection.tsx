@@ -17,8 +17,13 @@ const CommentSection: React.FC<{
   const { t } = useLanguage();
 
   const handleAddComment = () => {
+    const trimmedComment = newComment.trim();
     if (!currentUser || !currentUser.handle) {
       console.error('No current user is set.');
+      return;
+    }
+    if (trimmedComment === '') {
+      console.error('Cannot add an empty comment.');
       return;
     }
     const comment = {
@@ -29,6 +34,8 @@ const CommentSection: React.FC<{
     setNewComment('');
     setShowInput(false);
   };
+
+  
 
   return (
     <div className="comment-section">
@@ -69,7 +76,9 @@ const CommentSection: React.FC<{
             className='send-button'
             size="medium"
             onClick={handleAddComment}
-            arian-label="Send"
+            aria-label="Send"
+            disabled={newComment.trim() === ''}
+            title={newComment.trim() === '' ? 'Please enter a comment to send.' : ''}
           >
             {t.send}
           </Button>

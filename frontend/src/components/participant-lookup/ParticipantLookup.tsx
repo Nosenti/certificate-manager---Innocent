@@ -143,9 +143,11 @@ const ParticipantLookup: React.FC<ParticipantLookupProps> = ({
         </div>
         <div className="participant-list-actions">
           <Button
-            variation="contained"
+            type='button'
+            className='select-button'
             size="medium"
             onClick={handleSelectClick}
+            aria-label='Select'
             disabled={selectedParticipants.length === 0}
           >
             {t.select}

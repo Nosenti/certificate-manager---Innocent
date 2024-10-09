@@ -165,6 +165,7 @@ const SupplierLookup: React.FC<SupplierLookupProps> = ({
         </div>
         <div className="supplier-list-actions">
           <Button
+            className='select-button'
             variation="contained"
             size="medium"
             onClick={handleSelectClick}

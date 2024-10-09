@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Backend.Entities;
+﻿namespace Backend.Entities;
 
 public partial class Comment
 {
@@ -21,7 +18,7 @@ public partial class Comment
 
     public byte[] RowVersion { get; set; } = null!;
 
-    public virtual Certificate Certificate { get; set; } = null!;
+    public virtual Certificate Certificate { get; set; } = null;
 
     public virtual User User { get; set; } = null!;
 }
