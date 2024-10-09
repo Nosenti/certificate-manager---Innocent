@@ -383,11 +383,15 @@ const CertificateForm: React.FC = () => {
                 {t.addParticipant}
               </Button>
             </div>
-            <Table
+            
+            
+          </div>
+          <div className='participants-table'>
+              <Table
               columns={assignedUsersColumns}
               data={formData.participants}
             />
-          </div>
+            </div>
           {handle ? (
             <CommentSection
               comments={formData.comments}

@@ -5,10 +5,10 @@ VALUES
 
 INSERT INTO Users (Name, Email, CreatedAt, UpdatedAt)
 VALUES
-('User 1', 'user1@example.com', GETDATE(), GETDATE()),
-('User 2', 'user2@example.com', GETDATE(), GETDATE()),
-('User 3', 'user3@example.com', GETDATE(), GETDATE()),
-('User 4', 'user4@example.com', GETDATE(), GETDATE());
+('Emily', 'user1@example.com', GETDATE(), GETDATE()),
+('James', 'user2@example.com', GETDATE(), GETDATE()),
+('Olga', 'user3@example.com', GETDATE(), GETDATE()),
+('Kwame', 'user4@example.com', GETDATE(), GETDATE());
 
 INSERT INTO Participants (Name, Email, Plant, Department, UserId, CreatedAt, UpdatedAt)
 VALUES
