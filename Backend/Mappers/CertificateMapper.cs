@@ -15,7 +15,14 @@ namespace Backend.Mappers
                 ValidTo = certificate.ValidTo,
                 Supplier = certificate.Supplier != null ? certificate.Supplier.ToDto() : null,
                 PdfDocument = certificate.PdfDocument,
-                Participants = certificate.CertificateParticipants?.Select(cp => cp.Participant != null ? cp.Participant.ToDto() : new ParticipantDto()).ToList() ?? new List<ParticipantDto>()
+                Participants = certificate.CertificateParticipants?.Select(cp => cp.Participant != null ? cp.Participant.ToDto() : new ParticipantDto()).ToList() ?? new List<ParticipantDto>(),
+                Comments = certificate.Comments?.Select(c => new CommentDto
+                {
+                    CertificateHandle = c.Certificate.Handle,
+                    UserHandle = c.User != null ? c.User.Handle : Guid.Empty,
+                    UserName = c.User != null ? c.User.Name : null,
+                    Text = c.Text
+                }).ToList() ?? new List<CommentDto>()
             };
         }
 

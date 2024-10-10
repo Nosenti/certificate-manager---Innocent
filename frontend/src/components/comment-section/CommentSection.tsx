@@ -3,15 +3,13 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useUser } from '../../context/UserContext';
 import Button from '../button/Button';
 import './comment-section.css';
+import { ApiClient } from '../../services/ApiClient';
+import { CommentInput } from '../../../types/types';
 
-interface Comment {
-  user: string;
-  text: string;
-}
 
 const CommentSection: React.FC<{
-  comments: Comment[];
-  onAddComment: (comment: Comment) => void;
+  comments: ApiClient.CommentDto[];
+  onAddComment: (comment: CommentInput) => void;
 }> = ({comments, onAddComment}) => {
   const { currentUser } = useUser();
   const [newComment, setNewComment] = useState('');
@@ -19,44 +17,45 @@ const CommentSection: React.FC<{
   const { t } = useLanguage();
 
   const handleAddComment = () => {
-    const comment = { user: currentUser, text: newComment };
+    const trimmedComment = newComment.trim();
+    if (!currentUser || !currentUser.handle) {
+      console.error('No current user is set.');
+      return;
+    }
+    if (trimmedComment === '') {
+      console.error('Cannot add an empty comment.');
+      return;
+    }
+    const comment = {
+      userHandle: currentUser.handle,
+      text: newComment,
+    };
     onAddComment(comment);
     setNewComment('');
     setShowInput(false);
   };
 
+  
+
   return (
     <div className="comment-section">
-      <Button
-        variation="contained"
+      <div className="button-container">
+        <Button
+        variation="primary"
         type="button"
         size="medium"
         onClick={() => setShowInput(true)}
       >
         {t.newComment}
       </Button>
-      {showInput && (
-        <div className="comment-input">
-          <p>{currentUser}</p>
-          <textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Enter your comment"
-          />
-          <Button
-            variation="contained"
-            size="medium"
-            onClick={handleAddComment}
-          >
-            {t.send}
-          </Button>
-        </div>
-      )}
+      </div>
+      
+      
       <div className="comments">
         {comments.map((comment, index) => (
           <div key={index} className="comment">
             <p>
-              <strong>{t.user}:</strong> {comment.user}
+              <strong>{t.user}:</strong> {comment.userName}
             </p>
             <p>
               <strong>{t.comment}:</strong> {comment.text}
@@ -64,6 +63,27 @@ const CommentSection: React.FC<{
           </div>
         ))}
       </div>
+      {showInput && (
+        <div className="comment-input">
+          <p>{currentUser?.name} *</p>
+          <textarea
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Enter your comment"
+          />
+          <Button
+            type='button'
+            className='send-button'
+            size="medium"
+            onClick={handleAddComment}
+            aria-label="Send"
+            disabled={newComment.trim() === ''}
+            title={newComment.trim() === '' ? 'Please enter a comment to send.' : ''}
+          >
+            {t.send}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

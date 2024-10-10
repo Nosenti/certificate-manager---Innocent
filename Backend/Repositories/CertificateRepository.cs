@@ -17,13 +17,13 @@ namespace Backend.Repositories
 
         public async Task<IEnumerable<CertificateDto>> GetAllCertificatesAsync()
         {
-            var certificates = await _context.Certificates.Include(c => c.Supplier).Include(c => c.CertificateParticipants).ToListAsync();
+            var certificates = await _context.Certificates.Include(c => c.Supplier).Include(c => c.CertificateParticipants).Include(c => c.Comments).ToListAsync();
             return certificates.ToDtoList();
         }
 
         public async Task<CertificateDto> GetCertificateByHandleAsync(Guid handle)
         {
-            var certificate = await _context.Certificates.Include(c => c.Supplier).Include(c => c.CertificateParticipants).ThenInclude(cp => cp.Participant).FirstOrDefaultAsync(c => c.Handle == handle);
+            var certificate = await _context.Certificates.Include(c => c.Supplier).Include(c => c.Comments).ThenInclude(comment => comment.User).Include(c => c.CertificateParticipants).ThenInclude(cp => cp.Participant).FirstOrDefaultAsync(c => c.Handle == handle);
 
             if (certificate == null) return null;
 
@@ -58,6 +58,7 @@ namespace Backend.Repositories
                 ValidTo = certificateCreateDto.ValidTo,
                 Supplier = existingSupplier,
                 PdfDocument = pdfBytes,
+
             };
 
             var existingParticipants = new List<Participant>();
@@ -86,11 +87,11 @@ namespace Backend.Repositories
             return certificate.ToDto();
         }
 
-        public async Task<CertificateDto> UpdateCertificateAsync(CertificateEditDto certificateEditDto, SupplierDto supplierDto, List<ParticipantDto> participantDtos, byte[]? pdfBytes)
+        public async Task<CertificateDto> UpdateCertificateAsync(Guid handle, CertificateEditDto certificateEditDto, SupplierDto supplierDto, List<ParticipantDto> participantDtos, byte[]? pdfBytes)
         {
             var certificate = await _context.Certificates
                 .Include(c => c.CertificateParticipants)
-                .FirstOrDefaultAsync(c => c.Handle == certificateEditDto.Handle);
+                .FirstOrDefaultAsync(c => c.Handle == handle);
 
             if (certificate == null) throw new KeyNotFoundException("Certificate not found");
 

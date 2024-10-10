@@ -27,7 +27,6 @@ namespace Backend.Repositories
             {
                 throw new InvalidOperationException($"Certificate with ID {comment.CertificateId} does not exist.");
             }
-            //var user = await _context.Users.AnyAsync(u => u.Handle, );
             _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
             return comment.ToDto();

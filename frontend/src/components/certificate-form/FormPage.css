@@ -39,14 +39,13 @@ form {
   display: flex;
   background-color: var(--color-grey-navy);
   border: 1px solid var(--color-grey-dark);
-  height: 40%;
+  height: 45%;
   width: 2rem;
   align-self: center;
   align-items: center;
   justify-content: center;
   padding-bottom: 0.4rem;
-  margin-top: 0.2rem;
-  margin-top: 10px;
+  margin-top: 1.3rem;
 }
 
 .form-action-buttons {

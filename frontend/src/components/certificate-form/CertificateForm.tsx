@@ -1,63 +1,66 @@
-import React, { useState, useReducer, useEffect } from 'react';
+import React, { useState, useReducer, useEffect, lazy, Suspense } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './FormPage.css';
 import Button from '../button/Button';
 import { useCertificates } from '../../context/CertificateContext';
+import { useUser } from '../../context/UserContext';
 import TextInput from '../text-input/TextInput';
 import DateInput from '../date-input/DateInput';
 import FormSelect from '../form-select/FormSelect';
 import FileUpload from '../file-upload/FileUpload';
 import PDFPreview from '../pdf-preview/PDFPreview';
 import ResetModal from '../confirm-modal/ConfirmModal';
-import SupplierLookup from '../supplier-lookup/SupplierLookup';
-import ParticipantLookup from '../participant-lookup/ParticipantLookup';
+const SupplierLookup = lazy(() => import('../supplier-lookup/SupplierLookup'));
+const ParticipantLookup = lazy(
+  () => import('../participant-lookup/ParticipantLookup'),
+);
 import SearchIcon from '../../../public/assets/search.svg';
 import RemoveIcon from '../../../public/assets/close-small.svg';
 import { validateForm } from '../../utils/validation';
 import { useNotification } from '../../context/NotificationContext';
 import { useLanguage } from '../../context/LanguageContext';
-import { addSupplier, getSuppliers } from '../../data/db';
-import { Supplier } from '../../../types/types';
+import { AssignedUser, Supplier } from '../../../types/types';
 import Table, { Column } from '../table/Table';
 import CommentSection from '../comment-section/CommentSection';
+import { UUID } from 'crypto';
+import { useApi } from '../../context/ApiContext';
+import { ApiClient } from '../../services/ApiClient';
+import { CommentInput } from '../../../types/types';
 
 interface FormData {
-  id: number;
-  supplier: string;
-  certificateType: string;
+  handle?: string;
+  supplier: Supplier | null;
+  type?: string;
   validFrom: string;
   validTo: string;
-  pdf: File | null;
-  assignedUsers: {
-    id: number;
-    name: string;
-    department: string;
-    email: string;
-  }[];
-  comments: { user: string; text: string }[];
+  pdfDocument: File | string | null;
+  participants: ApiClient.ParticipantDto[];
+  comments: ApiClient.CommentDto[];
 }
 
 const initialState: FormData = {
-  id: Date.now(),
-  supplier: '',
-  certificateType: '',
+  supplier: null,
+  type: '',
   validFrom: '',
   validTo: '',
-  pdf: null,
-  assignedUsers: [],
+  pdfDocument: null,
+  participants: [],
   comments: [],
 };
 
 type FormAction =
-  | { type: 'UPDATE_FIELD'; field: string; value: string | File | null }
+  | { type: 'UPDATE_FIELD'; field: string; value: any }
   | { type: 'RESET' }
   | { type: 'SET_INITIAL_STATE'; payload: FormData }
   | {
       type: 'ADD_ASSIGNED_USERS';
-      users: { name: string; department: string; email: string }[];
+      users: ApiClient.ParticipantDto[];
     }
   | { type: 'REMOVE_ASSIGNED_USER'; index: number }
-  | { type: 'ADD_COMMENT'; comment: { user: string; text: string } };
+  | {
+      type: 'ADD_COMMENT';
+      comment: ApiClient.CommentDto;
+    };
 
 const formReducer = (state: FormData, action: FormAction): FormData => {
   switch (action.type) {
@@ -68,19 +71,15 @@ const formReducer = (state: FormData, action: FormAction): FormData => {
     case 'SET_INITIAL_STATE':
       return action.payload;
     case 'ADD_ASSIGNED_USERS':
-      const usersWithId = action.users.map((user, index) => ({
-        ...user,
-        id: Date.now() + index, 
-      }));
       return {
         ...state,
-        assignedUsers: [...state.assignedUsers, ...usersWithId],
+        participants: [...state.participants, ...action.users],
       };
     case 'REMOVE_ASSIGNED_USER':
-      const assignedUsers = state.assignedUsers.filter(
+      const participants = state.participants.filter(
         (_, i) => i !== action.index,
       );
-      return { ...state, assignedUsers };
+      return { ...state, participants };
     case 'ADD_COMMENT':
       return {
         ...state,
@@ -98,29 +97,95 @@ enum Options {
 
 const CertificateForm: React.FC = () => {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { handle } = useParams<{ handle: UUID }>();
   const { addCertificate, certificates, updateCertificate } = useCertificates();
   const { notify } = useNotification();
   const [formData, dispatch] = useReducer(formReducer, initialState);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [resetFile, setResetFile] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [selectedSupplier, setSelectedSupplier] = useState<string | null>(null);
   const [showSupplierLookup, setShowSupplierLookup] = useState(false);
   const [showParticipantLookup, setShowParticipantLookup] = useState(false);
   const { t } = useLanguage();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+  const { client } = useApi();
+  const { currentUser } = useUser();
 
   useEffect(() => {
-    if (id) {
-      const certificate = certificates.find((cert) => cert.id === parseInt(id));
-      if (certificate) {
-        dispatch({ type: 'SET_INITIAL_STATE', payload: certificate });
-      }
-    }
-  }, [id, certificates]);
+    if (handle) {
+      setLoading(true);
+      setFetchError(null);
+      const fetchCertificate = async () => {
+        try {
+          const certificate = await client.certificatesGET(handle);
+          if (certificate) {
+            const pdfBase64 = certificate.pdfDocument
+              ? `data:application/pdf;base64,${certificate.pdfDocument}`
+              : null;
+            dispatch({
+              type: 'SET_INITIAL_STATE',
+              payload: {
+                ...certificate,
+                validFrom: certificate.validFrom
+                  ? new Date(certificate.validFrom).toISOString().split('T')[0]
+                  : '',
+                validTo: certificate.validTo
+                  ? new Date(certificate.validTo).toISOString().split('T')[0]
+                  : '',
+                pdfDocument: pdfBase64,
+                participants: certificate.participants || [],
+                comments: certificate.comments || [],
+              },
+            });
+          } else {
+            setFetchError('Certificate not found');
+          }
+        } catch (error) {
+          console.error('Error fetching certificate:', error);
+          setFetchError('Error fetching certificate');
+        } finally {
+          setLoading(false);
+        }
+      };
 
-  const handleAddComment = (comment: { user: string; text: string }) => {
-    dispatch({ type: 'ADD_COMMENT', comment });
+      fetchCertificate();
+    }
+  }, [handle, certificates]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  const handleAddComment = async (comment: CommentInput) => {
+    if (!handle) {
+      console.error('Certificate handle is missing');
+      return;
+    }
+    try {
+      const commentDto = new ApiClient.CommentDto();
+      commentDto.userHandle = comment.userHandle;
+      commentDto.text = comment.text;
+      const newComment = await client.comments(handle, commentDto);
+      newComment.userName = currentUser?.name;
+      newComment.text = comment.text;
+      dispatch({ type: 'ADD_COMMENT', comment: newComment });
+    } catch (error) {
+      console.error('Error adding comment:', error);
+    }
+  };
+
+  const dataURLtoBlob = (dataurl: string) => {
+    const arr = dataurl.split(',');
+    const mimeMatch = arr[0].match(/:(.*?);/);
+    const mime = mimeMatch ? mimeMatch[1] : '';
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
   };
 
   const handleInputChange = (
@@ -130,36 +195,65 @@ const CertificateForm: React.FC = () => {
     dispatch({ type: 'UPDATE_FIELD', field: name, value });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files ? e.target.files[0] : null;
-    dispatch({ type: 'UPDATE_FIELD', field: 'pdf', value: file });
+  const handleFileChange = (file: File | null) => {
+    dispatch({ type: 'UPDATE_FIELD', field: 'pdfDocument', value: file });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { isValid, errors } = validateForm(formData);
 
-    if (!selectedSupplier && formData.supplier) {
-      const newSupplier: Supplier = {
-        id: Date.now(),
-        supplierName: formData.supplier,
-        supplierIndex: (getSuppliers.length + 1).toString(),
-        city: 'Kigali',
-      };
-      await addSupplier(newSupplier);
-      notify(`New supplier "${newSupplier.supplierName}" created`, 'success');
-    }
-
     if (isValid) {
-      if (id) {
-        updateCertificate(formData);
-        notify('Certificate updated successfully', 'success');
-      } else {
-        addCertificate(formData);
-        notify('Certificate created successfully', 'success');
-      }
+      try {
+        let pdfFileParameter: ApiClient.FileParameter;
+        if (formData.pdfDocument instanceof File) {
+          // If pdfDocument is a File object
+          pdfFileParameter = {
+            data: formData.pdfDocument,
+            fileName: formData.pdfDocument.name,
+          };
+        } else if (typeof formData.pdfDocument === 'string') {
+          // If pdfDocument is a base64 data URL
+          const blob = dataURLtoBlob(formData.pdfDocument);
+          pdfFileParameter = {
+            data: blob,
+            fileName: 'document.pdf',
+          };
+        } else {
+          throw new Error('No pdfDocument provided.');
+        }
 
-      navigate('/certificates');
+        const participantHandles = formData.participants.map((p) => p.handle!);
+
+        if (handle) {
+          await updateCertificate({
+            handle: handle,
+            type: formData.type!,
+            validFrom: new Date(formData.validFrom),
+            validTo: new Date(formData.validTo),
+            supplierHandle: formData.supplier!.handle!,
+            pdfDocument: pdfFileParameter,
+            participantHandles: participantHandles,
+          });
+
+          notify('Certificate updated successfully', 'success');
+        } else {
+          await addCertificate({
+            type: formData.type!,
+            validFrom: new Date(formData.validFrom),
+            validTo: new Date(formData.validTo),
+            supplierHandle: formData.supplier!.handle!,
+            pdfDocument: pdfFileParameter,
+            participantHandles: participantHandles,
+          });
+
+          notify('Certificate created successfully', 'success');
+        }
+
+        navigate('/certificates');
+      } catch (error) {
+        notify('Error submitting certificate', 'error');
+      }
     } else {
       setErrors(errors);
     }
@@ -182,21 +276,19 @@ const CertificateForm: React.FC = () => {
   };
 
   const handleFileRemove = () => {
-    dispatch({ type: 'UPDATE_FIELD', field: 'pdf', value: null });
+    dispatch({ type: 'UPDATE_FIELD', field: 'pdfDocument', value: null });
   };
 
-  const handleSupplierSelect = (supplier: { supplierName: string }) => {
+  const handleSupplierSelect = (supplier: Supplier) => {
     dispatch({
       type: 'UPDATE_FIELD',
       field: 'supplier',
-      value: supplier.supplierName,
+      value: supplier,
     });
     setShowSupplierLookup(false);
   };
 
-  const handleParticipantSelect = (
-    participants: { name: string; department: string; email: string }[],
-  ) => {
+  const handleParticipantSelect = (participants: ApiClient.ParticipantDto[]) => {
     dispatch({ type: 'ADD_ASSIGNED_USERS', users: participants });
     setShowParticipantLookup(false);
   };
@@ -205,21 +297,12 @@ const CertificateForm: React.FC = () => {
     dispatch({ type: 'REMOVE_ASSIGNED_USER', index });
   };
 
-  const assignedUsersColumns: Column<{
-    id: number;
-    name: string;
-    department: string;
-    email: string;
-  }>[] = [
+  const assignedUsersColumns: Column<ApiClient.ParticipantDto>[] = [
     {
       header: '',
-      accessor: '' as keyof { name: string; department: string; email: string },
-      render: (
-        _value: string | number,
-        row: { id: number; name: string; department: string; email: string },
-        _index: number,
-      ) => (
-        <button type="button" onClick={() => handleRemoveAssignedUser(row.id)}>
+      accessor: '' as keyof ApiClient.ParticipantDto,
+      render: (_value: string | number, _row: ApiClient.ParticipantDto, index: number) => (
+        <button type="button" onClick={() => handleRemoveAssignedUser(index)}>
           <RemoveIcon />
         </button>
       ),
@@ -237,7 +320,7 @@ const CertificateForm: React.FC = () => {
             <TextInput
               label={t.supplier}
               name="supplier"
-              value={formData.supplier}
+              value={formData.supplier ? formData.supplier.name : ''}
               onChange={handleInputChange}
             />
             <span
@@ -249,7 +332,11 @@ const CertificateForm: React.FC = () => {
             <span
               className="form-btn"
               onClick={() =>
-                dispatch({ type: 'UPDATE_FIELD', field: 'supplier', value: '' })
+                dispatch({
+                  type: 'UPDATE_FIELD',
+                  field: 'supplier',
+                  value: null,
+                })
               }
             >
               <RemoveIcon />
@@ -258,8 +345,8 @@ const CertificateForm: React.FC = () => {
 
           <FormSelect
             label={t.certificateType}
-            name="certificateType"
-            value={formData.certificateType}
+            name="type"
+            value={formData.type}
             error={errors.certificateType}
             onChange={handleInputChange}
             options={[
@@ -271,7 +358,7 @@ const CertificateForm: React.FC = () => {
             ]}
           />
           <DateInput
-            label={ t.validFrom}
+            label={t.validFrom}
             name="validFrom"
             value={formData.validFrom}
             onChange={handleInputChange}
@@ -296,12 +383,23 @@ const CertificateForm: React.FC = () => {
                 {t.addParticipant}
               </Button>
             </div>
-            <Table
-              columns={assignedUsersColumns}
-              data={formData.assignedUsers}
-            />
+            
+            
           </div>
-          <CommentSection comments={formData.comments} onAddComment={ handleAddComment} />
+          <div className='participants-table'>
+              <Table
+              columns={assignedUsersColumns}
+              data={formData.participants}
+            />
+            </div>
+          {handle ? (
+            <CommentSection
+              comments={formData.comments}
+              onAddComment={handleAddComment}
+            />
+          ) : (
+            ''
+          )}
         </div>
         <div className="form-right">
           <div className="upload-actions">
@@ -309,16 +407,16 @@ const CertificateForm: React.FC = () => {
               onFileChange={handleFileChange}
               resetFile={resetFile}
               onFileRemove={handleFileRemove}
-              file={formData.pdf}
+              file={formData.pdfDocument}
             />
           </div>
 
-          <PDFPreview file={formData.pdf} />
+          <PDFPreview file={formData.pdfDocument} />
           <div className="form-action-buttons">
             <Button type="submit" variation="contained" size="medium">
-              {id ? t.update : t.save}
+              {handle ? t.update : t.save}
             </Button>
-            {!id ? (
+            {!handle ? (
               <Button
                 type="button"
                 variation="transparent"
@@ -338,17 +436,20 @@ const CertificateForm: React.FC = () => {
         onConfirm={handleResetConfirm}
         onCancel={handleCloseModal}
       />
-      <SupplierLookup
-        show={showSupplierLookup}
-        onClose={() => setShowSupplierLookup(false)}
-        onSelect={handleSupplierSelect}
-      />
-      <ParticipantLookup
-        show={showParticipantLookup}
-        onClose={() => setShowParticipantLookup(false)}
-        onSelect={handleParticipantSelect}
-      />
-     
+      <Suspense fallback={<div>Loading...</div>}>
+        <SupplierLookup
+          show={showSupplierLookup}
+          onClose={() => setShowSupplierLookup(false)}
+          onSelect={handleSupplierSelect}
+        />
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ParticipantLookup
+          show={showParticipantLookup}
+          onClose={() => setShowParticipantLookup(false)}
+          onSelect={handleParticipantSelect}
+        />
+      </Suspense>
     </section>
   );
 };

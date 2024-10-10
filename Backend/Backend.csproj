@@ -25,7 +25,6 @@
   <ItemGroup>
     <Folder Include="Entities\" />
     <Folder Include="Data\" />
-    <Folder Include="Scripts\" />
     <Folder Include="Tools\" />
   </ItemGroup>
 

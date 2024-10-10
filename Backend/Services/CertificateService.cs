@@ -47,7 +47,7 @@ namespace Backend.Services
             return certificate;
         }
 
-        public async Task<CertificateDto> UpdateCertificateAsync(CertificateEditDto certificateEditDto)
+        public async Task<CertificateDto> UpdateCertificateAsync(Guid handle, CertificateEditDto certificateEditDto)
         {
             var supplier = await _supplierRepository.GetSupplierByHandleAsync(certificateEditDto.SupplierHandle);
             if (supplier == null)
@@ -57,7 +57,7 @@ namespace Backend.Services
             var participants = await _participantRepository.GetParticipantsByHandlesAsync(certificateEditDto.ParticipantHandles);
 
             byte[]? pdfBytes = await FileHelper.ConvertToByteArrayAsync(certificateEditDto.PdfDocument);
-            var certificate = await _certificateRepository.UpdateCertificateAsync(certificateEditDto, supplier, participants, pdfBytes);
+            var certificate = await _certificateRepository.UpdateCertificateAsync(handle, certificateEditDto, supplier, participants, pdfBytes);
 
             return certificate;
 

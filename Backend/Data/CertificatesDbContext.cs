@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Backend.Entities;
+﻿using Backend.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Data;
@@ -52,7 +50,14 @@ public partial class CertificatesDbContext : DbContext
 
             entity.HasOne(d => d.Supplier).WithMany(p => p.Certificates)
                 .HasForeignKey(d => d.SupplierId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Certifica__Suppl__4222D4EF");
+            entity.HasMany(c => c.Comments)
+            .WithOne(c => c.Certificate)
+            .HasForeignKey(c => c.CertificateId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
         });
 
         modelBuilder.Entity<CertificateParticipant>(entity =>
@@ -77,6 +82,7 @@ public partial class CertificatesDbContext : DbContext
             entity.HasOne(d => d.Participant).WithMany(p => p.CertificateParticipants)
                 .HasForeignKey(d => d.ParticipantId)
                 .HasConstraintName("FK__Certifica__Parti__52593CB8");
+
         });
 
         modelBuilder.Entity<Comment>(entity =>
@@ -96,7 +102,7 @@ public partial class CertificatesDbContext : DbContext
 
             entity.HasOne(d => d.Certificate).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.CertificateId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_CertificateId");
 
             entity.HasOne(d => d.User).WithMany(p => p.Comments)
@@ -161,6 +167,8 @@ public partial class CertificatesDbContext : DbContext
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+
+
         });
 
         OnModelCreatingPartial(modelBuilder);

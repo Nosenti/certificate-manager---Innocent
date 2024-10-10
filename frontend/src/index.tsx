@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import { LanguageProvider } from './context/LanguageContext';
 import { UserProvider } from './context/UserContext';
+import { ApiProvider } from './context/ApiContext';
 
 const container: HTMLElement | null = document.getElementById('root');
 
@@ -13,11 +14,14 @@ if (container) {
   const root = createRoot(container);
   root.render(
     <StrictMode>
-      <LanguageProvider>
+      <ApiProvider>
+        <LanguageProvider>
         <UserProvider>
           <App />
         </UserProvider>
       </LanguageProvider>
+      </ApiProvider>
+      
     </StrictMode>,
   );
 } else {

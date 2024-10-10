@@ -11,6 +11,7 @@ namespace Backend.Mappers
             {
                 Handle = participant.Handle,
                 Name = participant.Name,
+                Email = participant.Email,
                 Department = participant.Department,
                 Plant = participant.Plant,
                 UserId = participant.UserId

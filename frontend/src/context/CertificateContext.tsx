@@ -1,3 +1,4 @@
+import { UUID } from 'crypto';
 import {
   createContext,
   ReactNode,
@@ -5,20 +6,16 @@ import {
   useEffect,
   useState,
 } from 'react';
-import {
-  initDB,
-  getCertificates,
-  addCertificate as addCertificateToDB,
-  updateCertificate as updateCertificateInDB,
-  deleteCertificate as deleteCertificateFromDB,
-} from '../data/db';
 import { Certificate } from '../../types/types';
+import { useApi } from './ApiContext';
+import { ApiClient } from '../services/ApiClient';
+
 
 interface CertificatesContextType {
   certificates: Certificate[];
-  addCertificate: (certificate: Certificate) => void;
-  updateCertificate: (certificate: Certificate) => void;
-  deleteCertificate: (id: number) => Promise<void>;
+  addCertificate: (certificate: Certificate) => Promise<void>;
+  updateCertificate: (certificate: Certificate) => Promise<void>;
+  deleteCertificate: (handle: UUID) => Promise<void>;
 }
 
 const CertificateContext = createContext<CertificatesContextType | undefined>(
@@ -29,70 +26,220 @@ interface Props {
   children?: ReactNode;
 }
 
+
+function formatDate(d: Date): string {
+  return d.toISOString().split('T')[0];
+}
+
+function formatDateForServer(date: Date): Date {
+  const dateString = date.toISOString().split('T')[0];
+  const dateCopy = new Date(date.getTime());
+  dateCopy.toJSON = function() {
+    return dateString;
+  };
+
+  return dateCopy;
+}
+
+
 function CertificateProvider({ children }: Props) {
-  const [certificates, setCertificates] = useState<Certificate[]>([]);
-  const [isDBReady, setIsDBReady] = useState<boolean>(false);
+  const [certificates, setCertificates] = useState<(typeof ApiClient.CertificateDto)[]>(
+    [],
+  );
+
+  const { client } = useApi();
 
   useEffect(() => {
-    const handleInitDB = async () => {
-      try {
-        const status = await initDB();
-        setIsDBReady(status);
-        if (status) {
-          const storedCertificates = await getCertificates();
-          const updatedCertificates = storedCertificates.map((cert, index) => ({
-            ...cert,
-            id: cert.id ?? Date.now(),
-          }));
-          setCertificates(storedCertificates);
-        } else {
-          throw new Error('Error: DB not initialized');
-        }
-      } catch (error) {
-        throw new Error('DB initialization failed');
-      }
+    const fetchCertificates = async () => {
+      const certificates = await client.certificatesAll();
+      setCertificates(certificates);
     };
 
-    handleInitDB();
+    fetchCertificates();
   }, []);
 
-  const addCertificate = async (certificate: Certificate) => {
-    if (!isDBReady) {
-      return;
-    }
+  const certificatesPOSTWrapper = (
+  type: string,
+  validFrom: Date,
+  validTo: Date,
+  supplierHandle: string,
+  pdfDocument: ApiClient.FileParameter,
+  participantHandles: string[]
+): Promise<ApiClient.CertificateDto> => {
+  return new Promise<ApiClient.CertificateDto>((resolve, reject) => {
+    client
+      .certificatesPOST(
+        type,
+        validFrom,
+        validTo,
+        supplierHandle,
+        pdfDocument,
+        participantHandles
+      )
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        if (
+          error instanceof ApiClient.ApiException &&
+          error.status === 201
+        ) {
+          // Treat 201 Created as success
+          const responseBody = JSON.parse(error.response);
+          resolve(responseBody as typeof CertificateDto);
+        } else {
+          reject(error);
+        }
+      });
+  });
+};
+
+
+  const addCertificateHandler = async (certificateData: {
+    type: string;
+    validFrom: Date;
+    validTo: Date;
+    supplierHandle: string;
+    pdfDocument: ApiClient.FileParameter;
+    participantHandles: string[];
+  }) => {
     try {
-      certificate.id = Date.now();
-      await addCertificateToDB(certificate);
-      const storedCertificates = await getCertificates();
-      setCertificates(storedCertificates);
+      const validFromDate = formatDateForServer(certificateData.validFrom);
+    const validToDate = formatDateForServer(certificateData.validTo);
+
+    
+    if (
+      !certificateData.participantHandles ||
+      certificateData.participantHandles.length === 0
+    ) {
+      certificateData.participantHandles = []; 
+    }
+      const res = await certificatesPOSTWrapper(
+      certificateData.type,
+      validFromDate,
+      validToDate,
+      certificateData.supplierHandle,
+      certificateData.pdfDocument,
+      certificateData.participantHandles
+    );
+      try {
+      const fetchedCertificates = await client.certificatesAll();
+      setCertificates(fetchedCertificates);
+    } catch (fetchError) {
+      console.error('Error fetching certificates after adding:', fetchError);
+    }
     } catch (error) {
+      if (error instanceof ApiClient.ApiException) {
+        console.error('API Error:', error.status, error.response);
+      } else {
+        console.error('Error adding certificate:', error);
+      }
       throw new Error('Error adding certificate');
     }
   };
 
-  const updateCertificate = async (certificate: Certificate) => {
-    try {
-      await updateCertificateInDB(certificate);
-      const storedCertificates = await getCertificates();
-      setCertificates(storedCertificates);
-    } catch (error) {
-      throw new Error('Error editing a certificate');
-    }
-  };
+  const certificatesPATCHWrapper = (
+  handle: string,
+  type: string,
+  validFrom: Date,
+  validTo: Date,
+  supplierHandle: string,
+  pdfDocument: ApiClient.FileParameter,
+  participantHandles: string[]
+): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
+    client
+      .certificatesPATCH(
+        handle,
+        type,
+        validFrom,
+        validTo,
+        supplierHandle,
+        pdfDocument,
+        participantHandles
+      )
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        if (
+          error instanceof ApiClient.ApiException &&
+          (error.status === 200 || error.status === 204)
+        ) {
+          // Treat 200 OK and 204 No Content as success
+          resolve();
+        } else {
+          reject(error);
+        }
+      });
+  });
+};
 
-  const deleteCertificate = async (id: number) => {
-    await deleteCertificateFromDB(id);
-    const storedCertificates = await getCertificates();
-    setCertificates(storedCertificates);
+
+  const updateCertificateHandler = async (certificateData: {
+  handle: string;
+  type: string;
+  validFrom: Date;
+  validTo: Date;
+  supplierHandle: string;
+  pdfDocument: ApiClient.FileParameter;
+  participantHandles: string[];
+}) => {
+  try {
+
+    const validFromDate = formatDateForServer(certificateData.validFrom);
+    const validToDate = formatDateForServer(certificateData.validTo);
+
+    if (
+      !certificateData.participantHandles ||
+      certificateData.participantHandles.length === 0
+    ) {
+      certificateData.participantHandles = [];
+    }
+    await certificatesPATCHWrapper(
+      certificateData.handle,
+      certificateData.type,
+      validFromDate,
+      validToDate,
+      certificateData.supplierHandle,
+      certificateData.pdfDocument,
+      certificateData.participantHandles
+    );
+    try {
+      const fetchedCertificates = await client.certificatesAll();
+      setCertificates(fetchedCertificates);
+    } catch (fetchError) {
+      console.error('Error fetching certificates after updating:', fetchError);
+    }
+  } catch (error) {
+    if (error instanceof ApiClient.ApiException) {
+      console.error('API Error:', error.status, error.response);
+    } else {
+      console.error('Error updating certificate:', error);
+    }
+    throw new Error('Error updating certificate');
+  }
+};
+
+
+  const deleteCertificateHandler = async (handle: UUID) => {
+    try {
+      await client.certificatesDELETE(handle);
+      const fetchedCertificates = await client.certificatesAll();
+      setCertificates(fetchedCertificates);
+    } catch (error) {
+      console.error('Error deleting certificate: ', error);
+      throw new Error('Error deleting certificate');
+    }
   };
 
   return (
     <CertificateContext.Provider
       value={{
         certificates,
-        addCertificate,
-        updateCertificate,
-        deleteCertificate,
+        addCertificate: addCertificateHandler,
+        updateCertificate: updateCertificateHandler,
+        deleteCertificate: deleteCertificateHandler,
       }}
     >
       {children}
@@ -111,3 +258,4 @@ function useCertificates() {
 }
 
 export { CertificateProvider, useCertificates };
+

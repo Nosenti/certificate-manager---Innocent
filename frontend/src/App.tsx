@@ -1,8 +1,8 @@
 import { RouterProvider } from 'react-router-dom';
 import './App.css';
-import router from './routes/Routes';
 import { CertificateProvider } from './context/CertificateContext';
 import { NotificationProvider } from './context/NotificationContext';
+import router from './routes/Routes';
 
 /**
  * App - component that serves as the main container of the entire application

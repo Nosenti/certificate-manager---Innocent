@@ -1,10 +1,12 @@
-// src/context/UserContext.tsx
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useApi } from './ApiContext';
+import { ApiClient } from '../services/ApiClient';
 
 interface UserContextProps {
-  currentUser: string;
-  switchUser: (user: string) => void;
+  users: ApiClient.UserDto[];
+  currentUser: ApiClient.UserDto | null;
+  switchUser: (userHandle: string) => void;
 }
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
@@ -14,14 +16,38 @@ interface UserProviderProps {
 }
 
 const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState('User 1');
+  const { client } = useApi();
+  const [users, setUsers] = useState<ApiClient.UserDto[]>([]);
+  const [currentUser, setCurrentUser] = useState<ApiClient.UserDto | null>(null);
 
-  const switchUser = (user: string) => {
-    setCurrentUser(user);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const usersFromApi = await client.users(); 
+        setUsers(usersFromApi);
+
+        if (usersFromApi.length > 0) {
+          setCurrentUser(usersFromApi[0]);
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, [client]);
+
+  const switchUser = (userHandle: string) => {
+    const user = users.find((u) => u.handle === userHandle);
+    if (user) {
+      setCurrentUser(user);
+    } else {
+      console.error('User not found with handle:', userHandle);
+    }
   };
 
   return (
-    <UserContext.Provider value={{ currentUser, switchUser }}>
+    <UserContext.Provider value={{ users, currentUser, switchUser }}>
       {children}
     </UserContext.Provider>
   );

@@ -15,11 +15,7 @@
       }
     ],
     [
-      "@babel/preset-typescript",
-      {
-        "isTSX": true,
-        "allExtensions": true
-      }
+      "@babel/preset-typescript"
     ]
   ],
   "plugins": [

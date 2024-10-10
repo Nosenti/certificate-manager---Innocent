@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import './Table.css';
 import React from 'react';
+import { UUID } from 'crypto';
 
 export interface Column<T> {
   header: string;
@@ -13,10 +14,10 @@ interface TableProps<T> {
   data: T[];
   caption?: string;
   className?: string;
-  render?: (id?: number) => React.ReactNode;
+  render?: (handle?: UUID) => React.ReactNode;
 }
 
-function Table<T extends { id?: number }>({
+function Table<T extends { handle?: UUID }>({
   columns,
   data,
   caption,
@@ -26,7 +27,7 @@ function Table<T extends { id?: number }>({
   if (data.length === 0 && columns.length === 0) {
     return <p>No data available</p>;
   }
-
+  console.log('table data: ', data);
   return (
     <div className={`table-container ${className}`}>
       <table>
@@ -50,10 +51,10 @@ function Table<T extends { id?: number }>({
             </tr>
           ) : (
             data.map((row, index) => (
-              <tr key={row.id}>
-                <td>{render ? render(row.id) : null}</td>
+              <tr key={row.handle}>
+                <td>{render ? render(row.handle) : null}</td>
                 {columns.map((column) => (
-                  <td key={`${row.id}-${String(column.accessor)}`}>
+                  <td key={`${row.handle}-${String(column.accessor)}`}>
                     {column.render
                       ? column.render(row[column.accessor], row, index)
                       : String(row[column.accessor])}

@@ -14,6 +14,12 @@ namespace Backend.Repositories
             _context = context;
         }
 
+        public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
+        {
+            var users = await _context.Users.ToListAsync();
+            return users.ToDtoList();
+        }
+
         public async Task<UserDto> GetUserByHandleAsync(Guid handle)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Handle == handle);

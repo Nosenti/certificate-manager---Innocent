@@ -18,13 +18,13 @@ namespace Backend.Middlewares
             Exception exception,
             CancellationToken cancellationToken)
         {
-            // Log the exception
+            
             _logger.LogError(exception, "Exception ocurred: {Message}", exception.Message);
 
             var problemDetails = new ProblemDetails();
             httpContext.Response.ContentType = "application/json";
 
-            // Handle specific exception types
+
             switch (exception)
             {
                 case KeyNotFoundException:

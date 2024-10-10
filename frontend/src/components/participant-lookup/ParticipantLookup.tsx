@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { getParticipants } from '../../data/db';
 import { Participant } from '../../../types/types';
 import './participant-lookup.css';
 import Modal from '../modal/Modal';
@@ -7,6 +6,7 @@ import Button from '../button/Button';
 import Table from '../table/Table';
 import TextInput from '../text-input/TextInput';
 import { useLanguage } from '../../context/LanguageContext';
+import { useApi } from '../../context/ApiContext';
 
 interface ParticipantLookupProps {
   show: boolean;
@@ -21,7 +21,6 @@ const ParticipantLookup: React.FC<ParticipantLookupProps> = ({
 }) => {
   const [filters, setFilters] = useState({
     name: '',
-    firstName: '',
     userID: '',
     department: '',
     plant: '',
@@ -29,6 +28,7 @@ const ParticipantLookup: React.FC<ParticipantLookupProps> = ({
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [selectedParticipants, setSelectedParticipants] = useState<Participant[]>([]);
   const { t } = useLanguage();
+  const { client } = useApi();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -36,21 +36,25 @@ const ParticipantLookup: React.FC<ParticipantLookupProps> = ({
   };
 
   const handleSearch = async () => {
-    const { name, firstName, userID, department, plant } = filters;
-    const results = await getParticipants(name, firstName, userID, department, plant);
-    setParticipants(results);
+    const { name,  userID, department, plant } = filters;
+    try {
+      const results = await client.participants(name, userID, department, plant);
+      setParticipants(results);
+    } catch (error) {
+      console.error("Error fetching participants: ", error);
+    }
   };
 
   const handleReset = () => {
-    setFilters({ name: '', firstName: '', userID: '', department: '', plant: '' });
+    setFilters({ name: '', userID: '', department: '', plant: '' });
     setParticipants([]);
     setSelectedParticipants([]);
   };
 
   const handleRowSelect = (participant: Participant) => {
     setSelectedParticipants((prev) =>
-      prev.find((p) => p.id === participant.id)
-        ? prev.filter((p) => p.id !== participant.id)
+      prev.find((p) => p.handle === participant.handle)
+        ? prev.filter((p) => p.handle !== participant.handle)
         : [...prev, participant]
     );
   };
@@ -69,17 +73,15 @@ const ParticipantLookup: React.FC<ParticipantLookupProps> = ({
       render: (_:any,row: Participant) => (
         <input
           type="checkbox"
-          checked={!!selectedParticipants.find((p) => p.id === row.id)}
+          checked={!!selectedParticipants.find((p) => p.handle === row.handle)}
           onChange={() => handleRowSelect(row)}
         />
       ),
     },
     { header: t.name, accessor: 'name' as keyof Participant },
-    { header: t.firstName, accessor: 'firstName' as keyof Participant },
-    { header: t.userId, accessor: 'userID' as keyof Participant },
+    { header: t.userId, accessor: 'userId' as keyof Participant },
     { header: t.department, accessor: 'department' as keyof Participant },
     { header: t.plant, accessor: 'plant' as keyof Participant },
-    { header: t.email, accessor: 'email' as keyof Participant },
   ];
 
   return (
@@ -94,12 +96,7 @@ const ParticipantLookup: React.FC<ParticipantLookupProps> = ({
               value={filters.name}
               onChange={handleInputChange}
             />
-            <TextInput
-              label={t.firstName}
-              name="firstName"
-              value={filters.firstName}
-              onChange={handleInputChange}
-            />
+            
             <TextInput
               label={t.userId}
               name="userID"
@@ -146,9 +143,11 @@ const ParticipantLookup: React.FC<ParticipantLookupProps> = ({
         </div>
         <div className="participant-list-actions">
           <Button
-            variation="contained"
+            type='button'
+            className='select-button'
             size="medium"
             onClick={handleSelectClick}
+            aria-label='Select'
             disabled={selectedParticipants.length === 0}
           >
             {t.select}

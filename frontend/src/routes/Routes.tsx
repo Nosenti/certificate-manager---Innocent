@@ -22,7 +22,7 @@ const router = createBrowserRouter([
         element: <FormPage />,
       },
       {
-        path: '/certificates/edit/:id',
+        path: '/certificates/edit/:handle',
         element: <FormPage />,
       },
       {

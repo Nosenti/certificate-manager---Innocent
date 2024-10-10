@@ -1,6 +1,8 @@
 import path from 'path';
 import webpack from 'webpack';
+import dotenv from 'dotenv';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -8,6 +10,12 @@ const __dirname = path.dirname(__filename);
 
 export default (env, argv) => {
   const isDevelopment = argv.mode === 'development';
+  const envVariables = dotenv.config().parsed || {};
+
+  const envKeys = Object.keys(envVariables).reduce((prev, next) => {
+    prev[`process.env.${next}`] = JSON.stringify(envVariables[next]);
+    return prev;
+  }, {});
 
   return {
     entry: './src/index.tsx',
@@ -64,7 +72,6 @@ export default (env, argv) => {
                 svgo: false,
               },
             },
-            
           ],
         },
       ],
@@ -77,6 +84,12 @@ export default (env, argv) => {
         'process.env.NODE_ENV': JSON.stringify(
           isDevelopment ? 'development' : 'production',
         ),
+        ...envKeys,
+      }),
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'static',
+        openAnalyzer: false,
+        reportFilename: 'bundle-report.html',
       }),
       new webpack.ProvidePlugin({
         process: 'process/browser',
@@ -88,6 +101,11 @@ export default (env, argv) => {
       splitChunks: {
         chunks: 'all',
       },
+    },
+    performance: {
+      hints: isDevelopment ? false : 'warning',
+      maxAssetSize: 512000,
+      maxEntrypointSize: 512000,
     },
     devServer: {
       static: path.join(__dirname, 'dist'),
